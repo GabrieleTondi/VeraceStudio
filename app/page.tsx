@@ -12,6 +12,7 @@ import {
   IconMessage,
   IconBriefcase,
 } from "@tabler/icons-react";
+import { MobileHero } from "@/components/MobileHero";
 
 const links = [
   {
@@ -64,6 +65,7 @@ export default function Home() {
     //   {/* 2. INSERISCI LO SFONDO QUI, PRIMA DI TUTTO */}
     //   <ParticleWaveBackground />
     <div className="flex min-h-screen flex-col items-center justify-end p-30">
+      <MobileHero />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
         <FloatingDock items={links} />
       </div>
