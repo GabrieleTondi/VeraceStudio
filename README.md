@@ -1,8 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VeraceStudio 🎨
 
-## Getting Started
+Welcome to the **VeraceStudio** repository! This is a modern, dynamic, and responsive web application built with **Next.js**, designed to showcase art, events, and projects in an engaging way.
 
-First, run the development server:
+## 🚀 Overview
+
+VeraceStudio ("exposing art") is built with a focus on premium aesthetics and smooth user experiences. The application utilizes a mobile-first approach, featuring custom animations and interactive components to create a memorable impression right from the first visit.
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **UI Library:** [React 19](https://react.dev/)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animations:** [Framer Motion](https://www.framer.com/motion/)
+- **3D Graphics:** [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) & [Drei](https://github.com/pmndrs/drei)
+- **Icons:** [Tabler Icons](https://tabler-icons.io/)
+
+## ✨ Key Features
+
+- **Mobile First Hero:** A dedicated mobile-only video introduction (`MobileHero`) that plays seamlessly on the first visit of the session, fading out smoothly to reveal the main content.
+- **Interactive Navigation:** Floating dock navigation for quick access to different sections (Events, Projects, About, JamSession).
+- **Smooth Animations:** Integrated Framer Motion for highly polished entry animations and interactive UI elements like the Animated Tooltip.
+- **Premium Aesthetics:** Clean typography, deliberate use of space, and dynamic components geared towards an artistic portfolio.
+
+## 📂 Project Structure
+
+- `/app`: Next.js App Router endpoints and core pages (e.g., `page.tsx` for Home).
+- `/components`: Reusable UI components including:
+  - `MobileHero`: Session-controlled animated mobile video intro.
+  - `FloatingNavBar` / `DockCard`: Interactive floating menu.
+  - `ui/animated-tooltip`: Dynamic user/profile tooltip cards.
+- `/public`: Static assets, images, and videos (e.g., `tiktok_media.mp4`).
+
+## 💻 Getting Started
+
+First, make sure you have installed the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -10,27 +51,15 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎨 Editing the Project
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You can start editing the main page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Global styles and Tailwind directives are located in `app/globals.css`.
 
-## Learn More
+## 🚀 Deployment
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new). Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
