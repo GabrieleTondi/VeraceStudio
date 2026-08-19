@@ -1,0 +1,127 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
+  article?: boolean;
+  author?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
+  googleSiteVerification?: string;
+  bingSiteVerification?: string;
+  gaMeasurementId?: string;
+}
+
+const {
+  title = 'VERACE | Ricerca, Fondi Europei e Rigenerazione Territoriale a Reggio Emilia',
+  description = 'Realtà no-profit di Reggio Emilia per la rigenerazione urbana, innovazione sociale, intercettazione fondi europei (FSE+, FESR, PNRR), eventi e inchieste sul territorio emiliano.',
+  keywords = 'VERACE, Reggio Emilia, fondi europei Reggio Emilia, bandi FSE+ FESR Emilia-Romagna, PNRR territorio, eventi Reggio Emilia, rigenerazione urbana, sostenibilità ESG, terzo settore',
+  image = '/images/verace-og.jpg',
+  article = false,
+  author = 'VERACE',
+  type = article ? 'article' : 'website',
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+  googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION || '',
+  bingSiteVerification = import.meta.env.PUBLIC_BING_SITE_VERIFICATION || '',
+  gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID || 'G-BFE9FW2764',
+} = Astro.props;
+
+const gaId = gaMeasurementId || 'G-BFE9FW2764';
+const siteUrl = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+const canonicalURL = new URL(Astro.url.pathname, siteUrl).href;
+const imageUrl = image.startsWith('http') ? image : `${siteUrl}${image.startsWith('/') ? '' : '/'}${image}`;
+---
+
+<!-- Basic Meta Tags -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<meta name="keywords" content={keywords} />
+<meta name="author" content={author} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+<meta name="googlebot" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Language & Geo Tags (Reggio Emilia, Emilia-Romagna) -->
+<meta http-equiv="content-language" content="it" />
+<meta name="geo.region" content="IT-45" />
+<meta name="geo.placename" content="Reggio Emilia, Emilia-Romagna" />
+<meta name="geo.position" content="44.698274;10.631241" />
+<meta name="ICBM" content="44.698274, 10.631241" />
+
+<!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+<meta property="og:site_name" content="VERACE" />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={title} />
+<meta property="og:locale" content="it_IT" />
+
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@fondazioneverace" />
+<meta name="twitter:creator" content="@fondazioneverace" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:image:alt" content={title} />
+
+<!-- Favicon & PWA Icons (Verde Logo) -->
+<link rel="icon" type="image/png" href="/logos/Verace_Logo_Verde.png" />
+<link rel="apple-touch-icon" href="/logos/Verace_Logo_Verde.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#C4302B" />
+
+<!-- Search Engine Verification Tags -->
+{googleSiteVerification && <meta name="google-site-verification" content={googleSiteVerification} />}
+{bingSiteVerification && <meta name="msvalidate.01" content={bingSiteVerification} />}
+
+<!-- Google Analytics 4 (GA4) with Google Consent Mode v2 -->
+<script is:inline define:vars={{ gaId }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  // Verifica consenso memorizzato preventivamente
+  let isAnalyticsGranted = false;
+  try {
+    const rawConsent = localStorage.getItem('verace_cookie_consent_v1');
+    if (rawConsent) {
+      const parsed = JSON.parse(rawConsent);
+      if (parsed && parsed.analytics === true) {
+        isAnalyticsGranted = true;
+      }
+    }
+  } catch (e) {}
+
+  // Imposta Consent Mode v2 di default
+  gtag('consent', 'default', {
+    'analytics_storage': isAnalyticsGranted ? 'granted' : 'denied',
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('js', new Date());
+  gtag('config', gaId, {
+    page_path: window.location.pathname,
+    anonymize_ip: true
+  });
+</script>
+<script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+

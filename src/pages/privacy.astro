@@ -1,0 +1,237 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+
+const privacySchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${siteOrigin}/privacy#webpage`,
+  "url": `${siteOrigin}/privacy`,
+  "name": "Informativa sulla Privacy (GDPR) | VERACE Reggio Emilia",
+  "description": "Informativa estesa sul trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR) e della normativa italiana vigente.",
+  "inLanguage": "it-IT",
+  "publisher": {
+    "@type": "NGO",
+    "name": "VERACE",
+    "url": siteOrigin
+  }
+};
+---
+
+<BaseLayout
+  title="Privacy Policy | Informativa Trattamento Dati GDPR | VERACE"
+  description="Informativa estesa sul trattamento dei dati personali di VERACE (Reggio Emilia). Trasparenza su finalità, basi giuridiche e diritti ai sensi del GDPR 2016/679."
+  keywords="privacy policy VERACE, GDPR Reggio Emilia, trattamento dati personali, informativa privacy terzo settore, diritti interessato GDPR"
+  customSchema={privacySchema}
+>
+  <div class="w-full bg-zero-bg">
+    
+    <!-- Hero Header -->
+    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-16 lg:py-24 bg-zero-paper gsap-fade-up">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div>
+          <div class="ui-meta text-zero-granata font-bold mb-4 flex items-center gap-2">
+            <span>[ CONFORMITÀ NORMATIVA REGOLAMENTO UE 2016/679 ]</span>
+            <span class="inline-block w-2 h-2 bg-zero-red"></span>
+          </div>
+          <h1 class="hero-headline text-zero-black uppercase leading-[0.85]">
+            INFORMATIVA<br/>SULLA <span class="text-zero-red">PRIVACY</span>
+          </h1>
+        </div>
+        <div class="max-w-md space-y-2">
+          <p class="ui-meta text-neutral-500 font-bold">ULTIMO AGGIORNAMENTO: AGOSTO 2026</p>
+          <p class="text-sm font-light text-zero-black leading-relaxed">
+            VERACE si impegna a proteggere la riservatezza e la sicurezza dei dati personali dei propri utenti, partner territoriali e lettori del magazine.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenuto Giuridico ed Editoriale -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-16">
+      
+      <!-- 1. Titolare del Trattamento -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">01</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Titolare del Trattamento dei Dati</h2>
+        </div>
+        <div class="space-y-4 text-zero-black leading-relaxed font-light">
+          <p>
+            Il Titolare del trattamento dei dati personali raccolti attraverso questo sito web è:
+          </p>
+          <div class="p-6 bg-zero-paper border border-zero-dark space-y-2 font-mono text-sm">
+            <p><strong class="text-zero-black">Denominazione:</strong> VERACE (Ente del Terzo Settore)</p>
+            <p><strong class="text-zero-black">Sede Legale ed Operativa:</strong> Via San Zenone 4, 42121 Reggio Emilia (RE), Italia</p>
+            <p><strong class="text-zero-black">Codice Fiscale:</strong> 97812340561</p>
+            <p><strong class="text-zero-black">Telefono:</strong> +39 0522 1234567</p>
+            <p><strong class="text-zero-black">Email di Contatto Privacy:</strong> <a href="mailto:info@fondazioneverace.eu" class="text-zero-red hover:underline">info@fondazioneverace.eu</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Tipologie di Dati Trattati -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">02</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Tipologie di Dati Personali Raccolti</h2>
+        </div>
+        <div class="space-y-4 text-zero-black leading-relaxed font-light">
+          <p>
+            Durante la consultazione del sito e l'interazione con i nostri servizi, VERACE raccoglie esclusivamente i dati necessari alle finalità istituzionali ed editoriali:
+          </p>
+          <ul class="space-y-4 list-none pl-0">
+            <li class="p-4 bg-white/70 border-l-4 border-zero-granata">
+              <strong class="font-mono text-xs uppercase block text-zero-black mb-1">A. Dati forniti volontariamente dall'utente</strong>
+              <span>Nome, cognome, indirizzo email aziendale o personale, recapito telefonico, ente/azienda di appartenenza e contenuto del messaggio inseriti nei form di contatto e nei moduli di richiesta co-progettazione / partnership.</span>
+            </li>
+            <li class="p-4 bg-white/70 border-l-4 border-zero-granata">
+              <strong class="font-mono text-xs uppercase block text-zero-black mb-1">B. Iscrizione al Bollettino / Newsletter</strong>
+              <span>Indirizzo di posta elettronica fornito per la ricezione periodica di aggiornamenti su bandi europei, inchieste del magazine ed eventi sul territorio di Reggio Emilia.</span>
+            </li>
+            <li class="p-4 bg-white/70 border-l-4 border-zero-granata">
+              <strong class="font-mono text-xs uppercase block text-zero-black mb-1">C. Dati di Navigazione e Parametri Tecnici</strong>
+              <span>Indirizzi IP, identificativi URI delle risorse richieste, orario della richiesta, codice di stato HTTP della risposta del server ed altri parametri relativi al sistema operativo dell'utente, raccolti automaticamente a fini di sicurezza informatica.</span>
+            </li>
+            <li class="p-4 bg-white/70 border-l-4 border-zero-granata">
+              <strong class="font-mono text-xs uppercase block text-zero-black mb-1">D. Dati Statistici Aggregati (Google Analytics 4)</strong>
+              <span>Dati aggregati di visualizzazione e permanenza sulle pagine, raccolti previo consenso e con mascheramento dell'indirizzo IP (anonymizeIp attivo).</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3. Finalità e Basi Giuridiche del Trattamento -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">03</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Finalità e Basi Giuridiche</h2>
+        </div>
+        <div class="space-y-4 text-zero-black leading-relaxed font-light">
+          <div class="overflow-x-auto">
+            <table class="w-full border border-zero-dark text-left text-sm bg-zero-paper">
+              <thead class="bg-zero-black text-white font-mono text-xs uppercase">
+                <tr>
+                  <th class="p-4 border border-zero-dark">Finalità del Trattamento</th>
+                  <th class="p-4 border border-zero-dark">Dati Utilizzati</th>
+                  <th class="p-4 border border-zero-dark">Base Giuridica (GDPR)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-zero-lightborder font-mono text-xs">
+                <tr>
+                  <td class="p-4 font-sans font-light">Riscontro a richieste di contatto e co-progettazione bandi europei</td>
+                  <td class="p-4">Dati anagrafici, email, azienda, messaggio</td>
+                  <td class="p-4 text-zero-granata font-bold">Esecuzione di misure precontrattuali (Art. 6.1.b)</td>
+                </tr>
+                <tr>
+                  <td class="p-4 font-sans font-light">Invio bollettino editoriale ed alert bandi territoriali</td>
+                  <td class="p-4">Indirizzo email</td>
+                  <td class="p-4 text-zero-granata font-bold">Consenso esplicito dell'interessato (Art. 6.1.a)</td>
+                </tr>
+                <tr>
+                  <td class="p-4 font-sans font-light">Funzionamento, sicurezza del server e prevenzione abusi</td>
+                  <td class="p-4">Log tecnici di sistema, IP anonimizzato</td>
+                  <td class="p-4 text-zero-granata font-bold">Legittimo interesse del Titolare (Art. 6.1.f)</td>
+                </tr>
+                <tr>
+                  <td class="p-4 font-sans font-light">Analisi statistiche anonime di consultazione del magazine</td>
+                  <td class="p-4">Cookie analitici anonimizzati</td>
+                  <td class="p-4 text-zero-granata font-bold">Consenso espresso tramite cookie banner (Art. 6.1.a)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Modalità di Trattamento e Sicurezza -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">04</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Modalità di Trattamento e Misure di Sicurezza</h2>
+        </div>
+        <div class="space-y-4 text-zero-black leading-relaxed font-light">
+          <p>
+            Il trattamento dei dati è eseguito attraverso strumenti informatici e telematici con logiche strettamente correlate alle finalità sopra indicate. VERACE adotta misure tecniche ed organizzative adeguate ai sensi dell'Art. 32 del GDPR:
+          </p>
+          <ul class="space-y-2 list-disc pl-5">
+            <li>Crittografia SSL/TLS con certificati crittografici avanzati per tutte le comunicazioni web.</li>
+            <li>Minimizzazione dei dati: vengono raccolti solo i campi strettamente indispensabili.</li>
+            <li>Archiviazione su infrastrutture cloud conformi agli standard ISO/IEC 27001 situate all'interno dello Spazio Economico Europeo (SEE).</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 5. Periodo di Conservazione dei Dati -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">05</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Periodo di Conservazione</h2>
+        </div>
+        <div class="space-y-4 text-zero-black leading-relaxed font-light">
+          <p>
+            I dati sono conservati per il tempo strettamente necessario al perseguimento delle finalità per cui sono stati raccolti:
+          </p>
+          <ul class="space-y-2 list-disc pl-5">
+            <li><strong>Dati di contatto e partnership:</strong> conservati per 24 mesi dalla conclusione della richiesta o per la durata del rapporto istituzionale/progettuale.</li>
+            <li><strong>Iscrizione alla Newsletter:</strong> fino alla richiesta di disiscrizione (opt-out), sempre esercitabile con un semplice click o via email.</li>
+            <li><strong>Log tecnici di navigazione:</strong> cancellati automaticamente dopo 90 giorni.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6. Diritti dell'Interessato (GDPR) -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">06</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Diritti dell'Interessato (Artt. 15-22 GDPR)</h2>
+        </div>
+        <div class="space-y-4 text-zero-black leading-relaxed font-light">
+          <p>
+            In qualità di interessato, l'utente ha diritto di esercitare in qualsiasi momento i seguenti diritti garantiti dal GDPR:
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div class="p-5 bg-zero-paper border border-zero-dark space-y-1">
+              <span class="ui-meta text-zero-red font-bold">DIRITTO DI ACCESSO (ART. 15)</span>
+              <p class="text-xs text-neutral-700">Ottenere conferma dell'esistenza di propri dati e riceverne copia intelligibile.</p>
+            </div>
+            <div class="p-5 bg-zero-paper border border-zero-dark space-y-1">
+              <span class="ui-meta text-zero-red font-bold">DIRITTO DI RETTIFICA (ART. 16)</span>
+              <p class="text-xs text-neutral-700">Richiedere la correzione o l'integrazione tempestiva dei dati inesatti.</p>
+            </div>
+            <div class="p-5 bg-zero-paper border border-zero-dark space-y-1">
+              <span class="ui-meta text-zero-red font-bold">DIRITTO ALLA CANCELLAZIONE (ART. 17)</span>
+              <p class="text-xs text-neutral-700">Richiedere la cancellazione ("diritto all'oblio") dei dati non più necessari.</p>
+            </div>
+            <div class="p-5 bg-zero-paper border border-zero-dark space-y-1">
+              <span class="ui-meta text-zero-red font-bold">DIRITTO DI OPPOSIZIONE (ART. 21)</span>
+              <p class="text-xs text-neutral-700">Opporsi in qualsiasi momento al trattamento per motivi legittimi o per marketing.</p>
+            </div>
+          </div>
+          <p class="pt-4">
+            Per esercitare i propri diritti è sufficiente inviare un'email a: <strong class="text-zero-black font-mono">info@fondazioneverace.eu</strong> o una comunicazione scritta alla sede di <strong class="text-zero-black">Via San Zenone 4, 42121 Reggio Emilia (RE)</strong>.
+          </p>
+          <p class="text-xs text-neutral-500 font-mono">
+            È altresì facoltà dell'utente proporre reclamo all'Autorità Garante per la Protezione dei Dati Personali (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener noreferrer" class="underline hover:text-zero-black">www.garanteprivacy.it</a>).
+          </p>
+        </div>
+      </section>
+
+      <!-- CTA Contatti -->
+      <section class="pt-8 border-t border-zero-dark flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+          <h3 class="font-display font-black text-xl uppercase text-zero-black">Hai domande sulla gestione dei tuoi dati?</h3>
+          <p class="text-sm text-neutral-600 font-light">Il nostro ufficio legale e privacy è a disposizione per ogni chiarimento.</p>
+        </div>
+        <a
+          href="/contatti"
+          class="px-6 py-3.5 bg-zero-black text-white ui-meta font-bold hover:bg-zero-red transition-colors flex-shrink-0"
+        >
+          CONTATTA IL TEAM →
+        </a>
+      </section>
+
+    </main>
+  </div>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import MagazineGrid from '../components/MagazineGrid.astro';
+import { getPosts } from '../lib/sanity';
+
+const posts = await getPosts();
+const recentPosts = posts.slice(0, 3);
+---
+
+<BaseLayout
+  title="VERACE | Fondi Europei, Rigenerazione Territoriale ed Eventi a Reggio Emilia"
+  description="Piattaforma di rigenerazione urbana e innovazione sociale a Reggio Emilia e provincia. Supporto a imprese sui fondi europei (FSE+, FESR, PNRR), eventi culturali e inchieste sul territorio."
+  keywords="VERACE, Reggio Emilia, fondi europei Reggio Emilia, bandi FSE+ FESR Emilia-Romagna, eventi Reggio Emilia, rigenerazione urbana, innovazione sociale, co-progettazione imprese, terzo settore Emilia"
+>
+  <Hero />
+
+  <div class="w-full px-4 sm:px-6 lg:px-8 pt-3 md:pt-4 pb-16 md:pb-24 gsap-fade-up">
+    <MagazineGrid posts={recentPosts} title="ULTIME PUBBLICAZIONI" subtitle="DALLA REDAZIONE" />
+  </div>
+</BaseLayout>
+

@@ -1,0 +1,581 @@
+import { createClient } from '@sanity/client';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
+
+// Read .env if present
+const envPath = path.join(rootDir, '.env');
+let token = process.env.SANITY_AUTH_TOKEN || process.env.SANITY_API_TOKEN;
+let projectId = process.env.PUBLIC_SANITY_PROJECT_ID || '83ude8vy';
+let dataset = process.env.PUBLIC_SANITY_DATASET || 'production';
+
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  for (const line of envContent.split('\n')) {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const [k, ...v] = trimmed.split('=');
+      const val = v.join('=').trim().replace(/^["']|["']$/g, '');
+      if (k.trim() === 'SANITY_AUTH_TOKEN' || k.trim() === 'SANITY_API_TOKEN') token = val;
+      if (k.trim() === 'PUBLIC_SANITY_PROJECT_ID') projectId = val;
+      if (k.trim() === 'PUBLIC_SANITY_DATASET') dataset = val;
+    }
+  }
+}
+
+if (!token) {
+  console.log('\n⚠️  ATTENZIONE: Nessun Token di scrittura Sanity trovato!');
+  console.log('Per importare automaticamente tutti gli articoli e progetti su Sanity, crea un API Token con permessi "Editor":');
+  console.log('1. Vai su https://www.sanity.io/manage -> Progetto 83ude8vy -> API -> Tokens');
+  console.log('2. Clicca "+ Add API token", dagli nome "Seed Script" e seleziona ruolo "Editor"');
+  console.log('3. Inserisci il token nel file .env: SANITY_AUTH_TOKEN=tuo_token\n');
+  console.log('4. Rilancia: node scripts/seed-sanity.mjs\n');
+}
+
+const client = createClient({
+  projectId,
+  dataset,
+  apiVersion: '2024-01-01',
+  token: token || undefined,
+  useCdn: false,
+});
+
+// Helper to upload local or remote image asset
+async function uploadAsset(imagePath) {
+  if (!token) return null;
+  try {
+    if (imagePath.startsWith('http')) {
+      const res = await fetch(imagePath);
+      const buffer = Buffer.from(await res.arrayBuffer());
+      const asset = await client.assets.upload('image', buffer, {
+        filename: path.basename(imagePath.split('?')[0])
+      });
+      return {
+        _type: 'image',
+        asset: {
+          _type: 'reference',
+          _ref: asset._id
+        }
+      };
+    } else {
+      const localFilePath = path.join(rootDir, 'public', imagePath.replace(/^\//, ''));
+      if (fs.existsSync(localFilePath)) {
+        const stream = fs.createReadStream(localFilePath);
+        const asset = await client.assets.upload('image', stream, {
+          filename: path.basename(localFilePath)
+        });
+        return {
+          _type: 'image',
+          asset: {
+            _type: 'reference',
+            _ref: asset._id
+          }
+        };
+      }
+    }
+  } catch (err) {
+    console.warn(`Could not upload asset ${imagePath}:`, err.message);
+  }
+  return null;
+}
+
+// Articles Data
+const POSTS = [
+  {
+    _id: 'post-fiumi-urbani',
+    _type: 'post',
+    title: 'Rapporto Città e Fiumi: La Rinascita dei Corsi d\'Acqua Urbani',
+    subtitle: 'Un\'indagine sulle politiche di riqualificazione delle sponde e sui nuovi ecosistemi fluviali ad alto valore sociale ed ecologico.',
+    slug: { _type: 'slug', current: 'rapporto-citta-fiumi-rinascita-corsi-acqua' },
+    category: 'Ambiente',
+    layoutType: 'editorial-focus',
+    coverImageSource: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+    publishedAt: '2026-08-10T11:00:00Z',
+    readingTime: 8,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'I fiumi urbani stanno ritornando ad essere i veri protagonisti della vita cittadina. Per decenni cementificati, nascosti o ridotti a meri canali di scolo, i corsi d\'acqua sono oggi al centro di interventi pionieristici di rinaturalizzazione e riapertura alla collettività.' }]
+      },
+      {
+        _key: 'b2',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's2', _type: 'span', text: 'La rigenerazione delle sponde fluviali permette di abbattere le isole di calore, creare parchi lineari accessibili e ricucire quartieri storicamente separati dalla barriera dell\'acqua. Questo dossier analizza le migliori pratiche europee e le sfide concrete del territorio emiliano.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-luci-periferie',
+    _type: 'post',
+    title: 'Luci Nelle Periferie: Reportage Notturno Sugli Spazi Industriali',
+    subtitle: 'Uno sguardo fotografico in chiaroscuro sugli ex complessi manifatturieri che riprendono vita nelle ore notturne.',
+    slug: { _type: 'slug', current: 'luci-nelle-periferie-reportage-notturno-spazi-industriali' },
+    category: 'Fotografia',
+    layoutType: 'photo-journalism',
+    coverImageSource: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=1200&q=80',
+    publishedAt: '2026-08-08T22:00:00Z',
+    readingTime: 6,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'La notte trasforma le architetture industriali dismesse in cattedrali di luce e ombra. Questo reportage notturno documenta come vecchi capannoni e officine abbiano iniziato a pulsare di nuova vita attraverso studi d\'artista, laboratori musicali e spazi di aggregazione giovanile.' }]
+      },
+      {
+        _key: 'b2',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's2', _type: 'span', text: 'L\'obiettivo fotografico cattura il contrasto visivo tra il ferro arrugginito delle strutture storiche e il bagliore al neon dei nuovi insediamenti creativi, mostrando la bellezza viscerale dei margini urbani.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-indicatori-impatto',
+    _type: 'post',
+    title: 'Indicatori di Impatto Sociale: Guida Pratica alla Valutazione',
+    subtitle: 'Framework analitici, metriche aperte e modelli di rendicontazione per misurare il valore generato dai progetti urbani.',
+    slug: { _type: 'slug', current: 'indicatori-impatto-sociale-guida-valutazione-rigenerazione' },
+    category: 'Dossier',
+    layoutType: 'data-dossier',
+    coverImageSource: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+    publishedAt: '2026-08-06T14:30:00Z',
+    readingTime: 9,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'Misurare l\'impatto sociale della rigenerazione urbana è una necessità imprescindibile per garantire la sostenibilità nel tempo degli interventi e la massima trasparenza verso comunità e finanziatori.' }]
+      },
+      {
+        _key: 'b2',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's2', _type: 'span', text: 'In questa guida illustriamo l\'approccio metodologico sviluppato dal Centro Ricerche VERACE, fondato su 12 indicatori quantitativi e qualitativi capaci di rilevare coesione sociale, valore economico residuo ed esternalità ambientali positive.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-manifesto-innovazione',
+    _type: 'post',
+    title: 'Manifesto per l\'Innovazione Sociale e la Coesione di Quartiere',
+    subtitle: '10 tesi fondamentali per guidare il cambiamento dei territori attraverso l\'ascolto, la co-progettazione e la partecipazione attiva.',
+    slug: { _type: 'slug', current: 'manifesto-innovazione-sociale-coesione-quartiere' },
+    category: 'Manifesto',
+    layoutType: 'manifesto-magazine',
+    coverImageSource: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
+    publishedAt: '2026-08-04T09:00:00Z',
+    readingTime: 7,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'Le città del futuro si fondano sulle comunità di oggi. Questo manifesto raccoglie le linee guida strategiche per costruire quartieri inclusivi, sostenibili ed in grado di rispondere alle trasformazioni sociali in corso.' }]
+      },
+      {
+        _key: 'b2',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's2', _type: 'span', text: 'Dalla gestione condivisa dei beni comuni alla valorizzazione della creatività giovanile, ogni tesi rappresenta un impegno concreto per una cittadinanza consapevole e partecipativa.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-al-cinese',
+    _type: 'post',
+    title: 'Al Cinese Da Luigi: Storie, Incontri e Memorie Urbane',
+    subtitle: 'Un\'indagine visiva e sociale sui luoghi di ritrovo popolari e sulla memoria collettiva del territorio.',
+    slug: { _type: 'slug', current: 'al-cinese-da-luigi-storie-memorie-urbane' },
+    category: 'Inchieste',
+    layoutType: 'pdf-reader',
+    coverImageSource: '/articles/AL CINESE/IMG_4846.webp',
+    publishedAt: '2026-08-13T08:00:00Z',
+    readingTime: 5,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'Al Cinese Da Luigi è una ricerca sul campo che esplora le trasformazioni dei luoghi di convivialità urbana e la memoria collettiva dei quartieri popolari.' }]
+      },
+      {
+        _key: 'b2',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's2', _type: 'span', text: 'Attraverso una documentazione fotografica d\'archivio e testimonianze dirette della comunità, il progetto mappa gli spazi storici di ritrovo che hanno segnato l\'evoluzione sociale e culturale della città.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-memorie',
+    _type: 'post',
+    title: 'Memorie del Sottosuolo: Esplorazioni tra Storia e Archeologia Industriale',
+    subtitle: 'Un viaggio fotografico nel patrimonio nascosto e negli spazi ipogei della città, tra fascino industriale e rigenerazione culturale.',
+    slug: { _type: 'slug', current: 'memorie-del-sottosuolo-archeologia-industriale' },
+    category: 'Ricerca',
+    layoutType: 'pdf-reader',
+    coverImageSource: '/articles/MEMORIE/IMG_9747.webp',
+    publishedAt: '2026-08-12T16:00:00Z',
+    readingTime: 6,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'Memorie del Sottosuolo propone una rilettura del paesaggio urbano sotterraneo e delle infrastrutture storiche dimenticate, trasformando il buio dei cunicoli in un laboratorio di riscoperta identitaria.' }]
+      },
+      {
+        _key: 'b2',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's2', _type: 'span', text: 'Il percorso raccoglie scatti inediti, rilievi storici e analisi sulla possibilità di riutilizzo culturale degli spazi ipogei come nuovi luoghi di aggregazione e produzione artistica.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-1',
+    _type: 'post',
+    title: 'Rigenerazione Urbana e Nuovi Spazi Culturali per la Collettività',
+    subtitle: 'Come trasformare l\'architettura industriale in luoghi vivaci di cultura, ricerca e coesione sociale.',
+    slug: { _type: 'slug', current: 'rigenerazione-urbana-spazi-culturali' },
+    category: 'Innovazione',
+    layoutType: 'split-view',
+    coverImageSource: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+    publishedAt: '2026-07-20T10:00:00Z',
+    readingTime: 6,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'La riqualificazione degli spazi urbani non è semplicemente una questione di cemento e mattoni, ma un processo profondo di riappropriazione comunitaria. Fondazione VERACE promuove un modello in cui l\'architettura incontra l\'impatto sociale, integrando spazi di coworking pubblico, laboratori artistici ed ecosistemi sostenibili.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-2',
+    _type: 'post',
+    title: 'Transizione Ecologica Giusta: Il Ruolo delle Fondazioni',
+    subtitle: 'Riflessioni e azioni concrete per coordinare la sostenibilità ambientale con l\'equità sociale.',
+    slug: { _type: 'slug', current: 'transizione-ecologica-giusta' },
+    category: 'Sostenibilita',
+    layoutType: 'standard',
+    coverImageSource: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=1200&q=80',
+    publishedAt: '2026-07-15T14:30:00Z',
+    readingTime: 4,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'La transizione ecologica non può avvenire a scapito delle fasce più vulnerabili della popolazione. Deve essere un percorso partecipato in cui sostenibilità ambientale e giustizia sociale procedono di pari passo.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-3',
+    _type: 'post',
+    title: 'L\'Impatto dei Dati Aperte nella Rendicontazione Sociale',
+    subtitle: 'Trasparenza radicata, metriche di impatto misurabili e fiducia tra enti, cittadini e imprese.',
+    slug: { _type: 'slug', current: 'impatto-dati-aperti-rendicontazione' },
+    category: 'Inchieste',
+    layoutType: 'standard',
+    coverImageSource: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+    publishedAt: '2026-07-08T09:15:00Z',
+    readingTime: 8,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'Nel panorama filantropico globale, la misurabilità delle azioni e la chiarezza dei rendiconti finanziari rappresentano il pilastro fondamentale di qualsiasi partnership duratura.' }]
+      }
+    ]
+  },
+  {
+    _id: 'post-4',
+    _type: 'post',
+    title: 'Giovani e Futuro del Lavoro Creativo in Europa',
+    subtitle: 'Analisi sui percorsi formativi integrati tra aziende tecnologiche e botteghe d\'arte digitale.',
+    slug: { _type: 'slug', current: 'giovani-futuro-lavoro-creativo' },
+    category: 'Comunita',
+    layoutType: 'split-view',
+    coverImageSource: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+    publishedAt: '2026-06-28T16:00:00Z',
+    readingTime: 5,
+    body: [
+      {
+        _key: 'b1',
+        _type: 'block',
+        style: 'normal',
+        children: [{ _key: 's1', _type: 'span', text: 'Fornire strumenti pratici e competenze di frontiera alle nuove generazioni è una priorità strategica per scongiurare il fenomeno della fuga dei talenti.' }]
+      }
+    ]
+  }
+];
+
+// Projects Data
+const PROJECTS = [
+  {
+    _id: 'proj-la-bela',
+    _type: 'project',
+    title: 'LA BELA: Laboratorio Itinerante per la Filiera della Lana',
+    slug: { _type: 'slug', current: 'la-bela' },
+    status: 'In Programmazione',
+    summary: 'Un laboratorio itinerante in Appennino per conoscere la filiera dimenticata della lana: 2 giorni, 1 notte al rifugio San Leonardo e 20 ragazzi a piedi per le valli per conoscere pastori, agricoltori, musicisti e scienziati.',
+    partners: ['Alpinaflora', 'Salewa'],
+    gallerySources: [
+      '/projects/LA BELA/IMG_4931.webp',
+      '/projects/LA BELA/IMG_4934.webp',
+      '/projects/LA BELA/IMG_4947.webp',
+      '/projects/LA BELA/IMG_5003.webp',
+      '/projects/LA BELA/IMG_5110.webp',
+      '/projects/LA BELA/IMG_5146.webp'
+    ]
+  },
+  {
+    _id: 'proj-scuola-territorio',
+    _type: 'project',
+    title: 'SCUOLA DI TERRITORIO: Connessioni tra Città e Natura',
+    slug: { _type: 'slug', current: 'scuola-di-territorio' },
+    status: 'In Corso',
+    summary: 'Un percorso biennale di conoscenza del territorio e delle connessioni tra la città di Reggio Emilia e la natura, per ragazzi dagli 11 ai 14 anni. Laboratori, cammini, micro-avventure urbane ed esperienze nella natura.',
+    partners: ['Asineria di Reggio Emilia', 'Giro del Cielo', 'Fondazione Manodori'],
+    gallerySources: [
+      '/projects/SCUOLA DI TERRITORIO/ST_2026-22.webp',
+      '/projects/SCUOLA DI TERRITORIO/ST_2026-30.webp',
+      '/projects/SCUOLA DI TERRITORIO/ST_2026-48.webp',
+      '/projects/SCUOLA DI TERRITORIO/ST_2026-83.webp',
+      '/projects/SCUOLA DI TERRITORIO/ST_2026-86.webp'
+    ]
+  },
+  {
+    _id: 'proj-viaggi-domenicali',
+    _type: 'project',
+    title: 'VIAGGI DOMENICALI MINIMI: In Bicicletta nell\'Immaginario di Luigi Ghirri',
+    slug: { _type: 'slug', current: 'viaggi-domenicali-minimi' },
+    status: 'In Corso',
+    summary: 'Un programma di avventure in bicicletta nell\'immaginario di Luigi Ghirri. 10 Viaggi Minimi per le campagne, fiumi, colline e città dell\'Emilia Romagna.',
+    partners: ['Fondazione Luigi Ghirri'],
+    gallerySources: [
+      '/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-14.webp',
+      '/projects/VIAGGI DOMENICALI MINIMI/2_2_POST_DEFINITIVI_VIAGGIDOMENICALI-04.webp',
+      '/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-15.webp',
+      '/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-16.webp',
+      '/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-17.webp',
+      '/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-18.webp'
+    ]
+  },
+  {
+    _id: 'proj-1',
+    _type: 'project',
+    title: 'Cantiere Umano: Hub di Inclusione e Maker Space',
+    slug: { _type: 'slug', current: 'cantiere-umano' },
+    status: 'In Corso',
+    summary: 'Progetto triennale volto alla creazione di un polo tecnologico e artigianale integrato nel cuore della città. Offre laboratori di stampa 3D, restauro conservativo e formazione gratuita per oltre 200 giovani al mese.',
+    partners: ['TechCorp Europa', 'Banca Sviluppo Sociale', 'Regione Lazio'],
+    gallerySources: [
+      'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80'
+    ]
+  },
+  {
+    _id: 'proj-2',
+    _type: 'project',
+    title: 'Progetto VerdeComune: Foreste Urbane e Biodiversità',
+    slug: { _type: 'slug', current: 'progetto-verdecomune' },
+    status: 'In Corso',
+    summary: 'Iniziativa di piantumazione di 5.000 alberi autoctoni con l\'obiettivo di abbattere le isole di calore nei quartieri periferici e coinvolgere i dipendenti delle aziende sostenitrici in giornate di volontariato aziendale.',
+    partners: ['GreenFuture SpA', 'EcoSystems EU'],
+    gallerySources: [
+      'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80'
+    ]
+  },
+  {
+    _id: 'proj-3',
+    _type: 'project',
+    title: 'Archivio Digitale della Memoria Operaia',
+    slug: { _type: 'slug', current: 'archivio-digitale-memoria-operaia' },
+    status: 'Concluso',
+    summary: 'Digitalizzazione in alta risoluzione di oltre 10.000 documenti, fotografie e registrazioni audio sull\'evoluzione industriale del secondo Novecento. Piattaforma consultabile liberamente online.',
+    partners: ['Ministero della Cultura', 'Archivio Storico'],
+    gallerySources: [
+      'https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=800&q=80'
+    ]
+  },
+  {
+    _id: 'proj-4',
+    _type: 'project',
+    title: 'AgriSkills: Agricoltura Idroponica Sostenibile',
+    slug: { _type: 'slug', current: 'agriskills-agricoltura-idroponica' },
+    status: 'In Programmazione',
+    summary: 'Programma di formazione professionale in serra idroponica solare dedicato al reinserimento lavorativo di soggetti svantaggiati, con rete di distribuzione a km 0 per le mense cittadine.',
+    partners: ['AgriTech Innovazione'],
+    gallerySources: [
+      'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=800&q=80'
+    ]
+  }
+];
+
+// Team Data
+const TEAM = [
+  {
+    _id: 'team-1',
+    _type: 'teamMember',
+    name: 'Elena Moretti',
+    role: 'Presidente & Direttore Scientifico',
+    photoSource: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+    bio: 'Docente di Politiche Culturali ed Economia Sociale con vent\'anni di esperienza nella gestione di enti no-profit internazionali.',
+    order: 1,
+    linkedinUrl: 'https://linkedin.com'
+  },
+  {
+    _id: 'team-2',
+    _type: 'teamMember',
+    name: 'Marco Valenti',
+    role: 'Caporedattore Magazine & Curatore Editoriale',
+    photoSource: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80',
+    bio: 'Giornalista d\'inchiesta e saggista. Ha collaborato con principali testate europee focalizzandosi su urbanistica e diritti digitali.',
+    order: 2,
+    linkedinUrl: 'https://linkedin.com'
+  },
+  {
+    _id: 'team-3',
+    _type: 'teamMember',
+    name: 'Sofia De Luca',
+    role: 'Responsabile Relazioni Corporate & Partnership B2B',
+    photoSource: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80',
+    bio: 'Specialista in Corporate Social Responsibility (CSR) ed ESG. Cura le alleanze strategiche con i sostenitori privati.',
+    order: 3,
+    linkedinUrl: 'https://linkedin.com'
+  },
+  {
+    _id: 'team-4',
+    _type: 'teamMember',
+    name: 'Alessandro Riccio',
+    role: 'Responsabile Immagine & Direzione Creativa',
+    photoSource: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80',
+    bio: 'Designer e art director specializzato in editoria periodica e identità visive complesse per enti del terzo settore.',
+    order: 4,
+    linkedinUrl: 'https://linkedin.com'
+  }
+];
+
+// Events Data
+const EVENTS = [
+  {
+    _id: 'evt-1',
+    _type: 'event',
+    title: 'Tavola Rotonda: Rigenerazione Urbana e Coesione Sociale',
+    date: '2026-08-18',
+    time: '18:30',
+    location: 'Sede Fondazione VERACE - Via della Spiga 24, Roma',
+    category: 'Tavola Rotonda',
+    description: 'Un incontro aperto con architetti, sociologi ed amministratori locali per discutere il futuro degli spazi pubblici ed ex industriali a Roma.',
+    speakers: ['Elena Moretti', 'Prof. Roberto Bianchi', 'Arch. Giulia Neri'],
+    registrationUrl: '/contatti?oggetto=Iscrizione%20Evento%20Rigenerazione',
+    isFree: true
+  },
+  {
+    _id: 'evt-2',
+    _type: 'event',
+    title: 'Workshop: Data Journalism e Trasparenza nei Dati Pubblici',
+    date: '2026-08-25',
+    time: '16:00',
+    location: 'Spazio Laboratorio VERACE & In Streaming Youtube',
+    category: 'Workshop',
+    description: 'Laboratorio pratico di 3 ore sulla ricerca, pulizia e visualizzazione di Open Data per inchieste giornalistiche di impatto sociale.',
+    speakers: ['Marco Valenti', 'Sara Conti (Data Analyst)'],
+    registrationUrl: '/contatti?oggetto=Iscrizione%20Workshop%20Data%20Journalism',
+    isFree: true
+  },
+  {
+    _id: 'evt-3',
+    _type: 'event',
+    title: 'Presentazione Report 2026: Impatto ESG e Territorio',
+    date: '2026-09-04',
+    time: '17:30',
+    location: 'Auditorium Parco della Musica - Sala Conferenze, Roma',
+    category: 'Presentazione Report',
+    description: 'Presentazione in anteprima del dossier annuale sulla sostenibilità ed efficacia degli investimenti ESG condotto dalla redazione di Fondazione VERACE.',
+    speakers: ['Elena Moretti', 'Sofia De Luca', 'Dott. Luca Ferri'],
+    registrationUrl: '/contatti?oggetto=Iscrizione%20Presentazione%20Report%20ESG',
+    isFree: true
+  },
+  {
+    _id: 'evt-4',
+    _type: 'event',
+    title: 'Incontro Pubblico: Comunità Energetiche Rinnovabili e Quartieri',
+    date: '2026-09-16',
+    time: '18:00',
+    location: 'Centro Culturale Testaccio, Roma',
+    category: 'Incontro Pubblico',
+    description: 'Come creare e gestire comunità energetiche nei quartieri ad alta densità abitativa per combattere la povertà energetica.',
+    speakers: ['Ing. Andrea Serra', 'Sofia De Luca'],
+    registrationUrl: '/contatti?oggetto=Iscrizione%20Incontro%20Comunita%20Energetiche',
+    isFree: true
+  },
+  {
+    _id: 'evt-5',
+    _type: 'event',
+    title: 'Festival VERACE 2026: Culture Urbane e Diritti',
+    date: '2026-09-28',
+    time: '10:00',
+    location: 'Ex Mattatoio - Spazio Aperto, Roma',
+    category: 'Festival',
+    description: 'Una giornata di dibattiti, mostre fotografiche, proiezioni e tavoli di lavoro dedicati alla trasformazione delle città europee.',
+    speakers: ['Redazione VERACE', 'Ospiti Internazionali'],
+    registrationUrl: '/contatti?oggetto=Iscrizione%20Festival%20VERACE%202026',
+    isFree: true
+  },
+  {
+    _id: 'evt-6',
+    _type: 'event',
+    title: 'Laboratorio Giovanile: Design Sociale e Nuovi Media',
+    date: '2026-10-09',
+    time: '15:30',
+    location: 'Sede Fondazione VERACE - Roma',
+    category: 'Laboratorio',
+    description: 'Workshop dedicato agli studenti ed ai giovani creativi sotto i 30 anni per sviluppare campagne di comunicazione ad impatto sociale.',
+    speakers: ['Alessandro Riccio', 'Chiara Rossi'],
+    registrationUrl: '/contatti?oggetto=Iscrizione%20Laboratorio%20Design%20Sociale',
+    isFree: true
+  },
+  {
+    _id: 'evt-7',
+    _type: 'event',
+    title: 'Forum B2B & CSR: Misurare il Valore Sociale delle Imprese',
+    date: '2026-10-22',
+    time: '14:30',
+    location: 'Palazzo delle Esposizioni - Sala Forum, Roma',
+    category: 'Tavola Rotonda',
+    description: 'Convegno dedicato alle aziende partner e fondi d\'investimento per la rendicontazione trasparente dei progetti di sostenibilità.',
+    speakers: ['Sofia De Luca', 'Rappresentanti TechCorp & GreenFuture'],
+    registrationUrl: '/contatti?oggetto=Iscrizione%20Forum%20B2B%20CSR',
+    isFree: true
+  }
+];
+
+  // 4. Events
+  console.log('\n📅 Caricamento Eventi Calendario...');
+  for (const evt of EVENTS) {
+    await client.createOrReplace(evt);
+    console.log(`   ✓ Evento salvato: "${evt.title}"`);
+  }
+
+  console.log('\n🎉 Sincronizzazione completata con successo! Tutti gli articoli e progetti sono ora su Sanity Studio!\n');
+}
+
+seed().catch(err => {
+  console.error('Errore durante il caricamento:', err);
+  process.exit(1);
+});

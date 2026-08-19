@@ -1,0 +1,338 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DownloadButton from '../../../components/DownloadButton.astro';
+import { getProjects, type Project, urlFor } from '../../../lib/sanity';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: project.slug?.current || 'la-bela' },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+
+const galleryImages = (project.galleryUrls && project.galleryUrls.length > 0)
+  ? project.galleryUrls
+  : ((project.gallery && project.gallery.length > 0)
+      ? project.gallery.map((g: any) => g.asset?.url || (g.asset?._ref ? urlFor(g)?.url() : null)).filter(Boolean)
+      : ['/projects/LA BELA/IMG_4931.webp']);
+
+const coverImg = galleryImages.length > 0 ? galleryImages[0] : '/projects/LA BELA/IMG_4931.webp';
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+
+const projectSchema = {
+  "@type": "CreativeWork",
+  "@id": `${siteOrigin}/progetti/progetto/${project.slug?.current || 'la-bela'}#project`,
+  "name": project.title,
+  "headline": project.title,
+  "description": project.summary,
+  "image": coverImg.startsWith('http') ? coverImg : `${siteOrigin}${coverImg}`,
+  "creator": {
+    "@type": "NGO",
+    "name": "VERACE",
+    "url": siteOrigin
+  },
+  "sponsor": (project.partners || []).map((partner: string) => ({
+    "@type": "Organization",
+    "name": partner
+  }))
+};
+---
+
+<BaseLayout
+  title={`${project.title} | Progetti Territoriali Reggio Emilia | VERACE`}
+  description={`${project.summary} - Iniziativa promossa da VERACE a Reggio Emilia e provincia.`}
+  keywords={`progetti Reggio Emilia, ${project.title}, ${project.partners?.join(', ') || ''}, rigenerazione urbana, VERACE`}
+  image={coverImg}
+  customSchema={projectSchema}
+>
+  <div class="w-full bg-zero-bg">
+    
+    <!-- Top Horizontal Navigation Ribbon -->
+    <div class="bg-zero-paper border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between text-xs ui-meta">
+      <a href="/progetti" class="text-zero-black font-bold hover:text-zero-granata transition-colors flex items-center gap-2">
+        <span>← TORNA A TUTTI I PROGETTI</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <span class="text-neutral-500 uppercase">Stato:</span>
+        <span class="font-bold text-zero-granata bg-zero-bg px-2.5 py-1 border border-zero-dark">{project.status}</span>
+      </div>
+    </div>
+
+    <!-- Widescreen Widescreen Hero Banner (21/9 Layout Orizzontale) -->
+    <div class="relative w-full border-b border-zero-dark overflow-hidden bg-zero-black group/hero">
+      <div class="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+      <img
+        src={coverImg}
+        alt={`Copertina progetto: ${project.title}`}
+        class="w-full aspect-[21/9] min-h-[350px] max-h-[600px] object-cover opacity-90 group-hover/hero:opacity-100 group-hover/hero:scale-105 transition-all duration-700"
+      />
+      <div class="absolute bottom-0 left-0 right-0 z-20 p-6 sm:p-10 lg:p-16 max-w-7xl mx-auto space-y-4">
+        <div class="ui-meta font-bold text-zero-paper bg-zero-granata px-3 py-1 inline-block text-xs uppercase tracking-wider">
+          [ SCHEDA TECNICA PROGETTO ]
+        </div>
+        <h1 class="font-display font-black text-3xl sm:text-5xl lg:text-6xl text-white uppercase leading-none tracking-tight">
+          {project.title}
+        </h1>
+        <p class="text-lg sm:text-2xl text-neutral-200 font-light max-w-4xl leading-relaxed">
+          {project.summary}
+        </p>
+      </div>
+    </div>
+
+    <!-- Horizontal Specifications Ribbon Bar -->
+    <div class="bg-zero-paper border-b border-zero-dark py-12 md:py-16 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 ui-meta">
+        <div class="border-l-2 border-zero-granata pl-4 py-1 space-y-2">
+          <div class="text-neutral-500 text-xs uppercase tracking-wider">STATO ESECUZIONE</div>
+          <div class="font-bold text-zero-black text-sm sm:text-base">{project.status}</div>
+        </div>
+        <div class="border-l-2 border-zero-granata pl-4 py-1 space-y-2">
+          <div class="text-neutral-500 text-xs uppercase tracking-wider">PARTNERSHIP</div>
+          <div class="font-bold text-zero-black text-sm sm:text-base">{project.partners?.length || 0} Enti Coinvolti</div>
+        </div>
+        <div class="border-l-2 border-zero-granata pl-4 py-1 space-y-2">
+          <div class="text-neutral-500 text-xs uppercase tracking-wider">CATEGORIA</div>
+          <div class="font-bold text-zero-black text-sm sm:text-base">Rigenerazione & Cultura</div>
+        </div>
+        <div class="border-l-2 border-zero-granata pl-4 py-1 space-y-2">
+          <div class="text-neutral-500 text-xs uppercase tracking-wider">DOCUMENTAZIONE</div>
+          <div class="font-bold text-zero-granata text-sm sm:text-base">
+            {project.attachedDocUrl ? 'Disponibile PDF' : 'Galleria Completa'}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Horizontal Split Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        
+        <!-- Left Column: Executive Summary & Description -->
+        <div class="lg:col-span-7 space-y-10">
+          <section class="space-y-6">
+            <h2 class="ui-meta font-bold text-zero-granata border-b border-zero-dark pb-2 text-sm uppercase">
+              [ SINTESI ESECUTIVA DEL PROGETTO ]
+            </h2>
+            <div class="prose prose-lg prose-p:font-light prose-p:text-zero-black prose-p:leading-relaxed max-w-none space-y-6">
+              <p class="text-xl font-normal text-zero-black leading-relaxed">
+                {project.summary}
+              </p>
+              <p>
+                Il progetto si sviluppa in continuità con la visione strategica di VERACE per favorire la riscoperta delle filiere territoriali, la rigenerazione degli spazi ed il coinvolgimento diretto delle giovani generazioni.
+              </p>
+              <p>
+                Attraverso un approccio partecipativo e multidisciplinare, l'iniziativa mette in rete istituzioni pubbliche, aziende private sostenitrici ed organizzazioni locali per garantire un impatto duraturo ed accrescere la coesione sociale del territorio.
+              </p>
+            </div>
+          </section>
+
+          <!-- Partners Section -->
+          {project.partners && project.partners.length > 0 && (
+            <section class="pt-8 mt-8 border-t border-zero-dark space-y-6">
+              <div class="flex items-center justify-between border-b border-zero-dark pb-2">
+                <h2 class="ui-meta font-bold text-zero-granata text-sm uppercase">
+                  [ RETE DEI PARTNER ]
+                </h2>
+                <span class="ui-meta text-xs font-bold text-zero-granata">
+                  {project.partners.length} ENTI SOSTENITORI
+                </span>
+              </div>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {project.partners.map((partner) => (
+                  <div class="p-4 bg-zero-paper flex items-center justify-between group">
+                    <span class="font-display font-bold uppercase text-sm text-zero-black group-hover:text-zero-granata transition-colors">
+                      {partner}
+                    </span>
+                    <span class="ui-meta text-xs text-zero-black font-mono font-bold bg-zero-bg px-2 py-0.5">
+                      PARTNER
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Attached Document / PDF Download Panel -->
+          {project.attachedDocUrl && (
+            <section class="p-6 md:p-8 bg-zero-paper space-y-6">
+              <div class="ui-meta font-bold text-zero-granata text-xs">[ ALLEGATO UFFICIALE ]</div>
+              <h3 class="font-display font-bold text-2xl uppercase text-zero-black">
+                {project.attachedDocName || 'Scheda Descrittiva Completa'}
+              </h3>
+              <p class="text-sm text-zero-black font-light leading-relaxed">
+                Scarica il documento ufficiale contenente il piano operativo, i dati di rendicontazione e le schede tecniche del progetto.
+              </p>
+              <DownloadButton
+                href={project.attachedDocUrl}
+                label="SCARICA DOSSIER PDF COMPLETO"
+                fileSize="PDF COMPLETO"
+                variant="brutalist"
+              />
+            </section>
+          )}
+        </div>
+
+        <!-- Right Column: Widescreen Gallery Carousel & Media -->
+        <div class="lg:col-span-5 space-y-8 lg:sticky lg:top-24">
+          <div class="space-y-4">
+            <h2 class="ui-meta font-bold text-zero-granata border-b border-zero-dark pb-2 text-sm uppercase flex items-center justify-between">
+              <span>[ GALLERIA FOTOGRAFICA ]</span>
+              <span class="text-xs text-neutral-500 font-mono">{galleryImages.length} SCATTI</span>
+            </h2>
+
+            <!-- Gallery Grid Layout -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {galleryImages.map((imgUrl, index) => (
+                <div
+                  class="group relative overflow-hidden bg-black aspect-[4/3] cursor-pointer gallery-modal-trigger"
+                  data-img-src={imgUrl}
+                  data-img-index={index}
+                >
+                  <img
+                    src={imgUrl}
+                    alt={`Foto ${index + 1} del progetto ${project.title}`}
+                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-108 transition-all duration-500"
+                    loading="lazy"
+                  />
+                  <div class="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <span class="p-2 bg-zero-granata text-white text-xs font-bold ui-meta">
+                      INGRANDISCI ⤢
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Contact Action Card -->
+          <div class="p-6 bg-zero-paper space-y-4">
+            <h3 class="ui-meta font-bold text-zero-granata border-b border-zero-dark pb-2 text-xs uppercase">
+              [ PARTECIPA O SOSTIENI ]
+            </h3>
+            <p class="text-xs text-zero-black font-light leading-relaxed">
+              Vuoi collaborare a questo progetto o richiedere maggiori dettagli operativi?
+            </p>
+            <a
+              href={`/contatti?progetto=${encodeURIComponent(project.title)}&oggetto=Informazioni`}
+              class="block w-full text-center py-3 bg-zero-granata text-white hover:bg-zero-black ui-meta font-bold text-xs transition-colors"
+            >
+              INVIA RICHIESTA INFORMAZIONI →
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal for Project Gallery Carousel -->
+  <div
+    id="project-lightbox-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md hidden p-4 sm:p-8"
+  >
+    <button
+      id="project-lightbox-close"
+      class="absolute top-4 right-4 z-30 text-white bg-black/70 hover:bg-zero-red p-3 transition-colors focus:outline-none"
+      aria-label="Chiudi galleria"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+
+    <button
+      id="project-lightbox-prev"
+      class="absolute left-4 top-1/2 -translate-y-1/2 z-30 text-white bg-black/70 hover:bg-zero-granata p-3 sm:p-4 transition-colors focus:outline-none"
+      aria-label="Foto precedente"
+    >
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+
+    <button
+      id="project-lightbox-next"
+      class="absolute right-4 top-1/2 -translate-y-1/2 z-30 text-white bg-black/70 hover:bg-zero-granata p-3 sm:p-4 transition-colors focus:outline-none"
+      aria-label="Foto successiva"
+    >
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <div class="relative max-w-5xl max-h-[85vh] flex flex-col items-center justify-center">
+      <img
+        id="project-lightbox-img"
+        src=""
+        alt="Foto ingrandita progetto"
+        class="max-w-full max-h-[75vh] object-contain border border-zero-dark shadow-2xl transition-all duration-300"
+      />
+      <div class="mt-4 flex items-center justify-between w-full text-white ui-meta px-2">
+        <span id="project-lightbox-counter" class="font-bold text-zero-granata bg-zero-paper px-3 py-1 text-xs"></span>
+        <span class="text-neutral-400 text-xs hidden sm:inline">Usa le frecce della tastiera (← →) per navigare</span>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modalTriggers = document.querySelectorAll('.gallery-modal-trigger');
+    const lightboxModal = document.getElementById('project-lightbox-modal');
+    const lightboxImg = document.getElementById('project-lightbox-img') as HTMLImageElement | null;
+    const lightboxClose = document.getElementById('project-lightbox-close');
+    const lightboxPrev = document.getElementById('project-lightbox-prev');
+    const lightboxNext = document.getElementById('project-lightbox-next');
+    const lightboxCounter = document.getElementById('project-lightbox-counter');
+
+    const images: string[] = Array.from(modalTriggers).map(trig => trig.getAttribute('data-img-src') || '');
+    let currentIndex = 0;
+
+    if (modalTriggers.length > 0 && lightboxModal && lightboxImg) {
+      const updateLightbox = (index: number) => {
+        if (index < 0) index = images.length - 1;
+        if (index >= images.length) index = 0;
+        currentIndex = index;
+
+        lightboxImg.src = images[currentIndex];
+        if (lightboxCounter) {
+          lightboxCounter.textContent = `[ FOTO ${currentIndex + 1} / ${images.length} ]`;
+        }
+      };
+
+      const openLightbox = (index: number) => {
+        updateLightbox(index);
+        lightboxModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closeLightbox = () => {
+        lightboxModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      };
+
+      modalTriggers.forEach((trig, idx) => {
+        trig.addEventListener('click', () => {
+          openLightbox(idx);
+        });
+      });
+
+      if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+      if (lightboxPrev) lightboxPrev.addEventListener('click', () => updateLightbox(currentIndex - 1));
+      if (lightboxNext) lightboxNext.addEventListener('click', () => updateLightbox(currentIndex + 1));
+
+      lightboxModal.addEventListener('click', (e) => {
+        if (e.target === lightboxModal) closeLightbox();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (lightboxModal.classList.contains('hidden')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') updateLightbox(currentIndex - 1);
+        if (e.key === 'ArrowRight') updateLightbox(currentIndex + 1);
+      });
+    }
+  });
+</script>

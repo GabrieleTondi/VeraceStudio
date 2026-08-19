@@ -1,0 +1,45 @@
+---
+interface Props {
+  href: string;
+  label?: string;
+  fileSize?: string;
+  variant?: 'primary' | 'secondary' | 'outline' | 'brutalist';
+}
+
+const {
+  href,
+  label = 'SCARICA DOCUMENTO',
+  fileSize = 'PDF',
+  variant = 'primary',
+} = Astro.props;
+
+const variantClasses = {
+  primary: 'bg-zero-red text-white hover:bg-zero-black border border-zero-dark shadow-[4px_4px_0px_#373232]',
+  secondary: 'bg-zero-black text-white hover:bg-zero-red border border-zero-dark shadow-[4px_4px_0px_#373232]',
+  outline: 'bg-transparent text-zero-black hover:bg-zero-red hover:text-white border border-zero-dark',
+  brutalist: 'bg-zero-paper text-zero-black hover:bg-zero-black hover:text-white border border-zero-dark transition-colors duration-300 w-full justify-between group',
+};
+---
+
+<a
+  href={href}
+  download
+  target="_blank"
+  rel="noopener noreferrer"
+  class={`inline-flex items-center gap-3 px-6 py-4 ui-meta font-bold transition-all duration-300 focus:outline-none ${variantClasses[variant]}`}
+>
+  <span class="flex flex-col text-left">
+    <span>{label}</span>
+    {fileSize && variant !== 'brutalist' && <span class="text-[9px] opacity-90 font-normal mt-0.5">({fileSize})</span>}
+  </span>
+  
+  {variant === 'brutalist' ? (
+    <span class="border-l border-zero-dark pl-4 group-hover:border-white transition-colors duration-300 flex items-center justify-center">
+      ↓
+    </span>
+  ) : (
+    <svg class="w-4 h-4 flex-shrink-0 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    </svg>
+  )}
+</a>

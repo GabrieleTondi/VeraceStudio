@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+@font-face {
+  font-family: 'Populista';
+  src: url('/fonts/FontPopulista-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Unica 77';
+  src: url('/fonts/Unica77LL-Medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #FFFDF0;
+    --text-main: #373232;
+    --zero-red: #02271D;
+    --zero-green: #02271D;
+    --zero-granata: #662025;
+    --zero-black: #373232;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Unica 77', Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+  }
+
+  ::selection {
+    background-color: #662025;
+    color: #ffffff;
+  }
+
+  ::-moz-selection {
+    background-color: #662025;
+    color: #ffffff;
+  }
+
+  body {
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-size: clamp(1.0rem, 1vw + 0.25rem, 1.125rem);
+    line-height: 1.55;
+  }
+
+  /* Typography System - Brutalist Editorial */
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Populista', sans-serif;
+  }
+
+  h1, .hero-headline {
+    font-size: clamp(2.15rem, 5vw, 5.04rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    max-width: 100%;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  h2, .section-heading {
+    font-size: clamp(2.2rem, 4vw + 0.5rem, 4.5rem);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+  }
+
+  .ui-meta {
+    font-family: 'Populista', sans-serif;
+    font-size: clamp(0.75rem, 0.8vw, 0.875rem);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Grassetti negli articoli e nei paragrafi */
+  article strong, article b, .prose strong, .prose b {
+    font-family: 'Populista', sans-serif;
+  }
+}
+
+/* Custom Scrollbar Minimalist */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+  border-left: 1px solid #373232;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #373232;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--zero-red);
+}
+
+/* Minimalist Editorial Utilities */
+.zero-grid-border {
+  border-color: #373232;
+}
+
+.brutal-card {
+  background-color: #FFFDF0;
+  border: 1px solid #373232;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.brutal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 8px 8px 0px #373232;
+}
+
+/* Animazione del testo in entrata */
+.reveal-text-container {
+  overflow: hidden;
+}
+.reveal-text {
+  display: inline-block;
+  transform: translateY(110%);
+}

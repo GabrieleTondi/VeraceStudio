@@ -1,0 +1,262 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SEO from '../components/SEO.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
+  article?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
+  customSchema?: object;
+}
+
+const {
+  title = 'VERACE | Ricerca, Fondi Europei e Rigenerazione Territoriale a Reggio Emilia',
+  description = 'Realtà no-profit di Reggio Emilia per la rigenerazione urbana, innovazione sociale, intercettazione fondi europei (FSE+, FESR, PNRR), eventi e inchieste sul territorio emiliano.',
+  keywords = 'VERACE, Reggio Emilia, fondi europei Reggio Emilia, bandi FSE+ FESR Emilia-Romagna, PNRR territorio, eventi Reggio Emilia, rigenerazione urbana, sostenibilità ESG, terzo settore',
+  image = '/images/verace-og.jpg',
+  article = false,
+  publishedTime,
+  modifiedTime,
+  customSchema,
+} = Astro.props;
+
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+
+// Base NGO & Local Organization Schema (Reggio Emilia)
+const organizationSchema = {
+  "@type": ["NGO", "LocalBusiness"],
+  "@id": `${siteOrigin}/#organization`,
+  "name": "VERACE",
+  "legalName": "VERACE Ente del Terzo Settore",
+  "url": siteOrigin,
+  "logo": {
+    "@type": "ImageObject",
+    "url": `${siteOrigin}/logos/Verace_Logo_Verde.png`
+  },
+  "image": `${siteOrigin}/images/verace-og.jpg`,
+  "description": description,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Via San Zenone 4",
+    "addressLocality": "Reggio Emilia",
+    "addressRegion": "Emilia-Romagna",
+    "postalCode": "42121",
+    "addressCountry": "IT"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 44.698274,
+    "longitude": 10.631241
+  },
+  "areaServed": [
+    {
+      "@type": "AdministrativeArea",
+      "name": "Reggio Emilia"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Provincia di Reggio Emilia"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Emilia-Romagna"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Appennino Reggiano"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Bassa Reggiana"
+    }
+  ],
+  "knowsAbout": [
+    "Fondi Europei FSE+ e FESR",
+    "PNRR e Rigenerazione Urbana",
+    "Co-progettazione Territoriale e Welfare Aziendale",
+    "Eventi Culturali e Territoriali a Reggio Emilia",
+    "Innovazione Sociale e Sostenibilità ESG",
+    "Fotografia di Paesaggio e Archivio Luigi Ghirri"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Servizi di Co-progettazione e Intercettazione Fondi Europei",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Advisory Fondi Europei & PNRR per Imprese a Reggio Emilia",
+          "description": "Supporto strategico e partenariati pubblico-privati per mettere a terra bandi europei e regionali sul territorio emiliano."
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Co-progettazione Bandi Terzo Settore ed ESG",
+          "description": "Progettazione partecipata e misurazione di impatto sociale con fondazioni bancarie ed enti locali."
+        }
+      }
+    ]
+  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+39-0522-1234567",
+      "contactType": "segreteria istituzionale",
+      "email": "info@fondazioneverace.eu",
+      "areaServed": "IT",
+      "availableLanguage": ["Italian", "English"]
+    }
+  ],
+  "sameAs": [
+    "https://www.instagram.com/__verace__?igsh=MXBzbmxzM3A2emJsZg==",
+    "https://linkedin.com/company/fondazioneverace"
+  ]
+};
+
+// WebSite Schema with Sitelinks Searchbox
+const websiteSchema = {
+  "@type": "WebSite",
+  "@id": `${siteOrigin}/#website`,
+  "url": siteOrigin,
+  "name": "VERACE",
+  "description": "Piattaforma edicola ed editoriale di VERACE",
+  "publisher": { "@id": `${siteOrigin}/#organization` },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": `${siteOrigin}/magazine?q={search_term_string}`,
+    "query-input": "required name=search_term_string"
+  }
+};
+
+// Dynamic BreadcrumbList Schema
+const pathSegments = Astro.url.pathname.split('/').filter(Boolean);
+const breadcrumbItems = [
+  {
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": siteOrigin
+  }
+];
+
+let currentPath = siteOrigin;
+pathSegments.forEach((segment, index) => {
+  currentPath += `/${segment}`;
+  const formattedName = segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+  breadcrumbItems.push({
+    "@type": "ListItem",
+    "position": index + 2,
+    "name": formattedName,
+    "item": currentPath
+  });
+});
+
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  "@id": `${siteOrigin}${Astro.url.pathname}#breadcrumb`,
+  "itemListElement": breadcrumbItems
+};
+
+const fullSchemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    organizationSchema,
+    websiteSchema,
+    breadcrumbSchema,
+    ...(customSchema ? [customSchema] : [])
+  ]
+};
+---
+
+<!DOCTYPE html>
+<html lang="it" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Professional SEO Component -->
+    <SEO
+      title={title}
+      description={description}
+      keywords={keywords}
+      image={image}
+      article={article}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+    />
+
+    <!-- Schema.org Rich Snippets JSON-LD Graph -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(fullSchemaGraph)}></script>
+  </head>
+  <body class="bg-zero-bg text-zero-black font-sans antialiased selection:bg-zero-granata selection:text-white flex flex-col min-h-screen">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-zero-red focus:text-white focus:outline-none">
+      Salta al contenuto principale
+    </a>
+
+    <Header />
+
+    <main id="main-content" class="flex-grow">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Cookie & Performance Cache Consent Controller -->
+    <CookieBanner />
+
+    <script>
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+      
+      gsap.registerPlugin(ScrollTrigger);
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Scroll fade-in per le sezioni
+        const sections = document.querySelectorAll('.gsap-fade-up');
+        sections.forEach(section => {
+          gsap.fromTo(section, 
+            { y: 30, opacity: 0 }, 
+            { 
+              y: 0, 
+              opacity: 1, 
+              duration: 0.8, 
+              ease: "cubic-bezier(0.16, 1, 0.3, 1)",
+              scrollTrigger: {
+                trigger: section,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+              }
+            }
+          );
+        });
+
+        // Text reveal riga per riga
+        const revealTexts = document.querySelectorAll('.reveal-text');
+        if(revealTexts.length > 0) {
+           gsap.to(revealTexts, {
+              y: "0%",
+              duration: 1,
+              stagger: 0.1,
+              ease: "cubic-bezier(0.16, 1, 0.3, 1)",
+              scrollTrigger: {
+                trigger: revealTexts[0].parentElement,
+                start: "top 90%",
+              }
+           });
+        }
+      });
+    </script>
+  </body>
+</html>

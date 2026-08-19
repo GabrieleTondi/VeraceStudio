@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getPosts } from '../../lib/sanity';
+
+const posts = await getPosts();
+const featuredCoverPost = posts[0];
+const secondaryPosts = posts.slice(1);
+
+function getYouTubeEmbedUrl(url?: string) {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}?autoplay=1` : url;
+}
+
+const videoEmbedUrl = getYouTubeEmbedUrl(featuredCoverPost?.videoUrl);
+
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+
+const magazineSchema = {
+  "@type": "CollectionPage",
+  "@id": `${siteOrigin}/magazine#collection`,
+  "name": "Magazine & Inchieste | VERACE",
+  "description": "Edicola ed archivio editoriale indipendente di VERACE con reportage, inchieste e analisi data journalism.",
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": posts.map((post, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "url": `${siteOrigin}/magazine/articolo/${post.slug.current}`,
+      "name": post.title
+    }))
+  }
+};
+---
+
+<BaseLayout
+  title="Magazine & Inchieste Territoriali | VERACE Reggio Emilia"
+  description="Reportage, dossier data journalism e inchieste sul territorio di Reggio Emilia e provincia, archeologia industriale, comunità e paesaggio emiliano."
+  keywords="magazine Reggio Emilia, inchieste giornalistiche Emilia Romagna, reportage rigenerazione urbana, Luigi Ghirri memoria, data journalism Reggio Emilia, VERACE"
+  customSchema={magazineSchema}
+>
+  <div class="w-full">
+    <!-- Header Sezione Brutalista -->
+    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-8 bg-zero-paper gsap-fade-up">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div class="ui-meta text-zero-granata mb-2">[ MAGAZINE ]</div>
+          <h1 class="hero-headline text-zero-black uppercase">
+            INCHIESTE<br/><span class="text-zero-red">&</span> REPORTAGE
+          </h1>
+        </div>
+        <div class="ui-meta text-zero-black text-right max-w-xs">
+          REDAZIONE INDIPENDENTE<br/>AGGIORNATO MENSILMENTE
+        </div>
+      </div>
+    </header>
+
+    <div class="px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+      <!-- Articolo Hero In Evidenza -->
+      {featuredCoverPost && (
+        <section class="bg-zero-paper group transition-transform duration-300 ease-out hover:scale-[1.015] flex flex-col lg:flex-row gsap-fade-up overflow-hidden">
+          
+          <div 
+            class={`lg:w-3/5 relative overflow-hidden h-[400px] lg:h-auto min-h-[500px] ${videoEmbedUrl ? 'cursor-pointer group/video' : 'cursor-default'}`}
+            id={videoEmbedUrl ? "featured-video-trigger" : undefined}
+            data-video-url={videoEmbedUrl || undefined}
+          >
+            {featuredCoverPost.coverImageUrl ? (
+              <img
+                src={featuredCoverPost.coverImageUrl}
+                alt={`Copertina in evidenza: ${featuredCoverPost.title}`}
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            ) : (
+              <div class="w-full h-full bg-zero-dark flex items-center justify-center">
+                <span class="ui-meta text-white">CONTENUTO MULTIMEDIALE MANCANTE</span>
+              </div>
+            )}
+            
+            {videoEmbedUrl && (
+              <>
+                <div class="absolute inset-0 bg-black/20 group-hover/video:bg-black/35 transition-colors flex items-center justify-center">
+                  <svg class="w-16 h-16 sm:w-20 sm:h-20 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] group-hover/video:scale-125 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+
+                <div class="absolute bottom-6 left-6 z-10">
+                  <button
+                    class="bg-zero-red text-white ui-meta font-bold px-4 py-2 hover:bg-zero-black transition-colors flex items-center gap-2"
+                    aria-label="Riproduci showreel multimediale dell'articolo in evidenza"
+                  >
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    PLAY SHOWREEL
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div class="lg:w-2/5 p-8 md:p-12 flex flex-col justify-between bg-zero-paper relative">
+            <div class="absolute top-0 right-0 p-4 ui-meta text-zero-granata font-bold">
+              [ IN EVIDENZA ]
+            </div>
+            
+            <div class="space-y-6 mt-8">
+              <div class="flex items-center gap-3 ui-meta text-zero-black">
+                <span class="bg-zero-dark text-white px-2 py-1">{featuredCoverPost.category || 'INCHIESTA'}</span>
+                <span>{featuredCoverPost.readingTime || 6} MIN LETTURA</span>
+              </div>
+
+              <h2 class="font-display font-extrabold text-4xl lg:text-5xl uppercase text-zero-black leading-none group-hover:text-zero-red transition-colors">
+                <a href={`/magazine/articolo/${featuredCoverPost.slug.current}`} class="before:absolute before:inset-0">
+                  {featuredCoverPost.title}
+                </a>
+              </h2>
+
+              <p class="text-lg font-light text-zero-black leading-relaxed">
+                {featuredCoverPost.subtitle}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Griglia Articoli Secondari (3 Colonne) -->
+      <section class="gsap-fade-up">
+        <div class="border-b border-zero-dark pb-4 mb-8 flex justify-between items-end">
+          <h2 class="font-display font-bold text-3xl uppercase text-zero-black">ARCHIVIO ARTICOLI</h2>
+          <span class="ui-meta text-zero-granata font-bold">[{secondaryPosts.length} PUBBLICAZIONI]</span>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {secondaryPosts.map((post) => (
+            <ArticleCard post={post} />
+          ))}
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  {videoEmbedUrl && (
+    <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden p-4 sm:p-6 lg:p-12">
+      <div class="relative w-full max-w-4xl bg-black rounded-none overflow-hidden border border-zero-dark shadow-2xl aspect-video">
+        <button
+          id="close-video-modal"
+          class="absolute top-4 right-4 z-20 text-white bg-black/70 hover:bg-zero-red p-2 transition-colors focus:outline-none"
+          aria-label="Chiudi video"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <iframe
+          id="video-iframe"
+          class="w-full h-full"
+          src=""
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  )}
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.getElementById('featured-video-trigger');
+    const modal = document.getElementById('video-modal');
+    const iframe = document.getElementById('video-iframe') as HTMLIFrameElement | null;
+    const closeBtn = document.getElementById('close-video-modal');
+
+    if (trigger && modal && iframe) {
+      const videoUrl = trigger.getAttribute('data-video-url');
+
+      const openModal = () => {
+        if (videoUrl) {
+          iframe.src = videoUrl;
+          modal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+
+      const closeModal = () => {
+        iframe.src = '';
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      };
+
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+      }
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+    }
+  });
+</script>

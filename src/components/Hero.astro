@@ -1,0 +1,188 @@
+---
+import { getProjects, urlFor } from '../lib/sanity';
+
+const allProjects = await getProjects();
+const featuredProjects = allProjects.slice(0, 3);
+---
+
+<section class="relative bg-zero-bg w-full overflow-hidden border-b border-zero-dark">
+  <!-- Top Minimal Meta Bar -->
+  <div class="border-b border-zero-dark flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
+    <div class="ui-meta text-zero-granata">VERACE / PROGETTI PER IL TERRITORIO</div>
+    <div class="ui-meta text-zero-granata flex items-center gap-2">
+      COSTRUIAMO IL TERRITORIO DI DOMANI
+    </div>
+  </div>
+
+  <div class="w-full px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 lg:pt-14 pb-12 md:pb-16 relative z-10">
+    <!-- Massive Brutalist Headline with Text Reveal (Single Semantic H1) -->
+    <div class="max-w-full overflow-hidden">
+      <h1 class="hero-headline text-zero-black">
+        <span class="reveal-text-container block overflow-hidden"><span class="reveal-text block">COSTRUIAMO</span></span>
+        <span class="reveal-text-container block overflow-hidden"><span class="reveal-text block">IL TERRITORIO</span></span>
+        <span class="reveal-text-container block overflow-hidden"><span class="reveal-text text-zero-red block">DI DOMANI.</span></span>
+      </h1>
+    </div>
+
+    <!-- Intro Text & CTA -->
+    <div class="mt-8 md:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start gsap-fade-up">
+      <div class="lg:col-span-5">
+        <p id="typewriter-hero-text" class="text-xl lg:text-2xl font-light text-zero-black leading-snug min-h-[3.5rem]">
+          Una piattaforma indipendente per la <span class="font-bold">rigenerazione urbana</span> e l'innovazione sociale.
+        </p>
+      </div>
+      <div class="lg:col-span-4 lg:col-start-9 flex flex-col items-start lg:items-end space-y-4">
+        <a href="/magazine" class="inline-flex items-center justify-center bg-zero-red text-white ui-meta font-bold px-8 py-4 hover:bg-zero-black transition-colors duration-300 w-full lg:w-auto">
+          ESPLORA IL NOSTRO MAGAZINE
+        </a>
+        <a href="/progetti" class="inline-flex items-center justify-center bg-transparent border border-zero-dark text-zero-black ui-meta font-bold px-8 py-4 hover:bg-zero-paper transition-colors duration-300 w-full lg:w-auto">
+          CONTRIBUISCI AI NOSTRI PROGETTI
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Showcase Grid (Real projects with their authentic gallery photos) -->
+  <div class="w-full px-4 sm:px-6 lg:px-8 pb-3 md:pb-4 mt-8 md:mt-12 gsap-fade-up">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {featuredProjects.map((project, idx) => {
+        const projectSlug = project.slug?.current || 'la-bela';
+        const projectUrl = `/progetti/progetto/${projectSlug}`;
+        
+        let imageUrl = '/projects/LA BELA/IMG_4931.webp';
+        if (project.galleryUrls && project.galleryUrls.length > 0 && project.galleryUrls[0]) {
+          imageUrl = project.galleryUrls[0];
+        } else if (project.gallery && project.gallery.length > 0 && project.gallery[0]) {
+          imageUrl = project.gallery[0].asset?.url || (project.gallery[0].asset?._ref ? urlFor(project.gallery[0])?.url() : null) || imageUrl;
+        }
+
+        const shortTitle = project.title.split(':')[0].trim();
+
+        return (
+          <a
+            href={projectUrl}
+            class="relative w-full aspect-[3/4] bg-zero-paper overflow-hidden group block focus:outline-none border border-zero-dark/20"
+            aria-label={`Vai al progetto ${project.title}`}
+          >
+            <img
+              src={imageUrl}
+              alt={`Progetto VERACE: ${project.title}`}
+              class="w-full h-full object-cover grayscale transition-all duration-700 ease-out group-hover:grayscale-0 group-hover:scale-105"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="absolute bottom-4 left-4 bg-zero-paper px-3 py-1.5 ui-meta text-zero-black font-bold border border-zero-dark/20 group-hover:bg-zero-black group-hover:text-white transition-colors">
+              [ {shortTitle} ]
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initHero() {
+    const titleElements = document.querySelectorAll('.hero-headline .reveal-text');
+    const targetP = document.getElementById('typewriter-hero-text');
+    if (!targetP) return;
+
+    // Parse HTML to extract characters and preserve bold styling
+    const rawHtml = targetP.innerHTML;
+    const temp = document.createElement('div');
+    temp.innerHTML = rawHtml;
+
+    const characters: { char: string; isBold: boolean }[] = [];
+
+    function processNode(node: Node, isBold = false) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent || '';
+        for (const char of text) {
+          characters.push({ char, isBold });
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as HTMLElement;
+        const bold = isBold || el.classList.contains('font-bold') || el.tagName === 'SPAN' || el.tagName === 'B';
+        el.childNodes.forEach(child => processNode(child, bold));
+      }
+    }
+
+    temp.childNodes.forEach(node => processNode(node));
+
+    // Clear paragraph and build letter spans
+    targetP.innerHTML = '';
+    const charSpans: HTMLSpanElement[] = [];
+
+    characters.forEach(({ char, isBold }) => {
+      const span = document.createElement('span');
+      span.textContent = char;
+      span.style.opacity = '0';
+      if (isBold) {
+        span.className = 'font-bold';
+      }
+      targetP.appendChild(span);
+      charSpans.push(span);
+    });
+
+    // Red blinking cursor
+    const cursor = document.createElement('span');
+    cursor.className = 'inline-block w-[3px] h-[0.9em] bg-zero-red align-middle ml-0.5 animate-pulse';
+    cursor.style.opacity = '0';
+
+    // Timeline: 
+    // 1. Reveal title lines
+    // 2. ONLY AFTER title finishes, trigger letter-by-letter typewriter
+    const tl = gsap.timeline();
+
+    if (titleElements.length > 0) {
+      tl.to(titleElements, {
+        y: "0%",
+        duration: 1.0,
+        stagger: 0.12,
+        ease: "cubic-bezier(0.16, 1, 0.3, 1)"
+      });
+    }
+
+    // Show cursor at start of paragraph typing
+    tl.to(cursor, {
+      opacity: 1,
+      duration: 0.05,
+      onStart: () => {
+        if (charSpans.length > 0) {
+          charSpans[0].before(cursor);
+        } else {
+          targetP.appendChild(cursor);
+        }
+      }
+    });
+
+    // Reveal characters one by one with cursor following each letter
+    charSpans.forEach((span) => {
+      tl.to(span, {
+        opacity: 1,
+        duration: 0.005,
+        onStart: () => {
+          span.after(cursor);
+        }
+      }, "+=0.03");
+    });
+
+    // Fade out and remove cursor once typing is complete
+    tl.to(cursor, {
+      opacity: 0,
+      duration: 0.3,
+      delay: 0.3,
+      onComplete: () => {
+        cursor.remove();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHero);
+  } else {
+    initHero();
+  }
+</script>

@@ -1,0 +1,99 @@
+---
+const navLinks = [
+  { name: 'MAGAZINE', href: '/magazine' },
+  { name: 'PROGETTI', href: '/progetti' },
+  { name: 'PARTNERSHIP', href: '/partnership' },
+  { name: 'CALENDARIO', href: '/calendar' },
+  { name: 'TEAM', href: '/team' },
+  { name: 'CONTATTI', href: '/contatti' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-zero-bg border-b border-zero-dark w-full">
+  <div class="w-full px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-24 py-3">
+      <!-- Logo Brutalist (Real PNG Logo) -->
+      <a href="/" class="flex items-center group focus:outline-none">
+        <img
+          src="/logos/Verace_Logo_Verde.png"
+          alt="VERACE Logo"
+          class="h-[84px] md:h-[115px] w-auto object-contain transition-opacity duration-300 group-hover:opacity-80"
+        />
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-stretch space-x-6 lg:space-x-10" aria-label="Navigazione Principale">
+        {navLinks.map((link) => {
+          const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+          return (
+            <a
+              href={link.href}
+              class={`group flex items-center ui-meta transition-colors ${
+                isActive ? 'text-zero-red' : 'text-zero-black hover:text-zero-red'
+              }`}
+            >
+              <span>{link.name}</span>
+              <span class="ml-1 inline-block transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
+            </a>
+          );
+        })}
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <div class="md:hidden flex items-center">
+        <button
+          id="mobile-menu-toggle"
+          type="button"
+          class="p-2 text-zero-black focus:outline-none"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          aria-label="Apri menu navigazione"
+        >
+          <svg id="menu-open-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-menu" class="hidden md:hidden bg-zero-bg border-t border-zero-dark px-4 py-4 space-y-4">
+    {navLinks.map((link) => {
+      const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+      return (
+        <a
+          href={link.href}
+          class={`group flex items-center justify-between ui-meta py-2 border-b border-zero-lightborder ${
+            isActive ? 'text-zero-red' : 'text-zero-black'
+          }`}
+        >
+          <span>{link.name}</span>
+          <span class="transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
+        </a>
+      );
+    })}
+  </div>
+</header>
+
+<script>
+  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const openIcon = document.getElementById('menu-open-icon');
+  const closeIcon = document.getElementById('menu-close-icon');
+
+  if (toggleBtn && mobileMenu && openIcon && closeIcon) {
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', (!isExpanded).toString());
+      mobileMenu.classList.toggle('hidden');
+      openIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+  }
+</script>

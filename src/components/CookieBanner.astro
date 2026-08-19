@@ -1,0 +1,305 @@
+---
+// Cookie & Performance Cache Consent Banner for VERACE
+---
+
+<!-- Main Cookie & Performance Consent Modal / Banner -->
+<aside
+  id="cookie-consent-banner"
+  class="fixed bottom-0 inset-x-0 z-50 p-4 sm:p-6 bg-zero-paper/95 backdrop-blur-md border-t-2 border-zero-dark shadow-[0_-8px_30px_rgba(0,0,0,0.12)] transform translate-y-full transition-transform duration-500 ease-out hidden"
+  role="dialog"
+  aria-labelledby="cookie-banner-title"
+  aria-describedby="cookie-banner-desc"
+>
+  <div class="max-w-7xl mx-auto space-y-4">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      
+      <!-- Testo Informativo -->
+      <div class="max-w-4xl space-y-2">
+        <div class="flex items-center gap-2 ui-meta text-zero-granata font-bold">
+          <span>[ INFORMATIVA PRIVACY, COOKIE & CACHE PERFORMANCE ]</span>
+          <span class="inline-block w-1.5 h-1.5 bg-zero-red"></span>
+        </div>
+        <p id="cookie-banner-desc" class="text-xs md:text-sm font-light text-zero-black leading-relaxed">
+          VERACE utilizza cookie tecnici strettamente necessari e meccanismi di <span class="font-bold">caching client-side</span> per garantire prestazioni ottimali, fluidità di navigazione e risparmio di banda. Con il tuo consenso, utilizziamo inoltre cookie analitici anonimizzati (Google Analytics 4) per analizzare il traffico territoriale. Per maggiori dettagli consulta la <a href="/privacy" class="underline underline-offset-2 hover:text-zero-red font-normal">Privacy Policy</a> e la <a href="/cookie" class="underline underline-offset-2 hover:text-zero-red font-normal">Cookie Policy</a>.
+        </p>
+      </div>
+
+      <!-- Azioni Rapide -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3 flex-shrink-0">
+        <button
+          id="btn-cookie-accept-all"
+          type="button"
+          class="px-5 py-2.5 bg-zero-red text-white ui-meta font-bold text-xs hover:bg-zero-black transition-colors duration-300 shadow-sm"
+        >
+          ACCETTA TUTTI
+        </button>
+        <button
+          id="btn-cookie-reject-optional"
+          type="button"
+          class="px-4 py-2.5 bg-transparent border border-zero-dark text-zero-black ui-meta font-bold text-xs hover:bg-zero-paper hover:border-zero-black transition-colors duration-300"
+        >
+          SOLO NECESSARI
+        </button>
+        <button
+          id="btn-cookie-toggle-details"
+          type="button"
+          class="px-4 py-2.5 text-neutral-600 hover:text-zero-black ui-meta text-xs underline underline-offset-4 transition-colors"
+        >
+          PERSONALIZZA
+        </button>
+      </div>
+    </div>
+
+    <!-- Pannello Personalizzazione Dettagliata (Espandibile) -->
+    <div id="cookie-details-panel" class="hidden pt-4 border-t border-zero-lightborder/60 grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <!-- Categoria 1: Necessari -->
+      <div class="p-3 bg-zero-bg border border-zero-lightborder space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-xs font-bold text-zero-black">1. TECNICI & SESSIONE</span>
+          <span class="ui-meta text-[10px] text-zero-red font-bold">[ SEMPRE ATTIVI ]</span>
+        </div>
+        <p class="text-[11px] text-neutral-600 leading-tight">
+          Indispensabili per il funzionamento, la sicurezza, la gestione del consenso e il corretto rendering delle pagine.
+        </p>
+      </div>
+
+      <!-- Categoria 2: Cache & Performance -->
+      <div class="p-3 bg-zero-bg border border-zero-lightborder space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-xs font-bold text-zero-black">2. CACHE & PERFORMANCE</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="pref-cache" checked class="sr-only peer">
+            <div class="w-8 h-4 bg-neutral-300 peer-focus:outline-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:h-3 after:w-3.5 after:transition-all peer-checked:bg-zero-black"></div>
+          </label>
+        </div>
+        <p class="text-[11px] text-neutral-600 leading-tight">
+          Memorizza in locale (localStorage) frammenti di articoli e immagini per velocizzare il caricamento tra le pagine.
+        </p>
+      </div>
+
+      <!-- Categoria 3: Statistiche & Analytics -->
+      <div class="p-3 bg-zero-bg border border-zero-lightborder space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-xs font-bold text-zero-black">3. ANALYTICS (GA4)</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="pref-analytics" checked class="sr-only peer">
+            <div class="w-8 h-4 bg-neutral-300 peer-focus:outline-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:h-3 after:w-3.5 after:transition-all peer-checked:bg-zero-black"></div>
+          </label>
+        </div>
+        <p class="text-[11px] text-neutral-600 leading-tight">
+          Misurazione aggregata e anonima dei visitatori territoriali tramite Google Analytics 4 (IP anonimizzato).
+        </p>
+      </div>
+
+      <!-- Salva preferenze selezionate -->
+      <div class="md:col-span-3 flex justify-end pt-2">
+        <button
+          id="btn-cookie-save-preferences"
+          type="button"
+          class="px-6 py-2 bg-zero-black text-white ui-meta font-bold text-xs hover:bg-zero-red transition-colors"
+        >
+          SALVA PREFERENZE SELEZIONATE →
+        </button>
+      </div>
+    </div>
+
+  </div>
+</aside>
+
+<script is:inline>
+  // VERACE Client-Side Performance & Consent Engine
+  (function() {
+    const CONSENT_KEY = 'verace_cookie_consent_v1';
+    const CACHE_PREFIX = 'verace_perf_cache_';
+    const CACHE_EXPIRY_MS = 1000 * 60 * 60 * 24; // 24 ore
+
+    // Client-side lightweight cache helper
+    window.VeraceCache = {
+      set: function(key, data) {
+        try {
+          const consent = window.VeraceConsent?.get();
+          if (consent && consent.performance === false) return;
+          const item = {
+            data: data,
+            timestamp: Date.now()
+          };
+          localStorage.setItem(CACHE_PREFIX + key, JSON.stringify(item));
+        } catch (e) {
+          // localStorage full or unavailable
+        }
+      },
+      get: function(key) {
+        try {
+          const raw = localStorage.getItem(CACHE_PREFIX + key);
+          if (!raw) return null;
+          const item = JSON.parse(raw);
+          if (Date.now() - item.timestamp > CACHE_EXPIRY_MS) {
+            localStorage.removeItem(CACHE_PREFIX + key);
+            return null;
+          }
+          return item.data;
+        } catch (e) {
+          return null;
+        }
+      },
+      clear: function() {
+        try {
+          Object.keys(localStorage).forEach(function(k) {
+            if (k.startsWith(CACHE_PREFIX)) {
+              localStorage.removeItem(k);
+            }
+          });
+        } catch (e) {}
+      }
+    };
+
+    // Consent helper
+    window.VeraceConsent = {
+      get: function() {
+        try {
+          const raw = localStorage.getItem(CONSENT_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+          return null;
+        }
+      },
+      set: function(consentObj) {
+        try {
+          localStorage.setItem(CONSENT_KEY, JSON.stringify(consentObj));
+          // Imposta anche cookie a 1 anno per supporto server-side se necessario
+          document.cookie = "verace_consent=" + encodeURIComponent(JSON.stringify(consentObj)) + "; max-age=" + (365 * 24 * 60 * 60) + "; path=/; SameSite=Lax";
+        } catch (e) {}
+
+        // Aggiorna Google Consent Mode se presente
+        if (typeof window.gtag === 'function') {
+          window.gtag('consent', 'update', {
+            'analytics_storage': consentObj.analytics ? 'granted' : 'denied',
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied'
+          });
+        }
+
+        // Se cache performance disabilitata, ripulisci la cache locale
+        if (!consentObj.performance) {
+          window.VeraceCache.clear();
+        }
+      }
+    };
+
+    function initCookieBanner() {
+      const banner = document.getElementById('cookie-consent-banner');
+      const trigger = document.getElementById('cookie-settings-trigger');
+      const detailsPanel = document.getElementById('cookie-details-panel');
+      const btnAcceptAll = document.getElementById('btn-cookie-accept-all');
+      const btnRejectOptional = document.getElementById('btn-cookie-reject-optional');
+      const btnToggleDetails = document.getElementById('btn-cookie-toggle-details');
+      const btnSavePreferences = document.getElementById('btn-cookie-save-preferences');
+      const prefCache = document.getElementById('pref-cache');
+      const prefAnalytics = document.getElementById('pref-analytics');
+
+      if (!banner) return;
+
+      const currentConsent = window.VeraceConsent.get();
+
+      if (!currentConsent) {
+        // Nessun consenso ancora espresso -> mostra il banner
+        banner.classList.remove('hidden');
+        setTimeout(function() {
+          banner.classList.remove('translate-y-full');
+        }, 100);
+      } else {
+        // Sincronizza stato gtag
+        if (typeof window.gtag === 'function') {
+          window.gtag('consent', 'update', {
+            'analytics_storage': currentConsent.analytics ? 'granted' : 'denied'
+          });
+        }
+      }
+
+      function hideBanner() {
+        banner.classList.add('translate-y-full');
+        setTimeout(function() {
+          banner.classList.add('hidden');
+        }, 500);
+      }
+
+      function showBanner() {
+        banner.classList.remove('hidden');
+        setTimeout(function() {
+          banner.classList.remove('translate-y-full');
+        }, 50);
+        const consent = window.VeraceConsent.get();
+        if (consent && prefCache && prefAnalytics) {
+          prefCache.checked = !!consent.performance;
+          prefAnalytics.checked = !!consent.analytics;
+        }
+      }
+
+      if (btnAcceptAll) {
+        btnAcceptAll.addEventListener('click', function() {
+          window.VeraceConsent.set({
+            essential: true,
+            performance: true,
+            analytics: true,
+            timestamp: new Date().toISOString()
+          });
+          hideBanner();
+        });
+      }
+
+      if (btnRejectOptional) {
+        btnRejectOptional.addEventListener('click', function() {
+          window.VeraceConsent.set({
+            essential: true,
+            performance: false,
+            analytics: false,
+            timestamp: new Date().toISOString()
+          });
+          hideBanner();
+        });
+      }
+
+      if (btnToggleDetails && detailsPanel) {
+        btnToggleDetails.addEventListener('click', function() {
+          detailsPanel.classList.toggle('hidden');
+        });
+      }
+
+      if (btnSavePreferences && prefCache && prefAnalytics) {
+        btnSavePreferences.addEventListener('click', function() {
+          window.VeraceConsent.set({
+            essential: true,
+            performance: prefCache.checked,
+            analytics: prefAnalytics.checked,
+            timestamp: new Date().toISOString()
+          });
+          hideBanner();
+        });
+      }
+
+      if (trigger) {
+        trigger.addEventListener('click', function() {
+          showBanner();
+          if (detailsPanel) detailsPanel.classList.remove('hidden');
+        });
+      }
+
+      // Supporto per link esterni "Gestisci preferenze cookie" (es. nella pagina /cookie)
+      document.querySelectorAll('[data-open-cookie-settings]').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+          e.preventDefault();
+          showBanner();
+          if (detailsPanel) detailsPanel.classList.remove('hidden');
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCookieBanner);
+    } else {
+      initCookieBanner();
+    }
+  })();
+</script>

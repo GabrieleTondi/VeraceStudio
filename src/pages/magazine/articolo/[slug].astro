@@ -1,0 +1,23 @@
+---
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import { getPosts, getPostBySlug } from '../../../lib/sanity';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug.current },
+    props: { post },
+  }));
+}
+
+const { slug } = Astro.params;
+const { post: initialPost } = Astro.props;
+
+const post = initialPost || await getPostBySlug(slug as string);
+
+if (!post) {
+  return Astro.redirect('/magazine');
+}
+---
+
+<ArticleLayout post={post} />

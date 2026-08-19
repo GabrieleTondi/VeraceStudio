@@ -1,0 +1,615 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getEvents, type Event } from '../lib/sanity';
+
+const allEvents = await getEvents();
+
+// Current date calculation
+const now = new Date();
+const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+// 2 months in the future boundary
+const twoMonthsLater = new Date(todayStart);
+twoMonthsLater.setMonth(twoMonthsLater.getMonth() + 2);
+
+// Filter upcoming events within [today, today + 2 months]
+const upcomingEvents = allEvents
+  .filter((evt) => {
+    const evtDate = new Date(evt.date);
+    return evtDate >= todayStart && evtDate <= twoMonthsLater;
+  })
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+
+// JSON-LD Structured Data for Events in Reggio Emilia
+const calendarSchema = {
+  "@type": "ItemList",
+  "@id": `${siteOrigin}/calendar#eventlist`,
+  "name": "Calendario Eventi, Workshop & Incontri a Reggio Emilia | VERACE",
+  "description": "Programma completo e gratuito degli eventi, workshop su fondi europei, dibattiti di rigenerazione urbana e laboratori culturali a Reggio Emilia e provincia.",
+  "itemListElement": upcomingEvents.map((evt, idx) => ({
+    "@type": "ListItem",
+    "position": idx + 1,
+    "item": {
+      "@type": "Event",
+      "name": evt.title,
+      "startDate": `${evt.date}T${evt.time}:00`,
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": evt.location.toLowerCase().includes('streaming') 
+        ? "https://schema.org/MixedEventAttendanceMode" 
+        : "https://schema.org/OfflineEventAttendanceMode",
+      "location": {
+        "@type": "Place",
+        "name": evt.location,
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Centro Storico & Spazi Civici",
+          "addressLocality": "Reggio Emilia",
+          "addressRegion": "Emilia-Romagna",
+          "postalCode": "42121",
+          "addressCountry": "IT"
+        }
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": evt.registrationUrl ? `${siteOrigin}${evt.registrationUrl}` : `${siteOrigin}/contatti`
+      },
+      "description": evt.description,
+      "organizer": {
+        "@type": "Organization",
+        "name": "VERACE",
+        "url": siteOrigin
+      }
+    }
+  }))
+};
+
+// Formattazione data italiana helpers per server render
+function formatEventDate(dateStr: string) {
+  const d = new Date(dateStr);
+  const day = d.getDate();
+  const month = d.toLocaleDateString('it-IT', { month: 'short' }).toUpperCase().replace('.', '');
+  const year = d.getFullYear();
+  return { day, month, year };
+}
+---
+
+<BaseLayout
+  title="Eventi a Reggio Emilia: Calendario Incontri & Workshop | VERACE"
+  description="Scopri tutti gli eventi gratuiti, workshop su fondi europei, tavole rotonde sulla rigenerazione urbana e laboratori culturali a Reggio Emilia e provincia."
+  keywords="eventi Reggio Emilia, cosa fare a Reggio Emilia, workshop fondi europei Reggio Emilia, incontri culturali gratuiti Reggio Emilia, Chiostri di San Pietro eventi, Spazio Gerra incontri, VERACE calendario"
+  customSchema={calendarSchema}
+>
+  <div class="w-full bg-zero-bg">
+    
+    <!-- Header Sezione Coerente con le altre pagine -->
+    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-12 lg:py-20 bg-zero-paper gsap-fade-up">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div>
+          <div class="ui-meta text-zero-granata font-bold mb-4">[ PROGRAMMAZIONE EDITORIALE ]</div>
+          <h1 class="hero-headline text-zero-black uppercase leading-[0.85]">
+            CALENDARIO<br/>EVENTI <span class="text-zero-green">&</span> INCONTRI
+          </h1>
+        </div>
+        <div class="max-w-md">
+          <p class="text-lg font-light text-zero-black leading-relaxed">
+            Partecipa ai dibattiti dal vivo, workshop pratici e presentazioni organizzate dalla redazione. Tutti gli incontri sono ad ingresso libero.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      
+      <!-- Layout a 2 Colonne: Sinistra Calendario Mensile, Destra Lista Prossimi Eventi -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+        
+        <!-- COLONNA SINISTRA: CALENDARIO MENSILE INTERATTIVO MODERNO & FRAMELESS -->
+        <div class="lg:col-span-7 space-y-6 gsap-fade-up">
+          
+          <div class="bg-white/70 backdrop-blur-sm p-6 sm:p-8 shadow-[0_4px_24px_rgba(55,50,50,0.04)] relative">
+            
+            <!-- Intestazione Mese & Controlli Moderni -->
+            <div class="flex items-center justify-between pb-6 mb-6">
+              <div class="flex items-center gap-3">
+                <h2 id="calendar-month-year" class="font-display font-black text-2xl sm:text-3xl text-zero-black uppercase tracking-tight">
+                  AGOSTO 2026
+                </h2>
+                <button
+                  id="today-reset-btn"
+                  type="button"
+                  class="hidden sm:inline-flex items-center px-2.5 py-1 bg-zero-black/5 hover:bg-zero-black hover:text-white text-[11px] font-mono font-bold text-zero-black transition-all cursor-pointer"
+                  title="Torna al mese corrente"
+                >
+                  Oggi
+                </button>
+              </div>
+
+              <!-- Frecce Mese Arrotondate e Minimali -->
+              <div class="flex items-center gap-2">
+                <button
+                  id="prev-month-btn"
+                  type="button"
+                  class="w-10 h-10 rounded-full bg-zero-black/5 hover:bg-zero-black hover:text-white text-zero-black flex items-center justify-center transition-all focus:outline-none cursor-pointer"
+                  aria-label="Mese precedente"
+                  title="Mese precedente"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                </button>
+                
+                <button
+                  id="next-month-btn"
+                  type="button"
+                  class="w-10 h-10 rounded-full bg-zero-black/5 hover:bg-zero-black hover:text-white text-zero-black flex items-center justify-center transition-all focus:outline-none cursor-pointer"
+                  aria-label="Mese successivo"
+                  title="Mese successivo"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Giorni della Settimana (Minimali & Ariosi) -->
+            <div class="grid grid-cols-7 gap-2 text-center font-mono text-xs font-bold text-zero-granata/80 mb-3 tracking-wider">
+              <div>LUN</div>
+              <div>MAR</div>
+              <div>MER</div>
+              <div>GIO</div>
+              <div>VEN</div>
+              <div>SAB</div>
+              <div>DOM</div>
+            </div>
+
+            <!-- Griglia dei Giorni Frameless (Generata da Script Client) -->
+            <div id="calendar-days-grid" class="grid grid-cols-7 gap-2 min-h-[320px]">
+              <!-- Inserito dinamicamente -->
+            </div>
+
+            <!-- Legenda minimale & pulita -->
+            <div class="mt-6 pt-5 flex flex-wrap items-center justify-between text-xs font-mono text-neutral-500 gap-4">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-zero-green inline-block"></span>
+                <span>Giorno con evento in programma</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-zero-black inline-block"></span>
+                <span>Oggi</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Modale / Box Dettaglio Evento Selezionato Floating -->
+          <div
+            id="selected-event-detail"
+            class="hidden bg-white/95 backdrop-blur-md p-6 sm:p-8 shadow-[0_8px_30px_rgba(55,50,50,0.08)] relative space-y-5 transition-all"
+          >
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <span id="detail-category" class=" bg-zero-green/10 text-zero-green px-3 py-1 font-mono text-xs font-bold uppercase"></span>
+              <span id="detail-date-time" class="font-mono text-xs font-bold text-zero-granata"></span>
+            </div>
+            
+            <h3 id="detail-title" class="font-display font-black text-2xl sm:text-3xl uppercase text-zero-black leading-tight"></h3>
+            
+            <p id="detail-description" class="text-sm font-light text-zero-black/90 leading-relaxed"></p>
+            
+            <!-- Info Luogo & Ospiti -->
+            <div class="space-y-2.5 pt-2">
+              <div class="flex items-start gap-2 text-xs font-mono text-neutral-700">
+                <svg class="w-4 h-4 text-zero-green shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span><strong class="text-zero-black font-bold">LUOGO:</strong> <span id="detail-location"></span></span>
+              </div>
+              
+              <div id="detail-speakers-box" class="flex items-start gap-2 text-xs font-mono text-neutral-700">
+                <svg class="w-4 h-4 text-zero-granata shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <div class="flex items-center flex-wrap gap-1.5">
+                  <strong class="text-zero-black font-bold">OSPITI:</strong> 
+                  <div id="detail-speakers" class="inline-flex flex-wrap gap-1.5 ml-1"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pulsante Unificato Smart Aggiungi al Calendario (Auto Apple/Google) -->
+            <div class="pt-3">
+              <button
+                id="detail-add-cal-btn"
+                type="button"
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-zero-black hover:bg-zero-green text-white font-mono text-xs font-bold transition-all cursor-pointer shadow-sm"
+              >
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+                </svg>
+                <span>Aggiungi al Calendario</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COLONNA DESTRA: PROSSIMI EVENTI (DA OGGI A 2 MESI) -->
+        <div class="lg:col-span-5 space-y-6 gsap-fade-up">
+          
+          <div class="flex items-center justify-between pb-2">
+            <div>
+              <div class="ui-meta text-zero-granata font-bold mb-1">[ PROGRAMMA ]</div>
+              <h2 class="font-display font-black text-2xl sm:text-3xl uppercase text-zero-black tracking-tight">
+                PROSSIMI 2 MESI
+              </h2>
+            </div>
+            <span class="bg-zero-green/10 text-zero-green px-3.5 py-1 font-mono text-xs font-bold">
+              {upcomingEvents.length} IN PROGRAMMA
+            </span>
+          </div>
+
+          <!-- Lista Eventi Filtrati (Oggi -> +60 giorni) Senza Cornici -->
+          <div class="space-y-4">
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((evt) => {
+                const { day, month, year } = formatEventDate(evt.date);
+                return (
+                  <article class="bg-white/75 backdrop-blur-sm p-6 sm:p-7 shadow-[0_4px_20px_rgba(55,50,50,0.03)] hover:shadow-[0_10px_30px_rgba(55,50,50,0.07)] hover:-translate-y-0.5 transition-all duration-300 space-y-4 group">
+                    
+                    <div class="flex items-start gap-4">
+                      <!-- Badge Data Morbido e Moderno -->
+                      <div class="w-16 h-16 bg-zero-green text-white flex flex-col items-center justify-center shrink-0 shadow-sm">
+                        <div class="font-display font-black text-2xl leading-none">{day}</div>
+                        <div class="font-mono text-[10px] font-bold tracking-wider uppercase text-emerald-200 mt-0.5">{month}</div>
+                      </div>
+
+                      <div class="flex-grow space-y-1.5">
+                        <div class="flex flex-wrap items-center gap-2">
+                          <span class="bg-zero-green/10 text-zero-green px-2.5 py-0.5 font-mono text-[11px] font-bold">
+                            {evt.category}
+                          </span>
+                          <span class="text-neutral-500 font-mono text-xs">ore {evt.time}</span>
+                        </div>
+                        <h3 class="font-display font-bold text-xl uppercase text-zero-black group-hover:text-zero-green transition-colors leading-snug">
+                          {evt.title}
+                        </h3>
+                      </div>
+                    </div>
+
+                    <p class="text-sm font-light text-zero-black/85 leading-relaxed">
+                      {evt.description}
+                    </p>
+
+                    <!-- Luogo e Ospiti -->
+                    <div class="space-y-2 text-xs font-mono text-neutral-600">
+                      <div class="flex items-center gap-2">
+                        <svg class="w-3.5 h-3.5 text-zero-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="truncate">{evt.location}</span>
+                      </div>
+
+                      {evt.speakers && evt.speakers.length > 0 && (
+                        <div class="flex items-start gap-2 pt-0.5">
+                          <strong class="text-zero-black shrink-0">OSPITI:</strong>
+                          <span class="text-neutral-700">{evt.speakers.join(', ')}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <!-- Pulsante Unificato Aggiungi al Calendario (Auto Apple/Google) -->
+                    <div class="pt-2 flex items-center">
+                      <button
+                        type="button"
+                        class="smart-add-cal-btn inline-flex items-center gap-2 px-4 py-2 bg-zero-black/5 hover:bg-zero-black hover:text-white text-zero-black font-mono text-xs font-bold transition-all cursor-pointer"
+                        data-event-json={JSON.stringify(evt)}
+                        title="Aggiungi al Calendario"
+                      >
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+                        </svg>
+                        <span>Aggiungi al Calendario</span>
+                      </button>
+                    </div>
+
+                  </article>
+                );
+              })
+            ) : (
+              <div class="bg-white/60 p-8 text-center font-mono text-xs text-neutral-500">
+                Nessun evento in programma nei prossimi 2 mesi.
+              </div>
+            )}
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<!-- Client Script per Calendario Interattivo Mensile & Smart Calendar Export -->
+<script is:inline define:vars={{ allEventsJSON: JSON.stringify(allEvents) }}>
+  const eventsData = JSON.parse(allEventsJSON);
+  
+  let currentViewDate = new Date(); // Mese corrente
+  let selectedEvent = null;
+  
+  const monthNamesList = [
+    "GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GIUGNO",
+    "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"
+  ];
+
+  // Rilevamento dispositivo Apple (iOS, iPadOS, macOS)
+  function isAppleDevice() {
+    const ua = navigator.userAgent || navigator.vendor || (window.opera ? window.opera.toString() : '') || '';
+    const platform = navigator.platform || '';
+    return /iPad|iPhone|iPod|Macintosh|MacIntel|MacPPC|Mac68K/i.test(ua) ||
+           /iPad|iPhone|iPod|Mac/i.test(platform) ||
+           (navigator.maxTouchPoints && navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
+  }
+
+  function getGoogleCalUrl(evt) {
+    const [year, month, day] = evt.date.split('-');
+    const [hour, min] = (evt.time || '18:00').split(':');
+    const startStr = `${year}${month}${day}T${(hour || '18').padStart(2, '0')}${(min || '00').padStart(2, '0')}00`;
+    
+    const startDate = new Date(Number(year), Number(month) - 1, Number(day), Number(hour || 18), Number(min || 0));
+    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+    const endYear = endDate.getFullYear();
+    const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
+    const endDay = String(endDate.getDate()).padStart(2, '0');
+    const endHour = String(endDate.getHours()).padStart(2, '0');
+    const endMin = String(endDate.getMinutes()).padStart(2, '0');
+    const endStr = `${endYear}${endMonth}${endDay}T${endHour}${endMin}00`;
+    
+    const guestsText = evt.speakers && evt.speakers.length > 0 ? `\n\nOspiti: ${evt.speakers.join(', ')}` : '';
+    const details = `${evt.description || ''}${guestsText}\n\nOrganizzato da VERACE`;
+    
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: evt.title,
+      dates: `${startStr}/${endStr}`,
+      details: details,
+      location: evt.location || 'Reggio Emilia',
+    });
+    
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  }
+
+  function downloadIcs(evt) {
+    const [year, month, day] = evt.date.split('-');
+    const [hour, min] = (evt.time || '18:00').split(':');
+    const startStr = `${year}${month}${day}T${(hour || '18').padStart(2, '0')}${(min || '00').padStart(2, '0')}00`;
+    
+    const startDate = new Date(Number(year), Number(month) - 1, Number(day), Number(hour || 18), Number(min || 0));
+    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+    const endYear = endDate.getFullYear();
+    const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
+    const endDay = String(endDate.getDate()).padStart(2, '0');
+    const endHour = String(endDate.getHours()).padStart(2, '0');
+    const endMin = String(endDate.getMinutes()).padStart(2, '0');
+    const endStr = `${endYear}${endMonth}${endDay}T${endHour}${endMin}00`;
+    
+    const nowStr = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const uid = `${evt._id || 'evt'}-${Date.now()}@fondazioneverace.eu`;
+    const guestsText = evt.speakers && evt.speakers.length > 0 ? ` - Ospiti: ${evt.speakers.join(', ')}` : '';
+    
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//VERACE//Calendario Eventi//IT',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `UID:${uid}`,
+      `DTSTAMP:${nowStr}`,
+      `DTSTART:${startStr}`,
+      `DTEND:${endStr}`,
+      `SUMMARY:${evt.title.replace(/[,;]/g, ' ')}`,
+      `DESCRIPTION:${(evt.description || '').replace(/\n/g, ' ')}${guestsText}`,
+      `LOCATION:${(evt.location || 'Reggio Emilia').replace(/[,;]/g, ' ')}`,
+      'STATUS:CONFIRMED',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+    
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safeTitle = (evt.title || 'evento-verace').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 30);
+    a.download = `${safeTitle}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Gestione smart del click su aggiungi al calendario
+  function handleSmartAddToCalendar(evt) {
+    if (isAppleDevice()) {
+      downloadIcs(evt);
+    } else {
+      const googleUrl = getGoogleCalUrl(evt);
+      window.open(googleUrl, '_blank', 'noopener,noreferrer');
+    }
+  }
+
+  function renderCalendar() {
+    const gridEl = document.getElementById('calendar-days-grid');
+    const monthYearEl = document.getElementById('calendar-month-year');
+    if (!gridEl || !monthYearEl) return;
+
+    const year = currentViewDate.getFullYear();
+    const month = currentViewDate.getMonth();
+
+    monthYearEl.textContent = `${monthNamesList[month]} ${year}`;
+
+    gridEl.innerHTML = '';
+
+    // Primo giorno del mese (0 = Dom, 1 = Lun ...)
+    const firstDay = new Date(year, month, 1);
+    let startingDay = firstDay.getDay() - 1;
+    if (startingDay < 0) startingDay = 6;
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Celle vuote per i giorni del mese precedente
+    for (let i = 0; i < startingDay; i++) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'p-2 text-neutral-300 opacity-20 text-center font-mono text-sm select-none';
+      gridEl.appendChild(emptyDiv);
+    }
+
+    const todayObj = new Date();
+    const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
+
+    // Popolamento giorni
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dayFormatted = String(day).padStart(2, '0');
+      const monthFormatted = String(month + 1).padStart(2, '0');
+      const dateStr = `${year}-${monthFormatted}-${dayFormatted}`;
+
+      const dayEvents = eventsData.filter(e => e.date === dateStr);
+      const isToday = dateStr === todayStr;
+
+      const dayBtn = document.createElement('button');
+      dayBtn.type = 'button';
+
+      let baseClasses = 'relative  p-2.5 text-center flex flex-col items-center justify-between min-h-[56px] font-mono text-sm transition-all duration-200 cursor-pointer focus:outline-none';
+      
+      if (dayEvents.length > 0) {
+        baseClasses += ' bg-emerald-50/80 text-zero-green font-bold hover:bg-zero-green hover:text-white shadow-sm';
+      } else {
+        baseClasses += ' hover:bg-zero-black/5 text-zero-black';
+      }
+
+      if (isToday) {
+        baseClasses += ' ring-2 ring-zero-black/80 font-black';
+      }
+
+      dayBtn.className = baseClasses;
+      dayBtn.setAttribute('data-date', dateStr);
+
+      const numberSpan = document.createElement('span');
+      numberSpan.className = 'text-sm';
+      numberSpan.textContent = String(day);
+      dayBtn.appendChild(numberSpan);
+
+      if (dayEvents.length > 0) {
+        const dot = document.createElement('span');
+        dot.className = 'w-2 h-2 bg-zero-green group-hover:bg-white mt-1 shrink-0';
+        dayBtn.appendChild(dot);
+
+        dayBtn.addEventListener('click', () => {
+          // Highlight selected state in grid
+          document.querySelectorAll('#calendar-days-grid button').forEach(b => {
+            b.classList.remove('ring-2', 'ring-zero-granata', 'scale-105');
+          });
+          dayBtn.classList.add('ring-2', 'ring-zero-granata', 'scale-105');
+          showEventDetail(dayEvents[0]);
+        });
+      } else {
+        const placeholderDot = document.createElement('span');
+        placeholderDot.className = 'w-2 h-2 opacity-0';
+        dayBtn.appendChild(placeholderDot);
+      }
+
+      gridEl.appendChild(dayBtn);
+    }
+  }
+
+  function showEventDetail(evt) {
+    selectedEvent = evt;
+    const detailBox = document.getElementById('selected-event-detail');
+    if (!detailBox) return;
+
+    document.getElementById('detail-category').textContent = evt.category;
+    document.getElementById('detail-date-time').textContent = `${evt.date} / ORE ${evt.time}`;
+    document.getElementById('detail-title').textContent = evt.title;
+    document.getElementById('detail-description').textContent = evt.description;
+    document.getElementById('detail-location').textContent = evt.location;
+
+    const speakersBox = document.getElementById('detail-speakers-box');
+    const speakersContainer = document.getElementById('detail-speakers');
+    if (speakersContainer) {
+      speakersContainer.innerHTML = '';
+      if (evt.speakers && evt.speakers.length > 0) {
+        speakersBox.classList.remove('hidden');
+        evt.speakers.forEach(speaker => {
+          const pill = document.createElement('span');
+          pill.className = 'bg-zero-black/5 px-2.5 py-0.5 text-xs font-mono text-zero-black';
+          pill.textContent = speaker;
+          speakersContainer.appendChild(pill);
+        });
+      } else {
+        speakersBox.classList.add('hidden');
+      }
+    }
+
+    detailBox.classList.remove('hidden');
+    detailBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderCalendar();
+
+    const prevBtn = document.getElementById('prev-month-btn');
+    const nextBtn = document.getElementById('next-month-btn');
+    const todayResetBtn = document.getElementById('today-reset-btn');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        currentViewDate.setMonth(currentViewDate.getMonth() - 1);
+        renderCalendar();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+        renderCalendar();
+      });
+    }
+
+    if (todayResetBtn) {
+      todayResetBtn.addEventListener('click', () => {
+        currentViewDate = new Date();
+        renderCalendar();
+      });
+    }
+
+    // Bind event per il pulsante smart nel box di dettaglio
+    const detailAddCalBtn = document.getElementById('detail-add-cal-btn');
+    if (detailAddCalBtn) {
+      detailAddCalBtn.addEventListener('click', () => {
+        if (selectedEvent) {
+          handleSmartAddToCalendar(selectedEvent);
+        }
+      });
+    }
+
+    // Bind events per i pulsanti smart nella lista a destra
+    document.querySelectorAll('.smart-add-cal-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        try {
+          const evtData = JSON.parse(btn.getAttribute('data-event-json'));
+          if (evtData) {
+            handleSmartAddToCalendar(evtData);
+          }
+        } catch (e) {
+          console.error('Error in smart calendar export:', e);
+        }
+      });
+    });
+  });
+</script>

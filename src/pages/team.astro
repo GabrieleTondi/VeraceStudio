@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TeamMemberCard from '../components/TeamMemberCard.astro';
+import { getTeamMembers } from '../lib/sanity';
+
+const members = await getTeamMembers();
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+
+const aboutSchema = {
+  "@type": "AboutPage",
+  "@id": `${siteOrigin}/team#about`,
+  "name": "Governance & Team Redazionale | VERACE",
+  "description": "Il team indipendente e multidisciplinare di ricercatori, giornalisti, sociologi e curatori culturali di VERACE.",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "VERACE",
+    "url": siteOrigin
+  }
+};
+---
+
+<BaseLayout
+  title="Governance, Comitato Scientifico ed Europrogettazione | VERACE Reggio Emilia"
+  description="Incontra il collettivo multidisciplinare di ricercatori, europrogettisti, sociologi e curatori culturali di VERACE a Reggio Emilia."
+  keywords="team VERACE, governance Reggio Emilia, europrogettisti Reggio Emilia, ricercatori territoriali Emilia Romagna, comitato scientifico innovazione sociale"
+  customSchema={aboutSchema}
+>
+  <div class="w-full bg-zero-bg">
+    <!-- Header Sezione Coerente con il resto del sito -->
+    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-16 lg:py-24 bg-zero-paper gsap-fade-up">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div>
+          <div class="ui-meta text-zero-granata font-bold mb-4">[ IL TEAM E LA REDAZIONE ]</div>
+          <h1 class="hero-headline text-zero-black uppercase leading-[0.85]">
+            UN TEAM<br/>PER IL TERRITORIO
+          </h1>
+        </div>
+        <div class="max-w-sm">
+          <p class="text-lg font-light text-zero-black leading-relaxed">
+            Un collettivo interdisciplinare di ricercatori, giornalisti, curatori culturali ed esperti di sostenibilità uniti dalla passione per l'innovazione sociale.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-20">
+      
+      <!-- Griglia Team 4 Colonne Frameless -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 gsap-fade-up">
+        {members.map((member, idx) => (
+          <TeamMemberCard member={member} index={idx} />
+        ))}
+      </div>
+
+      <!-- Principi Etici & Trasparenza Frameless -->
+      <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-14 shadow-[0_4px_24px_rgba(55,50,50,0.03)] gsap-fade-up">
+        <div class="ui-meta text-zero-granata font-bold mb-2">[ ETICA & CONDOTTA ]</div>
+        <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black tracking-tight mb-6">
+          PRINCIPI ETICI & TRASPARENZA
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm md:text-base text-zero-black/85 font-light leading-relaxed">
+          <p>
+            Il nostro organo direttivo opera in totale autonomia decisionale, attenendosi rigorosamente al Codice Etico. Nessun membro del board ha conflitti di interesse con le aziende sostenitrici B2B.
+          </p>
+          <p>
+            La redazione del magazine rispetta la Carta dei Valori Editoriali, garantendo inchieste indipendenti basate su dati (data journalism), accuratezza delle fonti primarie e pluralismo delle visioni urbane.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</BaseLayout>

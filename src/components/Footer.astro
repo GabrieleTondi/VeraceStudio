@@ -1,0 +1,119 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-zero-black text-white border-t border-zero-dark mt-auto relative z-10">
+  <div class="w-full px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16 border-b border-zero-dark">
+      <!-- Col 1: Brand Foundation -->
+      <div class="space-y-6">
+        <div class="flex items-center">
+          <img
+            src="/logos/Verace_Logo_Bianco.png"
+            alt="VERACE Logo"
+            class="h-[58px] md:h-[74px] w-auto object-contain"
+          />
+        </div>
+        <p class="ui-meta text-neutral-400 leading-relaxed normal-case tracking-normal">
+          Realtà no-profit per la ricerca culturale, la valorizzazione del paesaggio, l'intercettazione dei fondi europei e la rigenerazione urbana a Reggio Emilia e provincia.
+        </p>
+        <div class="ui-meta text-neutral-500 space-y-2 pt-4 border-t border-zero-dark">
+          <p>C.F. 97812340561</p>
+          <p>VIA SAN ZENONE 4, 42121 REGGIO EMILIA (RE)</p>
+          <p>TEL. +39 0522 1234567</p>
+          <p class="pt-1">
+            <a
+              href="https://www.instagram.com/__verace__?igsh=MXBzbmxzM3A2emJsZg=="
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-neutral-400 hover:text-zero-red transition-colors inline-flex items-center gap-1.5"
+            >
+              <span>→ INSTAGRAM:</span>
+              <span class="text-white font-bold">@__verace__</span>
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Col 2: Piattaforma Navigazione -->
+      <div class="space-y-6">
+        <h4 class="ui-meta text-zero-red">[ VERACE ]</h4>
+        <ul class="space-y-4 ui-meta">
+          <li><a href="/" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ HOME PAGE</a></li>
+          <li><a href="/magazine" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ MAGAZINE</a></li>
+          <li><a href="/progetti" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ PROGETTI</a></li>
+          <li><a href="/partnership" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ PARTNERSHIP & FONDI</a></li>
+          <li><a href="/calendar" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ CALENDARIO EVENTI</a></li>
+          <li><a href="/team" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ TEAM & GOVERNANCE</a></li>
+          <li><a href="/contatti" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ CONTATTI & SEDE</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Area Stakeholder & CMS -->
+      <div class="space-y-6">
+        <h4 class="ui-meta text-zero-red">[ AREA STAKEHOLDER & CMS ]</h4>
+        <ul class="space-y-4 ui-meta">
+          <li>
+            <a href="/partnership#richiesta-partner" class="text-neutral-400 hover:text-white transition-colors block">
+              → SPORTELLO CO-PROGETTAZIONE IMPRESE
+            </a>
+          </li>
+          <li>
+            <a href="/studio" class="text-neutral-400 hover:text-white transition-colors flex items-center gap-2">
+              <span>● ACCESSO SANITY STUDIO</span>
+            </a>
+          </li>
+          <li><a href="/progetti#progetti" class="text-neutral-400 hover:text-white transition-colors block">DOSSIER PROGETTI IN CORSO</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Newsletter Foundation -->
+      <div class="space-y-6">
+        <h4 class="ui-meta text-zero-red">[ NEWSLETTER ]</h4>
+        <form class="space-y-4" onsubmit="event.preventDefault(); alert('Iscrizione completata con successo!');">
+          <input
+            type="email"
+            placeholder="LATUAEMAIL@DOMINIO.IT"
+            required
+            class="w-full px-4 py-3 bg-transparent border border-zero-dark ui-meta text-white focus:outline-none focus:border-zero-red transition-colors placeholder:text-neutral-600"
+          />
+          <button
+            type="submit"
+            class="w-full px-4 py-3 bg-zero-red hover:bg-white hover:text-zero-black ui-meta font-bold transition-colors duration-300"
+          >
+            ISCRIVITI AL BOLLETTINO
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="pt-8 flex flex-col md:flex-row items-start md:items-center justify-between ui-meta text-neutral-500 gap-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+        <span>© {currentYear} VERACE EU.</span>
+        <span class="hidden sm:inline text-neutral-700">|</span>
+        <span class="text-[9px] text-neutral-600 tracking-wider">
+          SVILUPPATO DA:{" "}
+          <a
+            href="https://github.com/GabrieleTondi"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-neutral-500 hover:text-neutral-300 transition-colors font-medium hover:underline underline-offset-2"
+          >
+            GABRIELE TONDI
+          </a>
+        </span>
+      </div>
+      <div class="flex flex-wrap items-center gap-6">
+        <a href="/privacy" class="hover:text-white transition-colors">PRIVACY POLICY</a>
+        <a href="/cookie" class="hover:text-white transition-colors">COOKIE POLICY</a>
+        <button
+          type="button"
+          data-open-cookie-settings
+          class="hover:text-white transition-colors cursor-pointer uppercase text-left bg-transparent border-0 p-0 font-inherit"
+        >
+          PREFERENZE COOKIE
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>

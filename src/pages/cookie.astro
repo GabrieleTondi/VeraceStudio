@@ -1,0 +1,245 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+
+const cookieSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${siteOrigin}/cookie#webpage`,
+  "url": `${siteOrigin}/cookie`,
+  "name": "Cookie Policy & Gestione Consenso | VERACE Reggio Emilia",
+  "description": "Informativa estesa sull'uso dei cookie, delle tecnologie di cache performance e guida alla gestione del consenso su VERACE.",
+  "inLanguage": "it-IT",
+  "publisher": {
+    "@type": "NGO",
+    "name": "VERACE",
+    "url": siteOrigin
+  }
+};
+---
+
+<BaseLayout
+  title="Cookie Policy & Cache Performance | VERACE"
+  description="Informativa estesa sui cookie tecnici, cache di performance e cookie analitici (GA4) utilizzati da VERACE. Gestisci le tue preferenze in ogni momento."
+  keywords="cookie policy VERACE, gestione cookie, cache performance localStorage, privacy cookie Reggio Emilia, Google Analytics 4 consenso"
+  customSchema={cookieSchema}
+>
+  <div class="w-full bg-zero-bg">
+    
+    <!-- Hero Header -->
+    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-16 lg:py-24 bg-zero-paper gsap-fade-up">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div>
+          <div class="ui-meta text-zero-granata font-bold mb-4 flex items-center gap-2">
+            <span>[ INFORMATIVA ESTESA SULL'USO DEI COOKIE E STORAGE LOCALE ]</span>
+            <span class="inline-block w-2 h-2 bg-zero-red"></span>
+          </div>
+          <h1 class="hero-headline text-zero-black uppercase leading-[0.85]">
+            COOKIE <span class="text-zero-red">&</span> CACHE<br/>POLICY
+          </h1>
+        </div>
+        <div class="max-w-md space-y-4">
+          <p class="text-sm font-light text-zero-black leading-relaxed">
+            In conformità alle Linee Guida del Garante Privacy del 10 giugno 2021 e alla Direttiva ePrivacy, questa pagina descrive i cookie e i meccanismi di caching utilizzati per velocizzare e ottimizzare la fruizione del sito.
+          </p>
+          <button
+            type="button"
+            data-open-cookie-settings
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-zero-red text-white ui-meta font-bold text-xs hover:bg-zero-black transition-colors"
+          >
+            <span>GESTISCI PREFERENZE COOKIE</span>
+            <span>⚙</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenuto Principale -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-16">
+      
+      <!-- 1. Cosa sono i Cookie e lo Storage Locale -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">01</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Cosa sono i Cookie e le Tecnologie di Cache</h2>
+        </div>
+        <div class="space-y-4 text-zero-black leading-relaxed font-light">
+          <p>
+            I <strong>cookie</strong> sono piccoli file di testo che i siti web visitati inviano al terminale dell'utente (computer, smartphone, tablet), dove vengono memorizzati per essere poi ritrasmessi agli stessi siti alla successiva visita.
+          </p>
+          <p>
+            Oltre ai tradizionali cookie, questo sito web implementa tecnologie di <strong>Web Storage locale (HTML5 localStorage)</strong> utilizzate come <em>performance cache</em> per memorizzare temporaneamente porzioni di contenuti editoriali e velocizzare i passaggi di pagina, riducendo drasticamente il tempo di caricamento e il consumo di dati per gli utenti.
+          </p>
+        </div>
+      </section>
+
+      <!-- 2. Categorie di Cookie Utilizzati -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">02</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Tipologie di Cookie e Strumenti di Tracciamento</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Box 1: Cookie Tecnici -->
+          <div class="p-6 bg-zero-paper border border-zero-dark space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="ui-meta text-zero-red font-bold">[ NECESSARI ]</span>
+              <span class="font-mono text-xs bg-zero-black text-white px-2 py-0.5">Sempre Attivi</span>
+            </div>
+            <h3 class="font-display font-bold text-lg uppercase text-zero-black">Cookie Tecnici & di Sessione</h3>
+            <p class="text-xs text-neutral-700 leading-relaxed font-light">
+              Garantiscono la corretta navigazione tra le pagine, la sicurezza dell'infrastruttura web e la memorizzazione dello stato del consenso privacy. Non richiedono consenso preventivo.
+            </p>
+          </div>
+
+          <!-- Box 2: Cache Performance -->
+          <div class="p-6 bg-zero-paper border border-zero-dark space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="ui-meta text-zero-granata font-bold">[ PRESTAZIONI ]</span>
+              <span class="font-mono text-xs border border-zero-dark px-2 py-0.5">Opzionale</span>
+            </div>
+            <h3 class="font-display font-bold text-lg uppercase text-zero-black">Cache Client-Side per Performance</h3>
+            <p class="text-xs text-neutral-700 leading-relaxed font-light">
+              Salva frammenti editoriali e query precompilate nel browser tramite <code class="bg-neutral-200 px-1 py-0.5 font-mono text-[10px]">localStorage</code>, garantendo un caricamento istantaneo del magazine e dei progetti.
+            </p>
+          </div>
+
+          <!-- Box 3: Cookie Analitici -->
+          <div class="p-6 bg-zero-paper border border-zero-dark space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="ui-meta text-zero-granata font-bold">[ ANALYTICS ]</span>
+              <span class="font-mono text-xs border border-zero-dark px-2 py-0.5">Opzionale</span>
+            </div>
+            <h3 class="font-display font-bold text-lg uppercase text-zero-black">Statistiche Google Analytics 4</h3>
+            <p class="text-xs text-neutral-700 leading-relaxed font-light">
+              Raccoglie metriche aggregate e anonime sulle visite e sulla lettura degli articoli editoriali, con mascheramento dell'indirizzo IP del visitatore (anonymizeIp attivo).
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 3. Tabella Dettagliata dei Cookie -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">03</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Dettaglio degli Strumenti di Storage Utilizzati</h2>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full border border-zero-dark text-left text-sm bg-zero-paper">
+            <thead class="bg-zero-black text-white font-mono text-xs uppercase">
+              <tr>
+                <th class="p-4 border border-zero-dark">Nome Strumento</th>
+                <th class="p-4 border border-zero-dark">Fornitore / Dominio</th>
+                <th class="p-4 border border-zero-dark">Finalità Specifica</th>
+                <th class="p-4 border border-zero-dark">Scadenza</th>
+                <th class="p-4 border border-zero-dark">Categoria</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zero-lightborder font-mono text-xs">
+              <tr>
+                <td class="p-4 font-bold text-zero-black">verace_cookie_consent_v1</td>
+                <td class="p-4">Prima parte (VERACE)</td>
+                <td class="p-4 font-sans font-light">Memorizza le preferenze espresse dall'utente sul banner privacy</td>
+                <td class="p-4">12 Mesi</td>
+                <td class="p-4 text-zero-red font-bold">Tecnico (Necessario)</td>
+              </tr>
+              <tr>
+                <td class="p-4 font-bold text-zero-black">verace_consent</td>
+                <td class="p-4">Prima parte (Cookie)</td>
+                <td class="p-4 font-sans font-light">Cookie tecnico di supporto per mantenere sincronizzato il consenso server/client</td>
+                <td class="p-4">12 Mesi</td>
+                <td class="p-4 text-zero-red font-bold">Tecnico (Necessario)</td>
+              </tr>
+              <tr>
+                <td class="p-4 font-bold text-zero-black">verace_perf_cache_*</td>
+                <td class="p-4">Prima parte (localStorage)</td>
+                <td class="p-4 font-sans font-light">Cache client-side per accelerare la visualizzazione di reportage e progetti</td>
+                <td class="p-4">24 Ore / Sessione</td>
+                <td class="p-4 text-zero-granata font-bold">Performance Cache</td>
+              </tr>
+              <tr>
+                <td class="p-4 font-bold text-zero-black">_ga</td>
+                <td class="p-4">Google Analytics (Terza parte)</td>
+                <td class="p-4 font-sans font-light">Identificatore anonimo per raccogliere dati statistici aggregati sull'uso del sito</td>
+                <td class="p-4">2 Anni</td>
+                <td class="p-4 text-neutral-600 font-bold">Analitico</td>
+              </tr>
+              <tr>
+                <td class="p-4 font-bold text-zero-black">_ga_BFE9FW2764</td>
+                <td class="p-4">Google Analytics (Terza parte)</td>
+                <td class="p-4 font-sans font-light">Mantiene lo stato della sessione di navigazione anonima del visitatore</td>
+                <td class="p-4">2 Anni</td>
+                <td class="p-4 text-neutral-600 font-bold">Analitico</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. Come Modificare il Consenso o Disattivare i Cookie -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+          <span class="font-mono text-sm font-bold text-zero-red">04</span>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Come Modificare le Tue Preferenze</h2>
+        </div>
+        <div class="space-y-4 text-zero-black leading-relaxed font-light">
+          <p>
+            Puoi modificare o revocare in qualsiasi momento le scelte effettuate relative ai cookie di performance e analitici cliccando sul pulsante sottostante o sul badge sempre visibile in basso a destra dello schermo:
+          </p>
+          <div class="pt-2">
+            <button
+              type="button"
+              data-open-cookie-settings
+              class="px-6 py-3 bg-zero-black text-white ui-meta font-bold hover:bg-zero-red transition-colors duration-300"
+            >
+              APRI PANNELLO PREFERENZE COOKIE →
+            </button>
+          </div>
+          
+          <div class="pt-6 space-y-3">
+            <h3 class="font-display font-bold text-lg uppercase text-zero-black">Gestione tramite le impostazioni del Browser</h3>
+            <p>
+              È inoltre possibile bloccare o rimuovere i cookie direttamente attraverso le impostazioni del proprio browser di navigazione:
+            </p>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none pl-0 font-mono text-xs pt-2">
+              <li class="p-3 bg-zero-paper border border-zero-lightborder">
+                <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" class="text-zero-black hover:text-zero-red block">
+                  → Google Chrome (Guida Ufficiale)
+                </a>
+              </li>
+              <li class="p-3 bg-zero-paper border border-zero-lightborder">
+                <a href="https://support.mozilla.org/it/kb/protezione-antitracciamento-avanzata-firefox-desktop" target="_blank" rel="noopener noreferrer" class="text-zero-black hover:text-zero-red block">
+                  → Mozilla Firefox (Guida Ufficiale)
+                </a>
+              </li>
+              <li class="p-3 bg-zero-paper border border-zero-lightborder">
+                <a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" class="text-zero-black hover:text-zero-red block">
+                  → Apple Safari (Guida Ufficiale)
+                </a>
+              </li>
+              <li class="p-3 bg-zero-paper border border-zero-lightborder">
+                <a href="https://support.microsoft.com/it-it/microsoft-edge/eliminare-i-cookie-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer" class="text-zero-black hover:text-zero-red block">
+                  → Microsoft Edge (Guida Ufficiale)
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Titolare del Trattamento -->
+      <section class="space-y-4 pt-4 border-t border-zero-dark">
+        <h3 class="font-display font-black text-xl uppercase text-zero-black">Contatti per la Privacy</h3>
+        <p class="text-sm font-light text-zero-black">
+          Per qualsiasi domanda relativa alla presente Cookie Policy, puoi contattare VERACE all'indirizzo email <a href="mailto:info@fondazioneverace.eu" class="text-zero-red hover:underline font-mono font-normal">info@fondazioneverace.eu</a> o consultare la nostra <a href="/privacy" class="text-zero-black font-normal underline hover:text-zero-red">Informativa Privacy Estesa</a>.
+        </p>
+      </section>
+
+    </main>
+  </div>
+</BaseLayout>

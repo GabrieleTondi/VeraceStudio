@@ -1,0 +1,68 @@
+---
+import type { Post } from '../lib/sanity';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+
+const formattedDate = new Date(post.publishedAt).toLocaleDateString('it-IT', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric'
+});
+---
+
+<article class="group bg-zero-paper flex flex-col h-full overflow-hidden relative transition-transform duration-300 ease-out hover:scale-[1.025]">
+  
+  <!-- Immagine di copertina (Opzionale o Fallback pattern) -->
+  <div class="relative h-48 sm:h-56 bg-zero-bg overflow-hidden shrink-0">
+    {post.coverImageUrl ? (
+      <img
+        src={post.coverImageUrl}
+        alt={`Immagine di copertina per l'articolo: ${post.title}`}
+        class="w-full h-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class="w-full h-full flex flex-col items-center justify-center bg-zero-dark p-6">
+        <img src="/logos/Verace_Logo_Bianco.png" alt="VERACE Magazine" class="h-8 w-auto object-contain opacity-40 mb-2" />
+        <span class="ui-meta text-xs text-white opacity-40">MAGAZINE</span>
+      </div>
+    )}
+    
+    <!-- Meta tag assoluti -->
+    <div class="absolute top-3 left-3 flex flex-col gap-1">
+      <span class="bg-zero-paper text-zero-granata px-2.5 py-1 ui-meta font-bold">
+        {post.category || 'INCHIESTA'}
+      </span>
+    </div>
+  </div>
+
+  <!-- Contenuto Testuale -->
+  <div class="p-6 flex flex-col flex-grow justify-between bg-zero-paper">
+    <div class="space-y-4">
+      <h3 class="font-display font-bold text-2xl uppercase text-zero-black leading-none group-hover:text-zero-red transition-colors">
+        <a href={`/magazine/articolo/${post.slug.current}`} class="focus:outline-none before:absolute before:inset-0">
+          {post.title}
+        </a>
+      </h3>
+
+      {post.subtitle && (
+        <p class="text-sm font-light text-zero-black leading-relaxed line-clamp-3">
+          {post.subtitle}
+        </p>
+      )}
+    </div>
+
+    <div class="mt-8 pt-4 border-t border-zero-dark flex items-center justify-between ui-meta text-zero-black group-hover:text-zero-red transition-colors">
+      <span class="text-neutral-500">{formattedDate}</span>
+      <span class="font-bold flex items-center gap-1">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/></svg>
+        {post.readingTime || 5} MIN
+      </span>
+    </div>
+  </div>
+</article>

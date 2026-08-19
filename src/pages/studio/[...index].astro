@@ -1,0 +1,35 @@
+---
+import SanityStudio from '../../components/SanityStudio';
+
+export function getStaticPaths() {
+  return [
+    { params: { index: undefined } },
+    { params: { index: 'structure' } },
+    { params: { index: 'desk' } },
+    { params: { index: 'vision' } },
+  ];
+}
+---
+
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sanity Studio | VERACE</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style is:global>
+      html, body, #sanity-root {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sanity-root">
+      <SanityStudio client:only="react" />
+    </div>
+  </body>
+</html>

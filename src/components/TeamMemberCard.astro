@@ -1,0 +1,67 @@
+---
+import type { TeamMember } from '../lib/sanity';
+
+interface Props {
+  member: TeamMember;
+  index?: number;
+}
+
+const { member, index = 0 } = Astro.props;
+
+// Palette di loghi e sfondi a rotazione coi colori ufficiali di VERACE
+const logoVariants = [
+  {
+    bg: 'bg-zero-green',
+    logo: '/logos/Verace_Logo_Bianco.png',
+    alt: 'Logo VERACE Bianco su Verde',
+  },
+  {
+    bg: 'bg-white',
+    logo: '/logos/Verace_Logo_Verde.png',
+    alt: 'Logo VERACE Verde',
+  },
+  {
+    bg: 'bg-zero-granata',
+    logo: '/logos/Verace_Logo_Bianco.png',
+    alt: 'Logo VERACE Bianco su Granata',
+  },
+  {
+    bg: 'bg-white',
+    logo: '/logos/Verace_Logo_Nero.png',
+    alt: 'Logo VERACE Nero',
+  },
+];
+
+const variant = logoVariants[index % logoVariants.length];
+---
+
+<article class="group flex flex-col space-y-4 relative w-full h-full bg-white/70 backdrop-blur-sm p-6 shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_12px_32px_rgba(55,50,50,0.07)] hover:-translate-y-1 transition-all duration-300">
+  
+  {/* Box Logo Brand a rotazione colori */}
+  <div class={`relative w-full aspect-[4/5] ${variant.bg} flex items-center justify-center p-8 overflow-hidden transition-transform duration-500 ease-out group-hover:scale-[1.02]`}>
+    <img
+      src={variant.logo}
+      alt={`${member.name} - ${variant.alt}`}
+      class="w-4/5 max-w-[170px] h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+
+  <div class="flex flex-col flex-grow pt-2 space-y-2">
+    <div>
+      <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-green transition-colors leading-tight">
+        {member.name}
+      </h3>
+      <div class="font-mono text-xs font-bold text-zero-granata uppercase tracking-wider mt-1">
+        {member.role}
+      </div>
+    </div>
+    
+    {member.bio && (
+      <p class="text-sm font-light text-zero-black/85 leading-relaxed pt-1">
+        {member.bio}
+      </p>
+    )}
+  </div>
+</article>
