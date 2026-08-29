@@ -11,10 +11,10 @@ const navLinks = [
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-50 bg-zero-bg border-b border-zero-dark w-full">
+<header class="sticky top-0 z-50 bg-zero-bg w-full">
   <div class="w-full px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 md:h-24 py-3">
-      <!-- Logo Brutalist (Real PNG Logo) -->
+      <!-- Logo (Real PNG Logo) -->
       <a href="/" class="flex items-center group focus:outline-none">
         <img
           src="/logos/Verace_Logo_Verde.png"
@@ -63,13 +63,13 @@ const currentPath = Astro.url.pathname;
   </div>
 
   <!-- Mobile Drawer -->
-  <div id="mobile-menu" class="hidden md:hidden bg-zero-bg border-t border-zero-dark px-4 py-4 space-y-4">
+  <div id="mobile-menu" class="hidden md:hidden bg-zero-bg px-4 py-4 space-y-4 shadow-md">
     {navLinks.map((link) => {
       const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
       return (
         <a
           href={link.href}
-          class={`group flex items-center justify-between ui-meta py-2 border-b border-zero-lightborder ${
+          class={`group flex items-center justify-between ui-meta py-2 border-b border-zero-lightborder/40 ${
             isActive ? 'text-zero-red' : 'text-zero-black'
           }`}
         >
@@ -82,18 +82,23 @@ const currentPath = Astro.url.pathname;
 </header>
 
 <script>
-  const toggleBtn = document.getElementById('mobile-menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const openIcon = document.getElementById('menu-open-icon');
-  const closeIcon = document.getElementById('menu-close-icon');
+  function initMobileMenu() {
+    const toggleBtn = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const openIcon = document.getElementById('menu-open-icon');
+    const closeIcon = document.getElementById('menu-close-icon');
 
-  if (toggleBtn && mobileMenu && openIcon && closeIcon) {
-    toggleBtn.addEventListener('click', () => {
-      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
-      toggleBtn.setAttribute('aria-expanded', (!isExpanded).toString());
-      mobileMenu.classList.toggle('hidden');
-      openIcon.classList.toggle('hidden');
-      closeIcon.classList.toggle('hidden');
-    });
+    if (toggleBtn && mobileMenu && openIcon && closeIcon) {
+      toggleBtn.onclick = () => {
+        const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+        toggleBtn.setAttribute('aria-expanded', (!isExpanded).toString());
+        mobileMenu.classList.toggle('hidden');
+        openIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
+      };
+    }
   }
+
+  document.addEventListener('DOMContentLoaded', initMobileMenu);
+  document.addEventListener('astro:page-load', initMobileMenu);
 </script>

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TeamMemberCard from '../components/TeamMemberCard.astro';
+import DownloadButton from '../components/DownloadButton.astro';
 import { getTeamMembers } from '../lib/sanity';
 
 const members = await getTeamMembers();
@@ -9,8 +10,8 @@ const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu
 const aboutSchema = {
   "@type": "AboutPage",
   "@id": `${siteOrigin}/team#about`,
-  "name": "Governance & Team Redazionale | VERACE",
-  "description": "Il team indipendente e multidisciplinare di ricercatori, giornalisti, sociologi e curatori culturali di VERACE.",
+  "name": "Chi Siamo & Team | VERACE",
+  "description": "Piattaforma indipendente fondata nel 2025 da un team under 30 composto da urbanisti, architetti e fotografi a Reggio Emilia.",
   "mainEntity": {
     "@type": "Organization",
     "name": "VERACE",
@@ -20,24 +21,24 @@ const aboutSchema = {
 ---
 
 <BaseLayout
-  title="Governance, Comitato Scientifico ed Europrogettazione | VERACE Reggio Emilia"
-  description="Incontra il collettivo multidisciplinare di ricercatori, europrogettisti, sociologi e curatori culturali di VERACE a Reggio Emilia."
-  keywords="team VERACE, governance Reggio Emilia, europrogettisti Reggio Emilia, ricercatori territoriali Emilia Romagna, comitato scientifico innovazione sociale"
+  title="Chi Siamo, Team & Trasparenza | VERACE Reggio Emilia"
+  description="Scopri chi siamo: piattaforma indipendente fondata nel 2025 da urbanisti, architetti e fotografi per attivare il territorio di Reggio Emilia."
+  keywords="chi siamo VERACE, team VERACE, urbanisti Reggio Emilia, architetti terzo settore, rigenerazione urbana Emilia Romagna, trasparenza bilancio"
   customSchema={aboutSchema}
 >
   <div class="w-full bg-zero-bg">
-    <!-- Header Sezione Coerente con il resto del sito -->
-    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-16 lg:py-24 bg-zero-paper gsap-fade-up">
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+    
+    <!-- A) Apertura Pagina: Sezione "CHI SIAMO" -->
+    <header class="px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 bg-zero-paper gsap-fade-up">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
-          <div class="ui-meta text-zero-granata font-bold mb-4">[ IL TEAM E LA REDAZIONE ]</div>
-          <h1 class="hero-headline text-zero-black uppercase leading-[0.85]">
-            UN TEAM<br/>PER IL TERRITORIO
+          <h1 class="hero-headline text-zero-black uppercase">
+            CHI SIAMO
           </h1>
         </div>
-        <div class="max-w-sm">
-          <p class="text-lg font-light text-zero-black leading-relaxed">
-            Un collettivo interdisciplinare di ricercatori, giornalisti, curatori culturali ed esperti di sostenibilità uniti dalla passione per l'innovazione sociale.
+        <div class="max-w-xl">
+          <p class="text-base md:text-lg font-light text-zero-black leading-relaxed">
+            Verace è una piattaforma indipendente fondata nel 2025 da un team under 30 composto da urbanisti, architetti e fotografi con l’obiettivo di contribuire ad attivare il territorio attraverso progetti culturali, media e di rigenerazione urbana. Di base a Reggio Emilia, lavoriamo con team multidisciplinari collaborando con imprese, fondazioni e enti no-profit.
           </p>
         </div>
       </div>
@@ -45,26 +46,46 @@ const aboutSchema = {
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-20">
       
-      <!-- Griglia Team 4 Colonne Frameless -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 gsap-fade-up">
-        {members.map((member, idx) => (
-          <TeamMemberCard member={member} index={idx} />
-        ))}
-      </div>
+      <!-- B) Sezione TEAM: Schede dei membri con foto e descrizioni -->
+      <section class="space-y-10 gsap-fade-up">
+        <div class="pb-2">
+          <div class="ui-meta text-zero-red font-bold mb-1">MEMBRI & CURATORI</div>
+          <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight">
+            IL TEAM
+          </h2>
+        </div>
 
-      <!-- Principi Etici & Trasparenza Frameless -->
-      <section class="bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-14 shadow-[0_4px_24px_rgba(55,50,50,0.03)] gsap-fade-up">
-        <div class="ui-meta text-zero-granata font-bold mb-2">[ ETICA & CONDOTTA ]</div>
-        <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black tracking-tight mb-6">
-          PRINCIPI ETICI & TRASPARENZA
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm md:text-base text-zero-black/85 font-light leading-relaxed">
-          <p>
-            Il nostro organo direttivo opera in totale autonomia decisionale, attenendosi rigorosamente al Codice Etico. Nessun membro del board ha conflitti di interesse con le aziende sostenitrici B2B.
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {members.map((member, idx) => (
+            <TeamMemberCard member={member} index={idx} />
+          ))}
+        </div>
+      </section>
+
+      <!-- C) Sezione TRASPARENZA (Subito dopo il Team con tasto 'scarica il bilancio 2025') -->
+      <section class="bg-zero-paper p-8 md:p-14 space-y-8 shadow-sm gsap-fade-up">
+        <div class="max-w-3xl space-y-3">
+          <div class="ui-meta text-zero-red font-bold">ADEMPIMENTI NORMATIVI & RENDICONTAZIONE</div>
+          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black tracking-tight">
+            TRASPARENZA
+          </h2>
+          <p class="text-base text-neutral-800 font-light leading-relaxed">
+            In ottemperanza agli obblighi di trasparenza, pubblicità e rendicontazione previsti per gli enti del Terzo Settore (D.Lgs. 117/2017 e L. 124/2017), VERACE pubblica annualmente il proprio bilancio d'esercizio, i contributi pubblici ricevuti e la relazione di impatto sulle attività svolte sul territorio.
           </p>
-          <p>
-            La redazione del magazine rispetta la Carta dei Valori Editoriali, garantendo inchieste indipendenti basate su dati (data journalism), accuratezza delle fonti primarie e pluralismo delle visioni urbane.
-          </p>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-neutral-200">
+          <div class="font-mono text-xs text-neutral-600 uppercase">
+            DOCUMENTO UFFICIALE DEPOSITATO AL REGISTRO UNICO NAZIONALE DEL TERZO SETTORE (RUNTS)
+          </div>
+          <a
+            href="/pdf/sample-project-presentation.pdf"
+            download
+            class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-zero-red text-white ui-meta font-bold text-xs uppercase hover:bg-zero-black transition-colors duration-300 shadow-sm cursor-pointer"
+          >
+            <span>scarica il bilancio 2025</span>
+            <span>↓</span>
+          </a>
         </div>
       </section>
 

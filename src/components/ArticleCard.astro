@@ -35,7 +35,7 @@ const formattedDate = new Date(post.publishedAt).toLocaleDateString('it-IT', {
     
     <!-- Meta tag assoluti -->
     <div class="absolute top-3 left-3 flex flex-col gap-1">
-      <span class="bg-zero-paper text-zero-granata px-2.5 py-1 ui-meta font-bold">
+      <span class="bg-zero-paper text-zero-red px-2.5 py-1 ui-meta font-bold shadow-sm">
         {post.category || 'INCHIESTA'}
       </span>
     </div>
@@ -57,11 +57,10 @@ const formattedDate = new Date(post.publishedAt).toLocaleDateString('it-IT', {
       )}
     </div>
 
-    <div class="mt-8 pt-4 border-t border-zero-dark flex items-center justify-between ui-meta text-zero-black group-hover:text-zero-red transition-colors">
+    <div class="mt-8 pt-4 flex items-center justify-between ui-meta text-zero-black group-hover:text-zero-red transition-colors">
       <span class="text-neutral-500">{formattedDate}</span>
       <span class="font-bold flex items-center gap-1">
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/></svg>
-        {post.readingTime || 5} MIN
+        LEGGI →
       </span>
     </div>
   </div>

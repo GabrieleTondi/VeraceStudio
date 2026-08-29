@@ -1,0 +1,274 @@
+================================================================================
+                    SPECIFICHE TECNICHE ED ESTETICHE SITO VERACE
+                         AGGIORNAMENTO - 29 AGOSTO 2026
+================================================================================
+File: correzione.txt
+Destinazione: Specifiche complete per il restyling estetico e funzionale del sito
+
+
+================================================================================
+INDICE DEI CONTENUTI
+================================================================================
+1. LINEE GUIDA GENERALI E DESIGN SYSTEM
+   1.1 Nuova Palette Colori
+   1.2 Regole Tipografiche e Testi Monocromatici
+   1.3 Pulizia Estetica Globale (Linee di contorno e Parentesi quadre)
+2. SPECIFICHE DETTAGLIATE PER SEZIONE / PAGINA
+   2.1 Home Page
+   2.2 Sezione Magazine & Scheda Articolo
+   2.3 Sezione Progetti & Scheda Singolo Progetto
+   2.4 Sezione Partnership & Co-progettazione
+   2.5 Sezione Calendario
+   2.6 Sezione Team, "Chi Siamo" e Trasparenza
+   2.7 Sezione Contatti
+   2.8 Footer (Sezione in Fondo) & Dati Societari
+3. FUNZIONALITÀ SPECIALE: TRACCIA AUDIO DI BENVENUTO
+4. MAPPA DEI FILE E COMPONENTI COINVOLTI NEL PROGETTO
+
+
+================================================================================
+1. LINEE GUIDA GENERALI E DESIGN SYSTEM [COMPLETATO]
+================================================================================
+
+1.1 NUOVA PALETTE COLORI [COMPLETATO]
+-------------------------------------
+- NUOVO BIANCO (Sfondo canvas, paper, card):
+  Valore HEX: #FFFCF9
+  Applicazione: sostituisce il precedente fondo #FFFDF0 in tutte le pagine, card e contenitori.
+
+- NUOVO ROSSO (Colore primario di accento, bottoni, hover, highlight):
+  Valore HEX: #B53D33
+  Applicazione: qualsiasi elemento interattivo o di accento che si colora (bottoni primari, tag, hover effect, cursori) deve assumere questo colore.
+
+- RIMOZIONE COLORI PRECEDENTI:
+  Rimuovere completamente qualsiasi rosso precedente, granata (#662025) o verde scuro (#02271D) precedentemente utilizzato come colore secondario o accento.
+
+1.2 REGOLE TIPOGRAFICHE E TESTI MONOCROMATICI [COMPLETATO]
+----------------------------------------------------------
+- TESTI SCURI OMOGENEI:
+  Qualsiasi scritta scura deve essere rigorosamente monocolore: solo NERA o GRIGIO SCURA (#373232 / #1A1A1A / #000000).
+  DIVIETO ASSOLUTO di colori doppi all'interno della stessa scritta o della stessa parola/frase (es. stop a titoli con una parte nera e una parte rossa/verde).
+
+- FONT E PULIZIA VISIVA:
+  Utilizzare il font lineare/pulito (sans-serif) per testi informativi e FAQ, evitando l'uso eccessivo del font display ("Populista") dove è richiesta massima leggibilità.
+
+1.3 PULIZIA ESTETICA GLOBALE (BORDERLESS E SENZA PARENTESI) [COMPLETATO]
+------------------------------------------------------------------------
+- RIMOZIONE DELLE LINEE NERE DI CONTORNO:
+  Rimuovere tutte le linee nere di contorno/bordi in ogni sezione del sito (eliminazione di border-zero-dark, riquadri a griglia dura brutalista e linee separatorie pesanti) a favore di un layout pulito, arioso e frameless.
+
+- RIMOZIONE DELLE PARENTESI QUADRE:
+  Rimuovere tutte le parentesi quadre ovunque compaiano nel sito (es. [ MAGAZINE ], [ IN EVIDENZA ], [ 01. PNRR ], [ PARTNERS STRATEGICI: ], [ PDF ], [ SCHEDA TECNICA ], ecc.).
+
+
+================================================================================
+2. SPECIFICHE DETTAGLIATE PER SEZIONE / PAGINA
+================================================================================
+
+--------------------------------------------------------------------------------
+2.1 HOME PAGE [COMPLETATO]
+--------------------------------------------------------------------------------
+A) HEADER / TOP BAR DELLA HOME: [COMPLETATO]
+   - Rimuovere le scritte in alto a destra e a sinistra sopra la Hero:
+     * Rimuovere "VERACE / PROGETTI PER IL TERRITORIO" (sinistra)
+     * Rimuovere "COSTRUIAMO IL TERRITORIO DI DOMANI" (destra)
+
+B) NUOVA IMPOSTAZIONE HERO SCHERMATA HOME (Mockup Pagina 2): [COMPLETATO]
+   - Layout centrale pulito:
+     1. In alto la barra di navigazione con Logo "VERACE" e voci di menu.
+     2. Al centro: slider fotografico con foto che scorrono (immagini da caricare), strutturato in modo da poter aggiornare o sostituire periodicamente le foto in rotazione.
+     3. Sotto la foto: inserire la dicitura:
+        "Media cultura e rigenerazione per il territorio"
+     4. Sotto la dicitura: inserire due bottoni affiancati:
+        - Bottone 1: "scopri i progetti"
+        - Bottone 2: "esplora il nostro magazine"
+        (Colore di sfondo bottone conforme al nuovo rosso #B53D33 o stile outline minimal).
+
+C) TITOLI E SEZIONI DELLA HOME: [COMPLETATO]
+   - Ingrandire leggermente la dimensione dei titoli delle sezioni nella Home Page.
+   - Mantenere la struttura delle sezioni Progetti e Articoli così com'è.
+
+
+--------------------------------------------------------------------------------
+2.2 SEZIONE MAGAZINE & SCHEDA ARTICOLO [COMPLETATO]
+--------------------------------------------------------------------------------
+A) SCHERMATA DI APERTURA DELLA PAGINA MAGAZINE (/magazine): [COMPLETATO]
+   - Modifica Titolo: togliere "Inchieste e reportage" e impostare solo "Magazine".
+   - Rimuovere la dicitura in alto a destra: "redazione indipendente aggiornato mensilmente".
+   - Inserire a destra (accanto al titolo "MAGAZINE" a sinistra) un testo breve di spiegazione:
+     "Verace raccoglie storie del territorio di Reggio Emilia e dintorni, per conoscere ed esplorare i mondi nascosti che vivono a pochi passi da noi."
+
+B) STRUTTURA E LAYOUT DEL SINGOLO ARTICOLO: [COMPLETATO]
+   - Mantenere intatti in apertura:
+     * Titolo
+     * Sottotitolo
+   - Rimuovere i minuti di lettura (es. "5 MIN LETTURA" / "6 MIN LETTURA").
+   - Nuovo corpo dell'articolo: impostare un layout monocolonna allineato al centro con alternanza ordinata:
+     [ TESTO ]
+     [ FOTO ]
+     [ TESTO ]
+     [ FOTO ]
+   - Galleria fotografica:
+     * Mantenere la galleria in fondo all'articolo.
+     * Rimuovere la dicitura "documentazione fotografica"; mantenere esclusivamente il titolo "Galleria".
+   - Bottone Scarica PDF:
+     * Togliere la possibilità di poter aprire il pdf ma estrarrare il testo da pdf e inserirlo nel corpo dell'articolo
+
+
+--------------------------------------------------------------------------------
+2.3 SEZIONE PROGETTI & SCHEDA SINGOLO PROGETTO [COMPLETATO]
+--------------------------------------------------------------------------------
+A) PAGINA PRINCIPALE PROGETTI (/progetti): [COMPLETATO]
+   - Rimuovere il piccolo logo VERACE posizionato sopra il titolo "PROGETTI".
+   - Eliminare le scritte "impatto" e "partecipazione" con i relativi testi descrittivi in alto a destra.
+   - Nelle card dei progetti:
+     * Rimuovere le righe nere divisorie.
+     * Rimuovere il tasto "scheda del progetto completa" (la card resta cliccabile direttamente).
+     * Modificare l'etichetta dei partner: scrivere solo "PARTNER" (eliminare la parola "strategici" da "PARTNERS STRATEGICI:").
+
+B) ALL'INTERNO DELLA SCHEDA DEL SINGOLO PROGETTO (/progetti/progetto/[slug]): [COMPLETATO]
+   - Rimuovere la dicitura "scheda tecnica" e "scheda tecnica progetto" (lasciare direttamente il testo descrittivo).
+   - Rimuovere l'intera sezione/dicitura "documentazione".
+   - Rimuovere tutte le righe nere di contorno e separazione.
+   - Nella galleria fotografica del progetto: rimuovere l'indicazione numerica "5 scatti" (o qualsiasi conteggio scatti).
+   - Rimuovere il conteggio numerico degli enti (es. "3 enti sostenitori" o "X enti coinvolti"): non mostrare alcun conteggio numerico, mostrare solo i nomi dei partner.
+
+
+--------------------------------------------------------------------------------
+2.4 SEZIONE PARTNERSHIP & CO-PROGETTAZIONE (/partnership) [COMPLETATO]
+--------------------------------------------------------------------------------
+A) APERTURA SEZIONE PARTNERSHIP: [COMPLETATO]
+   - Semplificare l'header come fatto per la sezione Magazine:
+     * Titolo "partnership" allineato a sinistra.
+     * Piccolo testo descrittivo a destra:
+       "Verace ha sviluppato un modello di collaborazione tra imprese e terzo settore, che si basa sull’analisi dei bisogni del territorio e la creazione di progetti ad alto impatto sociale con imprese, fondazioni e enti no-profit."
+     * Mantenere il tasto per la co-progettazione ("RICHIEDI CO-PROGETTAZIONE").
+
+B) ELIMINAZIONE SEZIONE LINEE DI FINANZIAMENTO: [COMPLETATO]
+   - Rimuovere completamente la sezione "01 / PROGRAMMI & STRUMENTI - LE LINEE DI FINANZIAMENTO INTERCETTATE" e le 4 schede correlate (PNRR, FESR, FSE, Bandi Territoriali).
+
+C) SEZIONE "COME COLLABORARE CON VERACE" E SCHEMA A 4 STEP: [COMPLETATO]
+   - Mantenere la sezione e lo schema grafico, sostituendo il testo con:
+     "Verace collabora con le aziende del territorio che desiderano investire in progetti ad alto impatto sociale realizzando: interventi sullo spazio pubblico, programmi culturali, progetti di rigenerazione urbana a base culturale. Aiutando a migliorare rating ESG, CSR e contribuendo allo sviluppo sociale ed economico della comunità."
+   - Sotto, inserire i 4 punti numerati SENZA alcun sottotesto descrittivo:
+     1 analizziamo i bisogni del territorio
+     2 costruiamo partnership virtuose
+     3 progettiamo l’intervento
+     4 misuriamo l’impatto con strumenti in linea con gli standard europei della sostenibilità
+     (Nota: non inserire testini o paragrafi sotto i 4 titoli).
+
+D) DOSSIER, SPORTELLO E FAQ: [COMPLETATO]
+   - Mantenere il pulsante per scaricare il dossier.
+   - Rimuovere le cornici bianche dai blocchi e lasciare la sezione su sfondo neutro (#FFFCF9) senza cornici.
+   - Mantenere lo sportello di co-progettazione rimuovendo lo sfondo bianco.
+   - Mantenere la sezione FAQ:
+     * Aggiornare le domande e risposte.
+     * Utilizzare un font lineare e pulito (non font Populista).
+
+
+--------------------------------------------------------------------------------
+2.5 SEZIONE CALENDARIO (/calendar) [COMPLETATO]
+--------------------------------------------------------------------------------
+- SEZIONE CONFERMATA: [COMPLETATO] La sezione calendario è approvata ("OK"), applicando esclusivamente i principi generali di colore (#FFFCF9, #B53D33) e la rimozione di parentesi e cornici nere.
+
+
+--------------------------------------------------------------------------------
+2.6 SEZIONE TEAM, "CHI SIAMO" E TRASPARENZA (/team) [COMPLETATO]
+--------------------------------------------------------------------------------
+A) INSERIMENTO SEZIONE "CHI SIAMO": [COMPLETATO]
+   - Integrare la sezione "chi siamo" in apertura alla pagina Team.
+   - Struttura:
+     * Titolo "chi siamo" a sinistra.
+     * Testo a destra:
+       "Verace è una piattaforma indipendente fondata nel 2025 da un team under 30 composto da urbanisti, architetti e fotografi con l’obiettivo di contribuire ad attivare il territorio attraverso progetti culturali, media e di rigenerazione urbana. Di base a Reggio Emilia, lavoriamo con team multidisciplinari collaborando con imprese, fondazioni e enti no-profit."
+
+B) SEZIONE TEAM: [COMPLETATO]
+   - Mantenere le schede dei membri con foto e descrizioni.
+
+C) SEZIONE TRASPARENZA: [COMPLETATO]
+   - Aggiungere una nuova sezione "TRASPARENZA" posizionata subito dopo il team.
+   - Inserire il tasto:
+     "scarica il bilancio 2025"
+     (Adempimento obbligatorio per legge per enti del terzo settore).
+
+
+--------------------------------------------------------------------------------
+2.7 SEZIONE CONTATTI (/contatti) [COMPLETATO]
+--------------------------------------------------------------------------------
+- Titolo Principale: [COMPLETATO] sostituire "CONTATTA LA REDAZIONE" con la dicitura "contattaci".
+- Rimuovere il sovratitolo (es. "[ CANALE DI COMUNICAZIONE ]") e il testo laterale a destra. [COMPLETATO]
+- Rimuovere le cornici con sfondo bianco; applicare uno sfondo colorato/tonale coerente con la nuova palette. [COMPLETATO]
+
+
+--------------------------------------------------------------------------------
+2.8 FOOTER (SEZIONE IN FONDO) & DATI SOCIETARI [COMPLETATO]
+--------------------------------------------------------------------------------
+A) MODIFICHE AI LINK E TESTI: [COMPLETATO]
+   - Sostituire la voce "ACCESSO A SANITY STUDIO" con la semplice dicitura "login" (o "Login").
+   - Nel bottone del modulo newsletter, sostituire "ISCRIVITI AL BOLLETTINO" con:
+     "iscriviti alla newsletter"
+   - Nel testino descrittivo posizionato sotto al logo VERACE, inserire esclusivamente:
+     "media, cultura e rigenerazione urbana per il territorio"
+
+B) AGGIORNAMENTO DATI LEGALI / SOCIETARI: [COMPLETATO]
+   Sostituire i recapiti legali nel footer con i dati societari corretti:
+   --------------------------------------------------
+   Bruma ETS
+   Via Carlo Marx 53, Roncocesi, Reggio Emilia
+   CF: 91201950358 P.IVA: 03112030352
+   --------------------------------------------------
+
+
+================================================================================
+3. FUNZIONALITÀ SPECIALE: TRACCIA AUDIO DI BENVENUTO [COMPLETATO]
+================================================================================
+- RICHIESTA: [COMPLETATO] Inserire una traccia audio di atmosfera/presentazione che si avvia all'apertura del sito e si conclude automaticamente dopo circa 40/50 secondi.
+- NOTE TECNICHE DI IMPLEMENTAZIONE: [COMPLETATO]
+  * Il file audio dedicato verrà fornito dal cliente.
+  * In conformità con le policy di autoplay dei browser moderni (Chrome, Safari, Firefox, Edge), l'audio partirà al primo tocco/clic dell'utente sulla pagina.
+  * Controllo minimalista sul lato dello schermo, solo se l'audio è attivo, per silenziare/riattivare l'audio (mute/unmute) e un fade-out negli ultimi 2 secondi. Quando l'audio viene mutato allora il contorllo minimalista passa in basso con solo il tasto mute/unmute.
+  * La traccia audio è di circa 40/50 secondi e si ripete automaticamente se l'utente non clicca su mute.
+- Usa l'audio contenuto in: "C:\WEB SITES\VERACE studio\public\audio\Kid Cudi - Erase Me - Main.mp3" [COMPLETATO]
+- Nota: prima di caricare la modifica, testare l'audio su browser Chrome e Safari [COMPLETATO - TESTATO CON SUCCESSO]
+- Nota: non apportare modifiche al layout se non richieste. [RISPETTATO]
+
+================================================================================
+4. MAPPA DEI FILE E COMPONENTI COINVOLTI NEL PROGETTO [COMPLETATO E VERIFICATO]
+================================================================================
+Per agevolare l'esecuzione delle modifiche nel codice sorgente, di seguito la mappatura dei file:
+
+1. Stili Globali e Configurazione Colori: [COMPLETATO]
+   - tailwind.config.mjs (definizione colori #FFFCF9 e #B53D33, rimozione vecchi accenti)
+   - src/styles/global.css (variabili CSS, bordi, typography, scrollbar)
+
+2. Home Page: [COMPLETATO]
+   - src/pages/index.astro
+   - src/components/Hero.astro (slider foto, nuovi bottoni, rimozione scritte top bar)
+
+3. Sezione Magazine: [COMPLETATO]
+   - src/pages/magazine/index.astro (nuovo header, eliminazione sovratitoli)
+   - src/layouts/ArticleLayout.astro (layout centrato testo-foto-testo-foto, rimozione minuti di lettura, PDF in fondo, pulizia titolo galleria)
+   - src/components/ArticleCard.astro (rimozione parentesi quadre, nuovi stili colore)
+
+4. Sezione Progetti: [COMPLETATO]
+   - src/pages/progetti.astro (rimozione scritte impatto/partecipazione, logo sopra il titolo)
+   - src/components/ProjectCard.astro (rimozione tasto scheda completa, label "PARTNER")
+   - src/pages/progetti/progetto/[slug].astro (rimozione scheda tecnica, documentazione, righe, conteggio scatti ed enti)
+
+5. Sezione Partnership: [COMPLETATO]
+   - src/pages/partnership.astro (nuovo header a 2 colonne, rimozione linee finanziamento, nuovo testo e 4 step senza sottotitoli, pulizia cornici e font FAQ)
+
+6. Sezione Team & Trasparenza: [COMPLETATO]
+   - src/pages/team.astro (sezione "chi siamo", sezione trasparenza con tasto scarica bilancio 2025)
+   - src/components/TeamMemberCard.astro
+
+7. Sezione Contatti: [COMPLETATO]
+   - src/pages/contatti.astro (titolo "contattaci", eliminazione testi superflui, nuovo sfondo)
+
+8. Footer & Dati ETS: [COMPLETATO]
+   - src/components/Footer.astro (dati Bruma ETS, testino sotto logo, link login, bottone newsletter)
+
+================================================================================
+FINE DOCUMENTO - SPECIFICHE AGGIORNAMENTO VERACE STUDIO
+================================================================================
+

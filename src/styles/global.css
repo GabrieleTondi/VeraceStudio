@@ -22,11 +22,11 @@
 
 @layer base {
   :root {
-    --bg-main: #FFFDF0;
+    --bg-main: #FFFCF9;
     --text-main: #373232;
-    --zero-red: #02271D;
-    --zero-green: #02271D;
-    --zero-granata: #662025;
+    --zero-red: #B53D33;
+    --zero-green: #B53D33;
+    --zero-granata: #B53D33;
     --zero-black: #373232;
   }
 
@@ -38,12 +38,12 @@
   }
 
   ::selection {
-    background-color: #662025;
+    background-color: #B53D33;
     color: #ffffff;
   }
 
   ::-moz-selection {
-    background-color: #662025;
+    background-color: #B53D33;
     color: #ffffff;
   }
 
@@ -58,9 +58,10 @@
     line-height: 1.55;
   }
 
-  /* Typography System - Brutalist Editorial */
+  /* Typography System */
   h1, h2, h3, h4, h5, h6, .font-display {
     font-family: 'Populista', sans-serif;
+    color: #373232;
   }
 
   h1, .hero-headline {
@@ -71,6 +72,7 @@
     max-width: 100%;
     word-break: normal;
     overflow-wrap: break-word;
+    color: #373232;
   }
 
   h2, .section-heading {
@@ -78,6 +80,7 @@
     line-height: 1.0;
     letter-spacing: -0.02em;
     font-weight: 800;
+    color: #373232;
   }
 
   .ui-meta {
@@ -90,41 +93,33 @@
   /* Grassetti negli articoli e nei paragrafi */
   article strong, article b, .prose strong, .prose b {
     font-family: 'Populista', sans-serif;
+    color: #373232;
   }
 }
 
-/* Custom Scrollbar Minimalist */
-::-webkit-scrollbar {
-  width: 8px;
+/* Hide page scrollbar — keep scrolling functional */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
-  border-left: 1px solid #373232;
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
-::-webkit-scrollbar-thumb {
-  background: #373232;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--zero-red);
-}
-
-/* Minimalist Editorial Utilities */
+/* Minimalist Utilities (Frameless) */
 .zero-grid-border {
-  border-color: #373232;
+  border-color: transparent;
 }
 
 .brutal-card {
-  background-color: #FFFDF0;
-  border: 1px solid #373232;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #FFFCF9;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .brutal-card:hover {
   transform: translateY(-4px);
-  box-shadow: 8px 8px 0px #373232;
+  box-shadow: 0 12px 32px rgba(55, 50, 50, 0.08);
 }
 
 /* Animazione del testo in entrata */

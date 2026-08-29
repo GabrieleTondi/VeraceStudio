@@ -14,11 +14,6 @@ const formattedDate = new Date(post.publishedAt).toLocaleDateString('it-IT', {
   year: 'numeric'
 });
 
-const isSplitView = post.layoutType === 'split-view';
-const isEditorialFocus = post.layoutType === 'editorial-focus';
-const isPhotoJournalism = post.layoutType === 'photo-journalism';
-const isDataDossier = post.layoutType === 'data-dossier';
-const isManifestoMagazine = post.layoutType === 'manifesto-magazine';
 const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
 
 function getYouTubeEmbedUrl(url?: string) {
@@ -30,6 +25,8 @@ function getYouTubeEmbedUrl(url?: string) {
 
 const videoEmbedUrl = getYouTubeEmbedUrl(post.videoUrl);
 
+const authorName = post.authorInfo?.name || post.author || "Redazione VERACE";
+
 const articleSchema = {
   "@type": "NewsArticle",
   "@id": `${siteOrigin}/magazine/articolo/${post.slug.current}#article`,
@@ -38,11 +35,11 @@ const articleSchema = {
   "image": post.coverImageUrl ? [post.coverImageUrl] : [`${siteOrigin}/images/verace-og.jpg`],
   "datePublished": post.publishedAt,
   "dateModified": post.publishedAt,
-  "articleSection": post.category || 'Inchiesta',
+  "articleSection": post.category || 'Inchieste',
   "inLanguage": "it-IT",
   "author": {
     "@type": "Organization",
-    "name": "Redazione VERACE",
+    "name": authorName,
     "url": siteOrigin
   },
   "publisher": {
@@ -60,7 +57,25 @@ const articleSchema = {
   }
 };
 
-const pageKeywords = `${post.category || 'Inchiesta'}, VERACE, magazine edicola, rigenerazione urbana, ${post.title}`;
+const pageKeywords = `${post.category || 'Inchieste'}, VERACE, magazine, territorio Reggio Emilia, ${post.title}`;
+
+const galleryImages = post.galleryUrls || [];
+const hasStructuredBlocks = post.contentBlocks && post.contentBlocks.length > 0;
+const bodyBlocks = post.body || [];
+
+// Fallback legacy content pairs se l'articolo non ha contentBlocks dedicati
+const fallbackPairs: { text: string; image?: string }[] = [];
+if (!hasStructuredBlocks && bodyBlocks.length > 0) {
+  bodyBlocks.forEach((block: any, idx: number) => {
+    if (block._type === 'block') {
+      const textContent = block.children?.map((c: any) => c.text).join('') || '';
+      const associatedImage = (galleryImages.length > idx && galleryImages[idx] !== post.coverImageUrl)
+        ? galleryImages[idx]
+        : undefined;
+      fallbackPairs.push({ text: textContent, image: associatedImage });
+    }
+  });
+}
 ---
 
 <BaseLayout
@@ -74,348 +89,224 @@ const pageKeywords = `${post.category || 'Inchiesta'}, VERACE, magazine edicola,
 >
   <article class="w-full relative" itemscope itemtype="https://schema.org/NewsArticle">
     
-    <!-- Header Articolo Brutalista -->
-    <header class="border-b border-zero-dark bg-zero-bg pt-12 md:pt-20 pb-12 px-4 sm:px-6 lg:px-8 gsap-fade-up">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex items-center justify-between gap-4 mb-8">
-          <span class="ui-meta text-zero-granata font-bold">
-            [ {post.category || 'INCHIESTA'} ]
+    <!-- 1. HEADER ARTICOLO -->
+    <header class="bg-zero-bg pt-12 md:pt-20 pb-8 px-4 sm:px-6 lg:px-8 gsap-fade-up">
+      <div class="max-w-4xl mx-auto space-y-6">
+        <div class="flex items-center justify-between gap-4 flex-wrap">
+          <span class="ui-meta text-zero-red font-bold">
+            {post.category || 'INCHIESTA'}
           </span>
-          
-          <div class="flex items-center gap-3 ui-meta text-neutral-500">
-            <time datetime={post.publishedAt} itemprop="datePublished">{formattedDate}</time>
-            <span class="hidden sm:inline-block">/</span>
-            <span class="ui-meta text-zero-black font-bold flex items-center gap-1">
-              <svg class="w-4 h-4 text-zero-granata" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/></svg>
-              {post.readingTime || 5} MIN
-            </span>
+          <div class="flex items-center gap-4 text-xs font-mono text-neutral-500">
+            <time datetime={post.publishedAt} itemprop="datePublished">
+              {formattedDate}
+            </time>
           </div>
         </div>
 
-        <h1 itemprop="headline" class="hero-headline text-zero-black uppercase mb-8">
+        <h1 itemprop="headline" class="hero-headline text-zero-black uppercase leading-[0.9]">
           {post.title}
         </h1>
 
         {post.subtitle && (
-          <p itemprop="description" class="text-xl md:text-2xl font-light text-zero-black leading-relaxed max-w-4xl border-l-4 border-zero-granata pl-6">
+          <p itemprop="description" class="text-xl md:text-2xl font-light text-zero-black leading-relaxed">
             {post.subtitle}
           </p>
+        )}
+
+        {(post.authorInfo || post.author) && (
+          <div class="pt-4 border-t border-neutral-200/80 flex items-center gap-2 text-xs font-mono text-neutral-600 flex-wrap">
+            <span class="text-zero-red font-bold uppercase">Intervistato / Autore:</span>
+            <span class="font-bold text-zero-black">
+              {post.authorInfo ? `${post.authorInfo.name} ${post.authorInfo.roleOrContext ? `(${post.authorInfo.roleOrContext})` : ''}` : post.author}
+            </span>
+          </div>
         )}
       </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      {isSplitView ? (
-        /* LAYOUT B: Split-View Brutalista (Sticky Media) */
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start gsap-fade-up">
-          
-          <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-8">
-            {post.coverImageUrl && (
-              <figure
-                class={`overflow-hidden relative ${post.pdfUrl ? 'cursor-pointer group/cover-pdf open-pdf-trigger' : videoEmbedUrl ? 'cursor-pointer group/cover-video' : ''}`}
-                id={post.pdfUrl ? undefined : videoEmbedUrl ? "article-cover-video-trigger" : undefined}
-                data-video-url={post.pdfUrl ? undefined : videoEmbedUrl || undefined}
-                data-pdf-url={post.pdfUrl || undefined}
-              >
-                <img
-                  src={post.coverImageUrl}
-                  alt={`Copertina articolo: ${post.title}`}
-                  itemprop="image"
-                  class="w-full aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                  loading="eager"
-                  fetchpriority="high"
-                  decoding="async"
-                />
-                {post.pdfUrl ? (
-                  <div class="absolute inset-0 bg-black/40 group-hover/cover-pdf:bg-black/60 transition-colors flex flex-col items-center justify-center p-6 text-center">
-                    <span class="px-6 py-3.5 bg-zero-granata text-white font-display font-bold text-sm md:text-base uppercase tracking-wider shadow-2xl flex items-center gap-2 group-hover/cover-pdf:scale-105 transition-transform duration-300">
-                      <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                      LEGGI L'ARTICOLO INTERO [ PDF ]
-                    </span>
-                  </div>
-                ) : videoEmbedUrl ? (
-                  <div class="absolute inset-0 bg-black/20 group-hover/cover-video:bg-black/35 transition-colors flex items-center justify-center">
-                    <svg class="w-16 h-16 sm:w-20 sm:h-20 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] group-hover/cover-video:scale-125 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                  </div>
-                ) : null}
-                <figcaption class="p-4 border-t border-zero-dark bg-zero-paper ui-meta text-zero-black flex items-center justify-between">
-                  <span>{post.coverMedia?.caption || 'DOCUMENTAZIONE FOTOGRAFICA - ARCHIVIO VERACE'}</span>
-                  {post.pdfUrl ? (
-                    <span class="text-zero-granata font-bold flex items-center gap-1 shrink-0 ml-2">
-                      SFOGLIA PDF ↓
-                    </span>
-                  ) : videoEmbedUrl ? (
-                    <span class="text-zero-red font-bold flex items-center gap-1 shrink-0 ml-2">
-                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> GUARDA VIDEO
-                    </span>
-                  ) : null}
-                </figcaption>
-              </figure>
-            )}
-
-            <div class="border border-zero-dark bg-zero-bg p-6 space-y-4">
-              <h3 class="ui-meta text-zero-granata font-bold border-b border-zero-dark pb-2">[ INFO REDAZIONALI ]</h3>
-              <p class="ui-meta text-zero-black leading-relaxed normal-case tracking-normal">
-                Contenuto ad accesso libero sotto licenza CC BY-NC 4.0. Edito da <span itemprop="author">VERACE</span>.
-              </p>
-              <button
-                onclick="navigator.clipboard.writeText(window.location.href); alert('Link copiato!');"
-                class="w-full py-3 border border-zero-dark bg-zero-paper hover:bg-zero-black hover:text-white ui-meta font-bold transition-colors mt-4"
-                aria-label="Condividi questo articolo"
-              >
-                CONDIVIDI ARTICOLO ↓
-              </button>
-            </div>
-          </div>
-
-          <div itemprop="articleBody" class="lg:col-span-7 space-y-8 prose prose-lg prose-p:font-light prose-p:text-zero-black prose-p:leading-relaxed max-w-none">
-            {post.body && post.body.map((block: any) => {
-              if (block._type === 'block') {
-                return (
-                  <p>
-                    {block.children?.map((c: any) => c.text).join('')}
-                  </p>
-                );
-              }
-              return null;
-            })}
-
-            <blockquote class="my-8 py-4 bg-transparent border-none">
-              <p class="font-display font-bold text-2xl md:text-3xl uppercase text-zero-green leading-snug m-0">
-                "La rigenerazione nasce dall'ascolto e dal coraggio di immaginare nuovi spazi."
-              </p>
-            </blockquote>
-          </div>
-        </div>
-      ) : isEditorialFocus ? (
-        /* LAYOUT D: Editorial Focus (Immersivo Minimal) */
-        <div class="max-w-4xl mx-auto space-y-12 gsap-fade-up">
-          {post.coverImageUrl && (
-            <figure class="overflow-hidden border-y-2 border-zero-granata py-2">
-              <img
-                src={post.coverImageUrl}
-                alt={post.title}
-                class="w-full aspect-[21/9] object-cover"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-              />
-              <figcaption class="p-3 bg-zero-bg ui-meta text-zero-black font-bold text-center border-t border-zero-dark text-xs">
-                DOSSIER EDITORIALE // {post.title}
-              </figcaption>
-            </figure>
+    <!-- 2. CORPO ARTICOLO: RITMO [TESTO] [FOTO] [TESTO] [BREVE DIDASCALIA] [TESTO] [FOTO] ... [AUTORI] -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-14 space-y-12 md:space-y-16">
+      
+      <!-- Foto Copertina Iniziale -->
+      {post.coverImageUrl && (
+        <figure class="w-full overflow-hidden shadow-sm gsap-fade-up">
+          <img
+            src={post.coverImageUrl}
+            alt={`Copertina articolo: ${post.title}`}
+            itemprop="image"
+            class="w-full max-h-[70vh] object-cover"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+          {post.coverMedia?.caption && (
+            <figcaption class="p-3 bg-zero-paper ui-meta text-zero-black text-xs text-center border-t border-neutral-200/40">
+              {post.coverMedia.caption}
+            </figcaption>
           )}
+        </figure>
+      )}
 
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-            <div class="md:col-span-3 ui-meta text-zero-granata font-bold space-y-2 border-l-2 border-zero-granata pl-4">
-            </div>
-            <div itemprop="articleBody" class="md:col-span-9 space-y-8 prose prose-lg max-w-none">
-              {post.body && post.body.map((block: any, idx: number) => (
-                <p class={idx === 0 ? "first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-granata leading-relaxed" : "leading-relaxed"}>
-                  {block.children?.map((c: any) => c.text).join('')}
-                </p>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : isPhotoJournalism ? (
-        /* LAYOUT E: Photo Journalism (Fotoreportage a Destra) */
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start gsap-fade-up">
-          <!-- Testo dell'Articolo a Sinistra -->
-          <div itemprop="articleBody" class="lg:col-span-6 space-y-8 prose prose-lg prose-p:font-light prose-p:text-zero-black prose-p:leading-relaxed max-w-none">
-            <div class="ui-meta font-bold text-zero-granata border-b border-zero-dark pb-2 mb-6">
-              [ REPORTAGE FOTOGRAFICO NOTTURNO ]
-            </div>
-            {post.body && post.body.map((block: any) => {
-              if (block._type === 'block') {
-                return (
-                  <p>
-                    {block.children?.map((c: any) => c.text).join('')}
-                  </p>
-                );
-              }
-              return null;
-            })}
-
-            <blockquote class="my-8 py-4 bg-transparent border-none">
-              <p class="font-display font-bold text-2xl md:text-3xl uppercase text-zero-green leading-snug m-0">
-                "La luce notturna svela l'anima nascosta degli spazi industriali."
-              </p>
-            </blockquote>
-          </div>
-
-          <!-- Immagine di Copertina a Destra (Sticky Media) -->
-          <div class="lg:col-span-6 lg:sticky lg:top-24 space-y-6 lg:order-last">
-            {post.coverImageUrl && (
-              <figure class="overflow-hidden border border-zero-dark bg-zero-paper">
-                <img
-                  src={post.coverImageUrl}
-                  alt={`Copertina articolo: ${post.title}`}
-                  itemprop="image"
-                  class="w-full aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                  loading="eager"
-                  fetchpriority="high"
-                  decoding="async"
-                />
-                <figcaption class="p-4 border-t border-zero-dark ui-meta text-zero-black flex items-center justify-between text-xs">
-                  <span>Fotografia - VERACE</span>
-                </figcaption>
-              </figure>
-            )}
-
-            <div class="border border-zero-dark bg-zero-bg p-6 space-y-3">
-              <h3 class="ui-meta text-zero-granata font-bold border-b border-zero-dark pb-2">[ CREDITI FOTOGRAFICI ]</h3>
-              <p class="ui-meta text-zero-black leading-relaxed normal-case tracking-normal text-xs">
-                Scatti realizzati nell'ambito del programma di documentazione urbana di <span itemprop="author">VERACE</span>.
-              </p>
-              <button
-                onclick="navigator.clipboard.writeText(window.location.href); alert('Link copiato!');"
-                class="w-full py-3 border border-zero-dark bg-zero-paper hover:bg-zero-black hover:text-white ui-meta font-bold transition-colors mt-2"
-                aria-label="Condividi questo articolo"
-              >
-                CONDIVIDI ARTICOLO ↓
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : isDataDossier ? (
-        /* LAYOUT F: Data Dossier (Scheda Analitica) */
-        <div class="max-w-5xl mx-auto space-y-12 gsap-fade-up">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 bg-zero-paper border-2 border-zero-dark">
-            <div class="p-4 border-r border-zero-dark border-b sm:border-b-0">
-              <div class="ui-meta text-xs text-zero-granata font-bold">IMPATTO TERRITORIALE</div>
-              <div class="font-display text-4xl font-bold text-zero-black mt-1">+45%</div>
-              <div class="text-xs text-neutral-600 mt-1">Coesione sociale nei quartieri</div>
-            </div>
-            <div class="p-4 border-r border-zero-dark border-b sm:border-b-0">
-              <div class="ui-meta text-xs text-zero-granata font-bold">SUPERFICIE RIQUALIFICATA</div>
-              <div class="font-display text-4xl font-bold text-zero-black mt-1">12.500 m²</div>
-              <div class="text-xs text-neutral-600 mt-1">Spazi verdi e culturali restituiti</div>
-            </div>
-            <div class="p-4">
-              <div class="ui-meta text-xs text-zero-granata font-bold">VALORE GENERATO</div>
-              <div class="font-display text-4xl font-bold text-zero-black mt-1">3.4 M€</div>
-              <div class="text-xs text-neutral-600 mt-1">Esternalità positive misurate</div>
-            </div>
-          </div>
-
-          {post.coverImageUrl && (
-            <figure class="overflow-hidden">
-              <img src={post.coverImageUrl} alt={post.title} class="w-full max-h-[60vh] object-cover" />
-            </figure>
-          )}
-
-          <div itemprop="articleBody" class="space-y-8 prose prose-lg max-w-none">
-            {post.body && post.body.map((block: any) => (
-              <p class="leading-relaxed">{block.children?.map((c: any) => c.text).join('')}</p>
-            ))}
-          </div>
-        </div>
-      ) : isManifestoMagazine ? (
-        /* LAYOUT G: Manifesto Magazine (Poster Culturale) */
-        <div class="max-w-4xl mx-auto space-y-12 gsap-fade-up">
-          <div class="p-8 border-4 border-zero-dark bg-zero-paper space-y-6">
-            <div class="ui-meta font-bold text-zero-granata text-sm">[ MANIFESTO CULTURALE VERACE ]</div>
-            <blockquote class="text-2xl md:text-3xl font-display uppercase font-bold text-zero-black leading-tight border-l-4 border-zero-granata pl-6">
-              "10 Principi per guidare la trasformazione dei territori e costruire comunità consapevoli."
-            </blockquote>
-          </div>
-
-          {post.coverImageUrl && (
-            <figure class="overflow-hidden">
-              <img src={post.coverImageUrl} alt={post.title} class="w-full max-h-[65vh] object-cover" />
-            </figure>
-          )}
-
-          <div itemprop="articleBody" class="space-y-8 prose prose-lg max-w-none">
-            {post.body && post.body.map((block: any) => (
-              <p class="leading-relaxed text-xl">{block.children?.map((c: any) => c.text).join('')}</p>
-            ))}
-          </div>
-        </div>
-      ) : (
-        /* LAYOUT A: Standard Continuo */
-        <div class="max-w-4xl mx-auto space-y-12 gsap-fade-up">
-          {post.coverImageUrl && (
-            <figure
-              class={`overflow-hidden relative ${post.pdfUrl ? 'cursor-pointer group/cover-pdf open-pdf-trigger' : videoEmbedUrl ? 'cursor-pointer group/cover-video' : ''}`}
-              id={post.pdfUrl ? undefined : videoEmbedUrl ? "article-cover-video-trigger-std" : undefined}
-              data-video-url={post.pdfUrl ? undefined : videoEmbedUrl || undefined}
-              data-pdf-url={post.pdfUrl || undefined}
-            >
-              <img
-                src={post.coverImageUrl}
-                alt={`Immagine di copertina per ${post.title}`}
-                itemprop="image"
-                class="w-full max-h-[70vh] object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-              />
-              {post.pdfUrl ? (
-                <div class="absolute inset-0 bg-black/40 group-hover/cover-pdf:bg-black/60 transition-colors flex flex-col items-center justify-center p-6 text-center">
-                  <span class="px-6 py-3.5 bg-zero-granata text-white font-display font-bold text-sm md:text-base uppercase tracking-wider shadow-2xl flex items-center gap-2 group-hover/cover-pdf:scale-105 transition-transform duration-300">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                    LEGGI L'ARTICOLO INTERO [ PDF ]
-                  </span>
-                </div>
-              ) : videoEmbedUrl ? (
-                <div class="absolute inset-0 bg-black/20 group-hover/cover-video:bg-black/35 transition-colors flex items-center justify-center">
-                  <svg class="w-16 h-16 sm:w-20 sm:h-20 text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] group-hover/cover-video:scale-125 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-              ) : null}
-              {post.coverMedia?.caption && (
-                <figcaption class="p-4 border-t border-zero-dark bg-zero-paper ui-meta text-zero-black flex items-center justify-between">
-                  <span>{post.coverMedia.caption}</span>
-                  {post.pdfUrl ? (
-                    <span class="text-zero-granata font-bold flex items-center gap-1 shrink-0 ml-2">
-                      SFOGLIA PDF ↓
-                    </span>
-                  ) : videoEmbedUrl ? (
-                    <span class="text-zero-red font-bold flex items-center gap-1 shrink-0 ml-2">
-                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> GUARDA VIDEO
-                    </span>
-                  ) : null}
-                </figcaption>
-              )}
-            </figure>
-          )}
-
-          <div itemprop="articleBody" class="space-y-8 prose prose-lg prose-p:font-light prose-p:text-zero-black prose-p:leading-relaxed max-w-none">
-            {post.body && post.body.map((block: any) => {
-              if (block._type === 'block') {
-                return (
-                  <p>
-                    {block.children?.map((c: any) => c.text).join('')}
-                  </p>
-                );
-              }
-              return null;
-            })}
-          </div>
+      <!-- Sezione Video Embed opzionale -->
+      {videoEmbedUrl && (
+        <div class="w-full aspect-video shadow-sm overflow-hidden gsap-fade-up">
+          <iframe
+            src={videoEmbedUrl}
+            title={`Video: ${post.title}`}
+            class="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
         </div>
       )}
 
-      <!-- Carosello Galleria Fotografica dell'Articolo -->
-      {post.galleryUrls && post.galleryUrls.length > 0 && (
-        <div class="mt-16 pt-12 border-t border-zero-dark space-y-6 gsap-fade-up">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="ui-meta text-zero-granata font-bold mb-1">[ DOCUMENTAZIONE FOTOGRAFICA ]</div>
-              <h3 class="font-display font-bold text-2xl uppercase text-zero-black">GALLERIA DELL'ARTICOLO</h3>
+      <!-- Sequenza Dinamica dei Blocchi di Contenuto -->
+      <div itemprop="articleBody" class="space-y-10 md:space-y-12 gsap-fade-up">
+        {hasStructuredBlocks ? (
+          post.contentBlocks!.map((block, idx) => {
+            if (block.type === 'text') {
+              return (
+                <div class="space-y-4">
+                  {block.heading && (
+                    <h2 class="font-display font-bold text-2xl md:text-3xl text-zero-black uppercase tracking-tight pt-4">
+                      {block.heading}
+                    </h2>
+                  )}
+                  <p class={`text-lg md:text-xl font-light text-zero-black leading-relaxed ${idx === 0 ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red' : ''}`}>
+                    {block.content}
+                  </p>
+                </div>
+              );
+            }
+
+            if (block.type === 'image') {
+              return (
+                <figure class="w-full my-10 overflow-hidden shadow-sm">
+                  <img
+                    src={block.url}
+                    alt={block.alt || `Fotografia documentaria per ${post.title}`}
+                    class="w-full max-h-[65vh] object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  {block.caption && (
+                    <figcaption class="p-3 bg-zero-paper ui-meta text-zero-black text-xs text-center border-t border-neutral-200/40">
+                      {block.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              );
+            }
+
+            if (block.type === 'didascalia') {
+              return (
+                <aside class="my-10 p-6 md:p-8 bg-zero-paper border-l-4 border-zero-red shadow-sm space-y-2">
+                  {block.title && (
+                    <div class="flex items-center gap-2">
+                      <span class="font-mono text-xs uppercase font-bold text-zero-red tracking-wider">SCHEDA DI APPROFONDIMENTO •</span>
+                      <h3 class="font-display font-bold text-base md:text-lg uppercase text-zero-black tracking-tight">
+                        {block.title}
+                      </h3>
+                    </div>
+                  )}
+                  <p class="text-base md:text-lg font-light text-zero-black leading-relaxed">
+                    {block.text}
+                  </p>
+                </aside>
+              );
+            }
+
+            if (block.type === 'quote') {
+              return (
+                <div class="my-12 py-4 text-center max-w-3xl mx-auto">
+                  <p class="font-display font-black text-2xl sm:text-3xl md:text-4xl uppercase text-zero-black leading-tight tracking-tight text-balance">
+                    {block.quote}
+                  </p>
+                </div>
+              );
+            }
+
+            return null;
+          })
+        ) : fallbackPairs.length > 0 ? (
+          fallbackPairs.map((pair, idx) => (
+            <div class="space-y-8">
+              <p class={`text-lg md:text-xl font-light text-zero-black leading-relaxed ${idx === 0 ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red' : ''}`}>
+                {pair.text}
+              </p>
+              {pair.image && (
+                <figure class="w-full overflow-hidden shadow-sm my-8">
+                  <img
+                    src={pair.image}
+                    alt={`Scatto documentario ${idx + 1} per ${post.title}`}
+                    class="w-full max-h-[60vh] object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+              )}
             </div>
+          ))
+        ) : (
+          <p class="text-lg font-light text-zero-black leading-relaxed">
+            Contenuto editoriale in corso di caricamento.
+          </p>
+        )}
+      </div>
+
+      <!-- 3. SEZIONE FINALE: [AUTORI] -->
+      <section class="mt-16 pt-10 border-t border-neutral-300/80 space-y-4 gsap-fade-up" aria-label="Autori e crediti reportage">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 bg-zero-red rounded-full"></span>
+          <h2 class="font-mono font-bold text-xs uppercase tracking-widest text-zero-red">
+            AUTORI & CREDITI REPORTAGE
+          </h2>
+        </div>
+
+        <div class="p-6 md:p-8 bg-zero-paper border border-neutral-200/70 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div class="space-y-1.5">
+            <div class="font-display font-bold text-xl md:text-2xl uppercase text-zero-black tracking-tight">
+              {post.authorInfo?.name || post.author || "Redazione VERACE"}
+            </div>
+            {post.authorInfo?.roleOrContext && (
+              <p class="font-mono text-xs text-neutral-600">
+                {post.authorInfo.roleOrContext}
+              </p>
+            )}
+            {post.authorInfo?.photography && (
+              <p class="font-mono text-xs text-neutral-600">
+                Fotografie: <span class="text-zero-black font-bold">{post.authorInfo.photography}</span>
+              </p>
+            )}
+          </div>
+          
+          {(post.authorInfo?.credits || post.credits) && (
+            <div class="font-mono text-xs text-neutral-500 max-w-xs text-left sm:text-right border-t sm:border-t-0 pt-3 sm:pt-0 border-neutral-200/60">
+              {post.authorInfo?.credits || post.credits}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <!-- 4. GALLERIA FOTOGRAFICA IN FONDO -->
+      {galleryImages.length > 0 && (
+        <section class="mt-16 pt-12 space-y-6 gsap-fade-up border-t border-neutral-200" aria-label="Galleria dell'articolo">
+          <div class="flex items-center justify-between">
+            <h2 class="font-display font-bold text-2xl md:text-3xl uppercase text-zero-black">
+              Galleria Fotografica
+            </h2>
             
             <div class="flex items-center gap-2">
               <button
                 id="carousel-prev"
-                class="w-10 h-10 border border-zero-dark bg-zero-paper text-zero-black hover:bg-zero-black hover:text-white flex items-center justify-center font-bold transition-colors focus:outline-none"
+                class="w-10 h-10 bg-zero-paper shadow-sm text-zero-black hover:bg-zero-red hover:text-white flex items-center justify-center font-bold transition-colors focus:outline-none"
                 aria-label="Foto precedente"
               >
                 ←
               </button>
               <button
                 id="carousel-next"
-                class="w-10 h-10 border border-zero-dark bg-zero-paper text-zero-black hover:bg-zero-black hover:text-white flex items-center justify-center font-bold transition-colors focus:outline-none"
+                class="w-10 h-10 bg-zero-paper shadow-sm text-zero-black hover:bg-zero-red hover:text-white flex items-center justify-center font-bold transition-colors focus:outline-none"
                 aria-label="Foto successiva"
               >
                 →
@@ -427,9 +318,9 @@ const pageKeywords = `${post.category || 'Inchiesta'}, VERACE, magazine edicola,
             id="article-gallery-carousel"
             class="flex items-center gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 no-scrollbar"
           >
-            {post.galleryUrls.map((imgUrl, index) => (
+            {galleryImages.map((imgUrl, index) => (
               <div
-                class="snap-start shrink-0 w-[85%] sm:w-[55%] md:w-[45%] lg:w-[38%] aspect-[4/3] relative overflow-hidden group cursor-pointer gallery-item"
+                class="snap-start shrink-0 w-[85%] sm:w-[55%] md:w-[45%] lg:w-[38%] aspect-[4/3] relative overflow-hidden group cursor-pointer gallery-item shadow-sm"
                 data-index={index}
                 data-img-url={imgUrl}
               >
@@ -440,8 +331,8 @@ const pageKeywords = `${post.category || 'Inchiesta'}, VERACE, magazine edicola,
                   loading="lazy"
                   decoding="async"
                 />
-                <div class="absolute bottom-3 left-3 bg-zero-paper px-2.5 py-0.5 ui-meta text-zero-black font-bold text-xs">
-                  [{index + 1} / {post.galleryUrls.length}]
+                <div class="absolute bottom-3 left-3 bg-zero-paper px-2.5 py-0.5 ui-meta text-zero-black font-bold text-xs shadow-sm">
+                  {index + 1} / {galleryImages.length}
                 </div>
                 <div class="absolute top-3 right-3 bg-black/60 text-white p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/></svg>
@@ -449,30 +340,42 @@ const pageKeywords = `${post.category || 'Inchiesta'}, VERACE, magazine edicola,
               </div>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      <!-- Navigation Bottom -->
-      <div class="mt-24 pt-8 border-t border-zero-dark flex flex-col sm:flex-row items-center justify-between gap-6 gsap-fade-up">
+      <!-- Condivisione e Navigazione Bottom -->
+      <div class="mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 gsap-fade-up">
         <a href="/magazine" class="ui-meta font-bold text-zero-black hover:text-zero-red transition-colors">
           ← TORNA AL MAGAZINE
         </a>
-        <a href="/contatti" class="px-8 py-4 bg-zero-black text-white ui-meta font-bold hover:bg-zero-red transition-colors">
-          PROPOSTA EDITORIALE
-        </a>
+        <div class="flex items-center gap-4">
+          <button
+            onclick="navigator.clipboard.writeText(window.location.href); alert('Link dell\'articolo copiato negli appunti!');"
+            class="px-6 py-3.5 bg-zero-paper text-zero-black ui-meta font-bold hover:bg-zero-red hover:text-white transition-colors shadow-sm"
+          >
+            CONDIVIDI ARTICOLO
+          </button>
+          <a href="/contatti" class="px-6 py-3.5 bg-zero-black text-white ui-meta font-bold hover:bg-zero-red transition-colors shadow-sm">
+            PROPOSTA EDITORIALE
+          </a>
+        </div>
       </div>
-    </div>
+
+    </main>
   </article>
 
   <!-- Lightbox Modal for Photo Gallery -->
-  {post.galleryUrls && post.galleryUrls.length > 0 && (
+  {galleryImages.length > 0 && (
     <div
       id="lightbox-modal"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md hidden p-4 sm:p-8"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Visualizzatore galleria fotografica a schermo intero"
     >
       <button
         id="lightbox-close"
-        class="absolute top-4 right-4 z-30 text-white bg-black/70 hover:bg-zero-red p-3 transition-colors focus:outline-none"
+        class="absolute top-4 right-4 z-30 text-white bg-black/70 hover:bg-zero-red p-3 transition-colors focus:outline-none cursor-pointer"
         aria-label="Chiudi galleria"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -480,7 +383,7 @@ const pageKeywords = `${post.category || 'Inchiesta'}, VERACE, magazine edicola,
 
       <button
         id="lightbox-prev"
-        class="absolute left-4 top-1/2 -translate-y-1/2 z-30 text-white bg-black/70 hover:bg-zero-red p-3 sm:p-4 transition-colors focus:outline-none"
+        class="absolute left-4 top-1/2 -translate-y-1/2 z-30 text-white bg-black/70 hover:bg-zero-red p-3 sm:p-4 transition-colors focus:outline-none cursor-pointer"
         aria-label="Immagine precedente"
       >
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -488,426 +391,119 @@ const pageKeywords = `${post.category || 'Inchiesta'}, VERACE, magazine edicola,
 
       <button
         id="lightbox-next"
-        class="absolute right-4 top-1/2 -translate-y-1/2 z-30 text-white bg-black/70 hover:bg-zero-red p-3 sm:p-4 transition-colors focus:outline-none"
+        class="absolute right-4 top-1/2 -translate-y-1/2 z-30 text-white bg-black/70 hover:bg-zero-red p-3 sm:p-4 transition-colors focus:outline-none cursor-pointer"
         aria-label="Immagine successiva"
       >
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
 
-      <div class="relative max-w-5xl max-h-[85vh] flex flex-col items-center justify-center">
+      <div class="max-w-5xl max-h-[85vh] relative flex flex-col items-center">
         <img
           id="lightbox-img"
           src=""
-          alt="Foto ingrandita"
-          class="max-w-full max-h-[75vh] object-contain border border-zero-dark shadow-2xl transition-all duration-300"
+          alt="Ingrandimento fotografia"
+          class="max-w-full max-h-[80vh] object-contain shadow-2xl"
         />
-        <div class="mt-4 flex items-center justify-between w-full text-white ui-meta px-2">
-          <span id="lightbox-counter" class="font-bold text-zero-granata bg-zero-paper px-3 py-1"></span>
-          <span class="text-neutral-400 text-xs hidden sm:inline">Usa le frecce della tastiera (← →) per navigare</span>
-        </div>
-      </div>
-    </div>
-  )}
-  <!-- Video Modal for Article Cover Video -->
-  {videoEmbedUrl && (
-    <div id="article-video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden p-4 sm:p-6 lg:p-12">
-      <div class="relative w-full max-w-4xl bg-black rounded-none overflow-hidden border border-zero-dark shadow-2xl aspect-video">
-        <button
-          id="close-article-video-modal"
-          class="absolute top-4 right-4 z-20 text-white bg-black/70 hover:bg-zero-red p-2 transition-colors focus:outline-none"
-          aria-label="Chiudi video"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-        <iframe
-          id="article-video-iframe"
-          class="w-full h-full"
-          src=""
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </div>
-  )}
-  <!-- PDF Book Viewer Modal for Article -->
-  {post.pdfUrl && (
-    <div
-      id="pdf-viewer-modal"
-      class="fixed inset-0 z-50 flex flex-col bg-black/95 backdrop-blur-md hidden"
-    >
-      <div class="bg-zero-black border-b border-zero-dark px-4 py-3 sm:px-6 flex items-center justify-between z-20 shrink-0">
-        <div class="flex items-center gap-3 text-white overflow-hidden pr-2">
-          <span class="ui-meta font-bold text-zero-granata bg-zero-paper px-2.5 py-1 text-xs shrink-0">
-            [ SFOGLIA LIBRO PDF ]
-          </span>
-          <h3 class="font-display font-bold uppercase text-sm sm:text-base truncate text-white">
-            {post.title}
-          </h3>
-        </div>
-
-        <div class="flex items-center gap-3 shrink-0">
-          <span id="pdf-book-counter" class="ui-meta text-xs text-zero-paper font-bold px-3 py-1 bg-white/10 hidden sm:inline-block">
-            [ CARICAMENTO PDF... ]
-          </span>
-
-          <a
-            href={post.pdfUrl}
-            download
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 bg-zero-paper text-zero-black hover:bg-zero-granata hover:text-white ui-meta font-bold text-xs transition-colors"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            SCARICA PDF
-          </a>
-
-          <button
-            id="close-pdf-modal-btn"
-            class="p-2 text-white bg-white/10 hover:bg-zero-red transition-colors focus:outline-none"
-            aria-label="Chiudi PDF"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="flex-grow w-full relative bg-neutral-950 flex flex-col items-center justify-center p-2 sm:p-6 overflow-hidden">
-        <button
-          id="pdf-book-prev"
-          class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 text-white bg-black/80 hover:bg-zero-granata border border-white/20 p-3 sm:p-4 transition-all duration-300 focus:outline-none shadow-2xl disabled:opacity-30"
-          aria-label="Pagine precedenti"
-        >
-          <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-
-        <button
-          id="pdf-book-next"
-          class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 text-white bg-black/80 hover:bg-zero-granata border border-white/20 p-3 sm:p-4 transition-all duration-300 focus:outline-none shadow-2xl disabled:opacity-30"
-          aria-label="Pagine successive"
-        >
-          <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </button>
-
-        <div
-          id="pdf-book-spread"
-          class="relative flex items-center justify-center shadow-2xl transition-all duration-500 max-w-full max-h-[82vh]"
-        >
-          <div id="pdf-book-spine" class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-4 z-20 pointer-events-none bg-gradient-to-r from-black/40 via-black/10 to-black/40 shadow-inner hidden md:block"></div>
-
-          <div id="pdf-frame-left" class="relative bg-white shadow-2xl flex items-center justify-center overflow-hidden border-r border-neutral-300">
-            <canvas id="pdf-canvas-left" class="max-h-[78vh] w-auto max-w-full object-contain block"></canvas>
-          </div>
-
-          <div id="pdf-frame-right" class="relative bg-white shadow-2xl items-center justify-center overflow-hidden hidden md:flex">
-            <canvas id="pdf-canvas-right" class="max-h-[78vh] w-auto max-w-full object-contain block"></canvas>
-          </div>
-        </div>
-
-        <div class="mt-4 flex items-center gap-4 text-white ui-meta text-xs z-20 bg-black/60 px-4 py-1.5 rounded-full border border-white/10">
-          <span id="pdf-book-counter-mobile" class="font-bold text-zero-granata">[ PAGINE -- / -- ]</span>
-          <span class="text-neutral-400 hidden sm:inline">• Usa le frecce (← →) per sfogliare le pagine come un libro</span>
-        </div>
+        <div id="lightbox-caption" class="mt-3 text-white/80 ui-meta text-xs tracking-wider text-center"></div>
       </div>
     </div>
   )}
 </BaseLayout>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" is:inline></script>
-
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // 2-Page Book Spread PDF Viewer Logic
-    const pdfTriggers = document.querySelectorAll('.open-pdf-trigger');
-    const pdfModal = document.getElementById('pdf-viewer-modal');
-    const pdfCloseBtn = document.getElementById('close-pdf-modal-btn');
-    const pdfPrevBtn = document.getElementById('pdf-book-prev') as HTMLButtonElement | null;
-    const pdfNextBtn = document.getElementById('pdf-book-next') as HTMLButtonElement | null;
-    const canvasLeft = document.getElementById('pdf-canvas-left') as HTMLCanvasElement | null;
-    const canvasRight = document.getElementById('pdf-canvas-right') as HTMLCanvasElement | null;
-    const frameRight = document.getElementById('pdf-frame-right');
-    const bookSpine = document.getElementById('pdf-book-spine');
-    const counterText = document.getElementById('pdf-book-counter');
-    const counterMobile = document.getElementById('pdf-book-counter-mobile');
-
-    let pdfDoc: any = null;
-    let currentLeftPage = 1;
-    let totalPages = 0;
-    let isLoadingPages = false;
-
-    if (pdfTriggers.length > 0 && pdfModal && canvasLeft) {
-      if ((window as any).pdfjsLib) {
-        (window as any).pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      }
-
-      const renderPageToCanvas = async (pageNum: number, canvas: HTMLCanvasElement) => {
-        if (!pdfDoc || pageNum < 1 || pageNum > totalPages) {
-          const ctx = canvas.getContext('2d');
-          if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-          return;
-        }
-
-        canvas.style.display = 'block';
-        const page = await pdfDoc.getPage(pageNum);
-        const viewport = page.getViewport({ scale: 1.5 });
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        if (ctx) {
-          await page.render({ canvasContext: ctx, viewport }).promise;
-        }
-      };
-
-      const renderSpread = async () => {
-        if (!pdfDoc || isLoadingPages) return;
-        isLoadingPages = true;
-
-        const leftNum = currentLeftPage;
-        const rightNum = currentLeftPage + 1;
-        const isDesktop = window.innerWidth >= 768;
-
-        // Render Left Page
-        await renderPageToCanvas(leftNum, canvasLeft);
-
-        // Check if Right Page exists
-        const hasRightPage = rightNum <= totalPages && isDesktop;
-
-        if (hasRightPage && canvasRight && frameRight) {
-          await renderPageToCanvas(rightNum, canvasRight);
-          frameRight.style.display = 'flex';
-          if (bookSpine) bookSpine.style.display = 'block';
-        } else {
-          if (canvasRight) {
-            const ctx = canvasRight.getContext('2d');
-            if (ctx) ctx.clearRect(0, 0, canvasRight.width, canvasRight.height);
-          }
-          if (frameRight) frameRight.style.display = 'none';
-          if (bookSpine) bookSpine.style.display = 'none';
-        }
-
-        const statusStr = hasRightPage
-          ? `[ PAGINE ${leftNum} - ${rightNum} / ${totalPages} ]`
-          : `[ PAGINA ${leftNum} / ${totalPages} ]`;
-
-        if (counterText) counterText.textContent = statusStr;
-        if (counterMobile) counterMobile.textContent = statusStr;
-
-        if (pdfPrevBtn) pdfPrevBtn.disabled = leftNum <= 1;
-        if (pdfNextBtn) pdfNextBtn.disabled = hasRightPage ? rightNum >= totalPages : leftNum >= totalPages;
-
-        isLoadingPages = false;
-      };
-
-      const loadPdfDocument = async (url: string) => {
-        if (!(window as any).pdfjsLib) return;
-        try {
-          if (counterText) counterText.textContent = '[ CARICAMENTO PDF... ]';
-          const loadingTask = (window as any).pdfjsLib.getDocument(url);
-          pdfDoc = await loadingTask.promise;
-          totalPages = pdfDoc.numPages;
-          currentLeftPage = 1;
-          await renderSpread();
-        } catch (err) {
-          console.error('Error loading PDF:', err);
-          if (counterText) counterText.textContent = '[ ERRORE CARICAMENTO PDF ]';
-        }
-      };
-
-      const openPdfModal = (url: string) => {
-        pdfModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        loadPdfDocument(url);
-      };
-
-      const closePdfModal = () => {
-        pdfModal.classList.add('hidden');
-        document.body.style.overflow = '';
-      };
-
-      pdfTriggers.forEach(trig => {
-        trig.addEventListener('click', (e) => {
-          e.preventDefault();
-          const pdfUrl = trig.getAttribute('data-pdf-url');
-          if (pdfUrl) {
-            openPdfModal(pdfUrl);
-          }
-        });
-      });
-
-      if (pdfCloseBtn) pdfCloseBtn.addEventListener('click', closePdfModal);
-
-      if (pdfPrevBtn) {
-        pdfPrevBtn.addEventListener('click', () => {
-          const step = window.innerWidth >= 768 ? 2 : 1;
-          if (currentLeftPage - step >= 1) {
-            currentLeftPage -= step;
-            renderSpread();
-          }
-        });
-      }
-
-      if (pdfNextBtn) {
-        pdfNextBtn.addEventListener('click', () => {
-          const step = window.innerWidth >= 768 ? 2 : 1;
-          if (currentLeftPage + step <= totalPages) {
-            currentLeftPage += step;
-            renderSpread();
-          }
-        });
-      }
-
-      document.addEventListener('keydown', (e) => {
-        if (pdfModal.classList.contains('hidden')) return;
-        const step = window.innerWidth >= 768 ? 2 : 1;
-        if (e.key === 'Escape') {
-          closePdfModal();
-        } else if (e.key === 'ArrowLeft' && currentLeftPage - step >= 1) {
-          currentLeftPage -= step;
-          renderSpread();
-        } else if (e.key === 'ArrowRight' && currentLeftPage + step <= totalPages) {
-          currentLeftPage += step;
-          renderSpread();
-        }
-      });
-    }
-    // Article Cover Video Modal Logic
-    const coverTrigger1 = document.getElementById('article-cover-video-trigger');
-    const coverTrigger2 = document.getElementById('article-cover-video-trigger-std');
-    const videoModal = document.getElementById('article-video-modal');
-    const videoIframe = document.getElementById('article-video-iframe') as HTMLIFrameElement | null;
-    const closeVideoBtn = document.getElementById('close-article-video-modal');
-
-    const triggers = [coverTrigger1, coverTrigger2].filter(Boolean);
-
-    if (triggers.length > 0 && videoModal && videoIframe) {
-      const openVideoModal = (url: string) => {
-        videoIframe.src = url;
-        videoModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      };
-
-      const closeVideoModal = () => {
-        videoIframe.src = '';
-        videoModal.classList.add('hidden');
-        document.body.style.overflow = '';
-      };
-
-      triggers.forEach(trig => {
-        trig?.addEventListener('click', (e) => {
-          e.preventDefault();
-          const videoUrl = trig.getAttribute('data-video-url');
-          if (videoUrl) {
-            openVideoModal(videoUrl);
-          }
-        });
-      });
-
-      if (closeVideoBtn) {
-        closeVideoBtn.addEventListener('click', closeVideoModal);
-      }
-
-      videoModal.addEventListener('click', (e) => {
-        if (e.target === videoModal) {
-          closeVideoModal();
-        }
-      });
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !videoModal.classList.contains('hidden')) {
-          closeVideoModal();
-        }
-      });
-    }
-
-    // Horizontal Scroll for Carousel
-    const carousel = document.getElementById('article-gallery-carousel');
+  function initArticleGallery() {
     const prevBtn = document.getElementById('carousel-prev');
     const nextBtn = document.getElementById('carousel-next');
-
-    if (carousel && prevBtn && nextBtn) {
-      const scrollAmount = 380;
-      prevBtn.addEventListener('click', () => {
-        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      });
-      nextBtn.addEventListener('click', () => {
-        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      });
-    }
-
-    // Lightbox Popup Modal Logic
-    const galleryItems = document.querySelectorAll('.gallery-item');
+    const carousel = document.getElementById('article-gallery-carousel');
+    const galleryItems = document.querySelectorAll<HTMLElement>('.gallery-item');
     const lightboxModal = document.getElementById('lightbox-modal');
     const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
-    const lightboxCounter = document.getElementById('lightbox-counter');
+    const lightboxCaption = document.getElementById('lightbox-caption');
     const lightboxClose = document.getElementById('lightbox-close');
     const lightboxPrev = document.getElementById('lightbox-prev');
     const lightboxNext = document.getElementById('lightbox-next');
 
-    if (galleryItems.length > 0 && lightboxModal && lightboxImg && lightboxCounter) {
-      const images: string[] = Array.from(galleryItems).map(item => item.getAttribute('data-img-url') || '');
-      let currentIndex = 0;
+    let currentLightboxIndex = 0;
+    const images: string[] = [];
 
-      const updateLightbox = (index: number) => {
-        currentIndex = (index + images.length) % images.length;
-        lightboxImg.src = images[currentIndex];
-        lightboxCounter.textContent = `[ ${currentIndex + 1} / ${images.length} ]`;
-      };
+    galleryItems.forEach((item) => {
+      const url = item.getAttribute('data-img-url');
+      if (url) images.push(url);
+    });
 
-      const openLightbox = (index: number) => {
-        updateLightbox(index);
-        lightboxModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      };
-
-      const closeLightbox = () => {
-        lightboxModal.classList.add('hidden');
-        document.body.style.overflow = '';
-      };
-
-      galleryItems.forEach((item) => {
-        item.addEventListener('click', () => {
-          const idx = parseInt(item.getAttribute('data-index') || '0', 10);
-          openLightbox(idx);
-        });
-      });
-
-      if (lightboxClose) {
-        lightboxClose.addEventListener('click', closeLightbox);
-      }
-
-      if (lightboxPrev) {
-        lightboxPrev.addEventListener('click', (e) => {
-          e.stopPropagation();
-          updateLightbox(currentIndex - 1);
-        });
-      }
-
-      if (lightboxNext) {
-        lightboxNext.addEventListener('click', (e) => {
-          e.stopPropagation();
-          updateLightbox(currentIndex + 1);
-        });
-      }
-
-      lightboxModal.addEventListener('click', (e) => {
-        if (e.target === lightboxModal) {
-          closeLightbox();
-        }
-      });
-
-      document.addEventListener('keydown', (e) => {
-        if (lightboxModal.classList.contains('hidden')) return;
-        if (e.key === 'Escape') {
-          closeLightbox();
-        } else if (e.key === 'ArrowLeft') {
-          updateLightbox(currentIndex - 1);
-        } else if (e.key === 'ArrowRight') {
-          updateLightbox(currentIndex + 1);
-        }
+    if (prevBtn && carousel) {
+      prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -320, behavior: 'smooth' });
       });
     }
-  });
+
+    if (nextBtn && carousel) {
+      nextBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: 320, behavior: 'smooth' });
+      });
+    }
+
+    function openLightbox(index: number) {
+      if (!lightboxModal || !lightboxImg || images.length === 0) return;
+      currentLightboxIndex = index;
+      lightboxImg.src = images[currentLightboxIndex];
+      if (lightboxCaption) {
+        lightboxCaption.textContent = `Scatto ${currentLightboxIndex + 1} di ${images.length}`;
+      }
+      lightboxModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      if (!lightboxModal) return;
+      lightboxModal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function showNextLightbox() {
+      if (images.length === 0) return;
+      currentLightboxIndex = (currentLightboxIndex + 1) % images.length;
+      if (lightboxImg) lightboxImg.src = images[currentLightboxIndex];
+      if (lightboxCaption) {
+        lightboxCaption.textContent = `Scatto ${currentLightboxIndex + 1} di ${images.length}`;
+      }
+    }
+
+    function showPrevLightbox() {
+      if (images.length === 0) return;
+      currentLightboxIndex = (currentLightboxIndex - 1 + images.length) % images.length;
+      if (lightboxImg) lightboxImg.src = images[currentLightboxIndex];
+      if (lightboxCaption) {
+        lightboxCaption.textContent = `Scatto ${currentLightboxIndex + 1} di ${images.length}`;
+      }
+    }
+
+    galleryItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        const idx = parseInt(item.getAttribute('data-index') || '0', 10);
+        openLightbox(idx);
+      });
+    });
+
+    if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+    if (lightboxNext) lightboxNext.addEventListener('click', showNextLightbox);
+    if (lightboxPrev) lightboxPrev.addEventListener('click', showPrevLightbox);
+
+    if (lightboxModal) {
+      lightboxModal.addEventListener('click', (e) => {
+        if (e.target === lightboxModal) closeLightbox();
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (lightboxModal && !lightboxModal.classList.contains('hidden')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') showNextLightbox();
+        if (e.key === 'ArrowLeft') showPrevLightbox();
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initArticleGallery);
+  document.addEventListener('astro:page-load', initArticleGallery);
 </script>

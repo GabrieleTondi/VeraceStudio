@@ -16,17 +16,12 @@ const completedProjects = projects.filter(p => p.status === 'Concluso');
   keywords="progetti Reggio Emilia, rigenerazione territoriale Appennino Reggiano, progetti Fondazione Manodori, Luigi Ghirri progetti, co-progettazione fondi europei, innovazione sociale Emilia Romagna, VERACE"
 >
   <div class="w-full">
-    <div class="flex flex-col lg:flex-row relative min-h-screen border-b border-zero-dark">
+    <div class="flex flex-col lg:flex-row relative min-h-screen">
       
       <!-- Colonna Sinistra Fissa (40%) -->
-      <div class="lg:w-2/5 lg:sticky lg:top-20 lg:h-[calc(100vh-5rem)] border-r border-zero-dark bg-zero-bg p-8 md:p-16 flex flex-col justify-between z-10">
+      <div class="lg:w-2/5 lg:sticky lg:top-20 lg:h-[calc(100vh-5rem)] bg-zero-bg p-8 md:p-16 flex flex-col justify-between z-10">
         <div class="space-y-8">
           <div>
-            <img
-              src="/logos/Verace_Logo_Nero.png"
-              alt="VERACE Logo"
-              class="h-10 md:h-12 w-auto object-contain mb-3"
-            />
             <h1 class="section-heading text-zero-black">
               PROGETTI
             </h1>
@@ -40,7 +35,7 @@ const completedProjects = projects.filter(p => p.status === 'Concluso');
         <div class="mt-12 lg:mt-0 pt-8">
           <a
             href="/contatti?oggetto=Proposta%20Progetto"
-            class="inline-flex items-center justify-between w-full px-8 py-5 bg-zero-red text-white ui-meta font-bold hover:bg-zero-black hover:text-white transition-colors duration-300 group"
+            class="inline-flex items-center justify-between w-full px-8 py-5 bg-zero-red text-white ui-meta font-bold hover:bg-zero-black hover:text-white transition-colors duration-300 group shadow-sm"
           >
             <span>PROPONI UN PROGETTO</span>
             <span class="transition-transform duration-300 group-hover:translate-x-2">→</span>
@@ -57,25 +52,13 @@ const completedProjects = projects.filter(p => p.status === 'Concluso');
       </div>
 
       <!-- Colonna Destra Scrollabile (60%) -->
-      <div class="lg:w-3/5 bg-zero-paper p-8 md:p-16 space-y-24 overflow-hidden">
-        
-        <!-- Valori Progetti -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="space-y-2">
-            <h3 class="font-display font-bold text-2xl uppercase text-zero-black">IMPATTO REALE</h3>
-            <p class="text-sm text-zero-black font-light leading-relaxed">Integrazione dei target di rigenerazione con interventi concreti sul territorio.</p>
-          </div>
-          <div class="space-y-2">
-            <h3 class="font-display font-bold text-2xl uppercase text-zero-black">PARTECIPAZIONE</h3>
-            <p class="text-sm text-zero-black font-light leading-relaxed">Coinvolgimento diretto di giovani, scuole, pastori e comunità locali.</p>
-          </div>
-        </section>
+      <div class="lg:w-3/5 bg-zero-paper p-8 md:p-16 space-y-16 overflow-hidden">
 
         <!-- Progetti In Corso & Attivi -->
         <section id="progetti" class="space-y-8 gsap-fade-up">
-          <div class="border-b border-zero-dark pb-4 flex items-end justify-between">
+          <div class="pb-4 flex items-end justify-between">
             <h2 class="font-display font-extrabold text-3xl uppercase text-zero-black">PROGETTI ATTIVI</h2>
-            <span class="ui-meta text-zero-granata font-bold">[{activeProjects.length} ATTIVI]</span>
+            <span class="ui-meta text-zero-red font-bold">{activeProjects.length} ATTIVI</span>
           </div>
           <div class="space-y-8">
             {activeProjects.map((project) => (
@@ -86,10 +69,10 @@ const completedProjects = projects.filter(p => p.status === 'Concluso');
 
         <!-- Archivio Progetti Conclusi (Scroll Orizzontale) -->
         {completedProjects.length > 0 && (
-          <section class="pt-12 border-t border-zero-dark space-y-6 gsap-fade-up">
-            <div class="border-b border-zero-dark pb-4 flex items-end justify-between">
+          <section class="pt-12 space-y-6 gsap-fade-up">
+            <div class="pb-4 flex items-end justify-between">
               <h2 class="font-display font-extrabold text-2xl uppercase text-zero-black">ARCHIVIO PROGETTI CONCLUSI</h2>
-              <span class="ui-meta text-neutral-500 font-bold">[{completedProjects.length} CONCLUSI]</span>
+              <span class="ui-meta text-neutral-500 font-bold">{completedProjects.length} CONCLUSI</span>
             </div>
             
             <!-- Horizontal Scroll Container -->

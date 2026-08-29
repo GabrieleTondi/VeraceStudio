@@ -8,27 +8,27 @@ interface Props {
 
 const { member, index = 0 } = Astro.props;
 
-// Palette di loghi e sfondi a rotazione coi colori ufficiali di VERACE
+// Palette di loghi e sfondi con i colori ufficiali VERACE
 const logoVariants = [
   {
-    bg: 'bg-zero-green',
+    bg: 'bg-zero-red',
     logo: '/logos/Verace_Logo_Bianco.png',
-    alt: 'Logo VERACE Bianco su Verde',
-  },
-  {
-    bg: 'bg-white',
-    logo: '/logos/Verace_Logo_Verde.png',
-    alt: 'Logo VERACE Verde',
-  },
-  {
-    bg: 'bg-zero-granata',
-    logo: '/logos/Verace_Logo_Bianco.png',
-    alt: 'Logo VERACE Bianco su Granata',
+    alt: 'Logo VERACE Bianco su Rosso',
   },
   {
     bg: 'bg-white',
     logo: '/logos/Verace_Logo_Nero.png',
     alt: 'Logo VERACE Nero',
+  },
+  {
+    bg: 'bg-zero-black',
+    logo: '/logos/Verace_Logo_Bianco.png',
+    alt: 'Logo VERACE Bianco su Nero',
+  },
+  {
+    bg: 'bg-zero-bg',
+    logo: '/logos/Verace_Logo_Nero.png',
+    alt: 'Logo VERACE Nero su Fondo Chiaro',
   },
 ];
 
@@ -50,10 +50,10 @@ const variant = logoVariants[index % logoVariants.length];
 
   <div class="flex flex-col flex-grow pt-2 space-y-2">
     <div>
-      <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-green transition-colors leading-tight">
+      <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-red transition-colors leading-tight">
         {member.name}
       </h3>
-      <div class="font-mono text-xs font-bold text-zero-granata uppercase tracking-wider mt-1">
+      <div class="font-mono text-xs font-bold text-zero-red uppercase tracking-wider mt-1">
         {member.role}
       </div>
     </div>

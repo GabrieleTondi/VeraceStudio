@@ -28,15 +28,15 @@ const cookieSchema = {
   <div class="w-full bg-zero-bg">
     
     <!-- Hero Header -->
-    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-16 lg:py-24 bg-zero-paper gsap-fade-up">
+    <header class="px-4 sm:px-6 lg:px-8 py-16 lg:py-24 bg-zero-paper gsap-fade-up">
       <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
-          <div class="ui-meta text-zero-granata font-bold mb-4 flex items-center gap-2">
-            <span>[ INFORMATIVA ESTESA SULL'USO DEI COOKIE E STORAGE LOCALE ]</span>
+          <div class="ui-meta text-zero-red font-bold mb-4 flex items-center gap-2">
+            <span>INFORMATIVA ESTESA SULL'USO DEI COOKIE E STORAGE LOCALE</span>
             <span class="inline-block w-2 h-2 bg-zero-red"></span>
           </div>
           <h1 class="hero-headline text-zero-black uppercase leading-[0.85]">
-            COOKIE <span class="text-zero-red">&</span> CACHE<br/>POLICY
+            COOKIE & CACHE<br/>POLICY
           </h1>
         </div>
         <div class="max-w-md space-y-4">
@@ -46,7 +46,7 @@ const cookieSchema = {
           <button
             type="button"
             data-open-cookie-settings
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-zero-red text-white ui-meta font-bold text-xs hover:bg-zero-black transition-colors"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-zero-red text-white ui-meta font-bold text-xs hover:bg-zero-black transition-colors shadow-sm"
           >
             <span>GESTISCI PREFERENZE COOKIE</span>
             <span>⚙</span>
@@ -60,7 +60,7 @@ const cookieSchema = {
       
       <!-- 1. Cosa sono i Cookie e lo Storage Locale -->
       <section class="space-y-6">
-        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+        <div class="flex items-center gap-3 pb-3">
           <span class="font-mono text-sm font-bold text-zero-red">01</span>
           <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Cosa sono i Cookie e le Tecnologie di Cache</h2>
         </div>
@@ -76,7 +76,7 @@ const cookieSchema = {
 
       <!-- 2. Categorie di Cookie Utilizzati -->
       <section class="space-y-6">
-        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+        <div class="flex items-center gap-3 pb-3">
           <span class="font-mono text-sm font-bold text-zero-red">02</span>
           <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Tipologie di Cookie e Strumenti di Tracciamento</h2>
         </div>
@@ -84,9 +84,9 @@ const cookieSchema = {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           <!-- Box 1: Cookie Tecnici -->
-          <div class="p-6 bg-zero-paper border border-zero-dark space-y-4">
+          <div class="p-6 bg-zero-paper shadow-sm space-y-4">
             <div class="flex items-center justify-between">
-              <span class="ui-meta text-zero-red font-bold">[ NECESSARI ]</span>
+              <span class="ui-meta text-zero-red font-bold">NECESSARI</span>
               <span class="font-mono text-xs bg-zero-black text-white px-2 py-0.5">Sempre Attivi</span>
             </div>
             <h3 class="font-display font-bold text-lg uppercase text-zero-black">Cookie Tecnici & di Sessione</h3>
@@ -96,10 +96,10 @@ const cookieSchema = {
           </div>
 
           <!-- Box 2: Cache Performance -->
-          <div class="p-6 bg-zero-paper border border-zero-dark space-y-4">
+          <div class="p-6 bg-zero-paper shadow-sm space-y-4">
             <div class="flex items-center justify-between">
-              <span class="ui-meta text-zero-granata font-bold">[ PRESTAZIONI ]</span>
-              <span class="font-mono text-xs border border-zero-dark px-2 py-0.5">Opzionale</span>
+              <span class="ui-meta text-zero-red font-bold">PRESTAZIONI</span>
+              <span class="font-mono text-xs bg-zero-bg px-2 py-0.5">Opzionale</span>
             </div>
             <h3 class="font-display font-bold text-lg uppercase text-zero-black">Cache Client-Side per Performance</h3>
             <p class="text-xs text-neutral-700 leading-relaxed font-light">
@@ -108,10 +108,10 @@ const cookieSchema = {
           </div>
 
           <!-- Box 3: Cookie Analitici -->
-          <div class="p-6 bg-zero-paper border border-zero-dark space-y-4">
+          <div class="p-6 bg-zero-paper shadow-sm space-y-4">
             <div class="flex items-center justify-between">
-              <span class="ui-meta text-zero-granata font-bold">[ ANALYTICS ]</span>
-              <span class="font-mono text-xs border border-zero-dark px-2 py-0.5">Opzionale</span>
+              <span class="ui-meta text-zero-red font-bold">ANALYTICS</span>
+              <span class="font-mono text-xs bg-zero-bg px-2 py-0.5">Opzionale</span>
             </div>
             <h3 class="font-display font-bold text-lg uppercase text-zero-black">Statistiche Google Analytics 4</h3>
             <p class="text-xs text-neutral-700 leading-relaxed font-light">
@@ -124,23 +124,23 @@ const cookieSchema = {
 
       <!-- 3. Tabella Dettagliata dei Cookie -->
       <section class="space-y-6">
-        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+        <div class="flex items-center gap-3 pb-3">
           <span class="font-mono text-sm font-bold text-zero-red">03</span>
           <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Dettaglio degli Strumenti di Storage Utilizzati</h2>
         </div>
         
-        <div class="overflow-x-auto">
-          <table class="w-full border border-zero-dark text-left text-sm bg-zero-paper">
+        <div class="overflow-x-auto shadow-sm">
+          <table class="w-full text-left text-sm bg-zero-paper">
             <thead class="bg-zero-black text-white font-mono text-xs uppercase">
               <tr>
-                <th class="p-4 border border-zero-dark">Nome Strumento</th>
-                <th class="p-4 border border-zero-dark">Fornitore / Dominio</th>
-                <th class="p-4 border border-zero-dark">Finalità Specifica</th>
-                <th class="p-4 border border-zero-dark">Scadenza</th>
-                <th class="p-4 border border-zero-dark">Categoria</th>
+                <th class="p-4">Nome Strumento</th>
+                <th class="p-4">Fornitore / Dominio</th>
+                <th class="p-4">Finalità Specifica</th>
+                <th class="p-4">Scadenza</th>
+                <th class="p-4">Categoria</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-zero-lightborder font-mono text-xs">
+            <tbody class="divide-y divide-neutral-200 font-mono text-xs">
               <tr>
                 <td class="p-4 font-bold text-zero-black">verace_cookie_consent_v1</td>
                 <td class="p-4">Prima parte (VERACE)</td>
@@ -160,7 +160,7 @@ const cookieSchema = {
                 <td class="p-4">Prima parte (localStorage)</td>
                 <td class="p-4 font-sans font-light">Cache client-side per accelerare la visualizzazione di reportage e progetti</td>
                 <td class="p-4">24 Ore / Sessione</td>
-                <td class="p-4 text-zero-granata font-bold">Performance Cache</td>
+                <td class="p-4 text-zero-red font-bold">Performance Cache</td>
               </tr>
               <tr>
                 <td class="p-4 font-bold text-zero-black">_ga</td>
@@ -183,7 +183,7 @@ const cookieSchema = {
 
       <!-- 4. Come Modificare il Consenso o Disattivare i Cookie -->
       <section class="space-y-6">
-        <div class="flex items-center gap-3 border-b-2 border-zero-black pb-3">
+        <div class="flex items-center gap-3 pb-3">
           <span class="font-mono text-sm font-bold text-zero-red">04</span>
           <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black">Come Modificare le Tue Preferenze</h2>
         </div>
@@ -195,7 +195,7 @@ const cookieSchema = {
             <button
               type="button"
               data-open-cookie-settings
-              class="px-6 py-3 bg-zero-black text-white ui-meta font-bold hover:bg-zero-red transition-colors duration-300"
+              class="px-6 py-3 bg-zero-black text-white ui-meta font-bold hover:bg-zero-red transition-colors duration-300 shadow-sm"
             >
               APRI PANNELLO PREFERENZE COOKIE →
             </button>
@@ -207,22 +207,22 @@ const cookieSchema = {
               È inoltre possibile bloccare o rimuovere i cookie direttamente attraverso le impostazioni del proprio browser di navigazione:
             </p>
             <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none pl-0 font-mono text-xs pt-2">
-              <li class="p-3 bg-zero-paper border border-zero-lightborder">
+              <li class="p-3 bg-zero-paper shadow-sm">
                 <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" class="text-zero-black hover:text-zero-red block">
                   → Google Chrome (Guida Ufficiale)
                 </a>
               </li>
-              <li class="p-3 bg-zero-paper border border-zero-lightborder">
+              <li class="p-3 bg-zero-paper shadow-sm">
                 <a href="https://support.mozilla.org/it/kb/protezione-antitracciamento-avanzata-firefox-desktop" target="_blank" rel="noopener noreferrer" class="text-zero-black hover:text-zero-red block">
                   → Mozilla Firefox (Guida Ufficiale)
                 </a>
               </li>
-              <li class="p-3 bg-zero-paper border border-zero-lightborder">
+              <li class="p-3 bg-zero-paper shadow-sm">
                 <a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" class="text-zero-black hover:text-zero-red block">
                   → Apple Safari (Guida Ufficiale)
                 </a>
               </li>
-              <li class="p-3 bg-zero-paper border border-zero-lightborder">
+              <li class="p-3 bg-zero-paper shadow-sm">
                 <a href="https://support.microsoft.com/it-it/microsoft-edge/eliminare-i-cookie-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer" class="text-zero-black hover:text-zero-red block">
                   → Microsoft Edge (Guida Ufficiale)
                 </a>
@@ -233,7 +233,7 @@ const cookieSchema = {
       </section>
 
       <!-- 5. Titolare del Trattamento -->
-      <section class="space-y-4 pt-4 border-t border-zero-dark">
+      <section class="space-y-4 pt-4">
         <h3 class="font-display font-black text-xl uppercase text-zero-black">Contatti per la Privacy</h3>
         <p class="text-sm font-light text-zero-black">
           Per qualsiasi domanda relativa alla presente Cookie Policy, puoi contattare VERACE all'indirizzo email <a href="mailto:info@fondazioneverace.eu" class="text-zero-red hover:underline font-mono font-normal">info@fondazioneverace.eu</a> o consultare la nostra <a href="/privacy" class="text-zero-black font-normal underline hover:text-zero-red">Informativa Privacy Estesa</a>.

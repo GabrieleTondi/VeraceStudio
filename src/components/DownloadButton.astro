@@ -14,10 +14,10 @@ const {
 } = Astro.props;
 
 const variantClasses = {
-  primary: 'bg-zero-red text-white hover:bg-zero-black border border-zero-dark shadow-[4px_4px_0px_#373232]',
-  secondary: 'bg-zero-black text-white hover:bg-zero-red border border-zero-dark shadow-[4px_4px_0px_#373232]',
-  outline: 'bg-transparent text-zero-black hover:bg-zero-red hover:text-white border border-zero-dark',
-  brutalist: 'bg-zero-paper text-zero-black hover:bg-zero-black hover:text-white border border-zero-dark transition-colors duration-300 w-full justify-between group',
+  primary: 'bg-zero-red text-white hover:bg-zero-black shadow-sm hover:shadow-md',
+  secondary: 'bg-zero-black text-white hover:bg-zero-red shadow-sm hover:shadow-md',
+  outline: 'bg-transparent text-zero-black hover:bg-zero-red hover:text-white border border-zero-black',
+  brutalist: 'bg-zero-paper text-zero-black hover:bg-zero-red hover:text-white shadow-sm hover:shadow-md transition-colors duration-300 w-full justify-between group',
 };
 ---
 
@@ -34,7 +34,7 @@ const variantClasses = {
   </span>
   
   {variant === 'brutalist' ? (
-    <span class="border-l border-zero-dark pl-4 group-hover:border-white transition-colors duration-300 flex items-center justify-center">
+    <span class="pl-4 transition-colors duration-300 flex items-center justify-center font-mono">
       ↓
     </span>
   ) : (

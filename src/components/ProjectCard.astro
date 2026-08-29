@@ -1,6 +1,5 @@
 ---
 import { type Project, urlFor } from '../lib/sanity';
-import DownloadButton from './DownloadButton.astro';
 
 interface Props {
   project: Project;
@@ -20,16 +19,16 @@ if (project.galleryUrls && project.galleryUrls.length > 0 && project.galleryUrls
 }
 
 const statusColors = {
-  'In Corso': 'bg-zero-red text-white border-zero-dark',
-  'Concluso': 'bg-zero-dark text-white border-zero-dark',
-  'In Programmazione': 'bg-zero-paper text-zero-black border-zero-dark'
+  'In Corso': 'bg-zero-red text-white shadow-sm',
+  'Concluso': 'bg-zero-dark text-white shadow-sm',
+  'In Programmazione': 'bg-zero-paper text-zero-black shadow-sm'
 };
 ---
 
-<article class={`group bg-zero-paper flex flex-col ${compact ? 'md:flex-row' : ''} relative overflow-hidden`}>
-  {/* Sezione Immagine */}
-  <div class={`relative overflow-hidden ${compact ? 'md:w-1/3' : 'h-64'}`}>
-    <a href={projectUrl} class="block w-full h-full overflow-hidden">
+<article class={`group bg-transparent flex flex-col ${compact ? 'md:flex-row md:gap-6' : ''} relative overflow-hidden`}>
+  {/* Sezione Immagine Senza Cornici */}
+  <div class={`relative overflow-hidden ${compact ? 'md:w-1/3' : 'h-64 sm:h-72 w-full'}`}>
+    <a href={projectUrl} class="block w-full h-full overflow-hidden" aria-label={`Vai a ${project.title}`}>
       <img
         src={imageUrl}
         alt={`Foto del progetto VERACE: ${project.title}`}
@@ -38,30 +37,30 @@ const statusColors = {
       />
     </a>
     <div class="absolute top-3 left-3">
-      <span class={`px-2 py-1 ui-meta font-bold ${statusColors[project.status]}`}>
+      <span class={`px-2.5 py-1 ui-meta font-bold text-xs ${statusColors[project.status]}`}>
         {project.status}
       </span>
     </div>
   </div>
 
-  {/* Dettagli Progetto */}
-  <div class={`p-6 flex flex-col justify-between flex-grow ${compact ? 'md:w-2/3' : 'space-y-6'}`}>
-    <div class="space-y-4">
-      <h3 class="font-display font-bold text-2xl uppercase text-zero-black leading-tight group-hover:text-zero-granata transition-colors">
-        <a href={projectUrl}>
+  {/* Dettagli Progetto Senza Riquadro/Cornice */}
+  <div class={`pt-5 flex flex-col justify-between flex-grow ${compact ? 'md:w-2/3 md:pt-0' : 'space-y-4'}`}>
+    <div class="space-y-3">
+      <h3 class="font-display font-bold text-2xl sm:text-3xl uppercase text-zero-black leading-tight group-hover:text-zero-red transition-colors">
+        <a href={projectUrl} class="focus:outline-none before:absolute before:inset-0">
           {project.title}
         </a>
       </h3>
-      <p class="text-sm text-zero-black leading-relaxed line-clamp-3">
+      <p class="text-sm text-neutral-700 font-light leading-relaxed line-clamp-3">
         {project.summary}
       </p>
       
       {project.partners && project.partners.length > 0 && (
-        <div class="pt-4 border-t border-zero-lightborder">
-          <div class="ui-meta text-zero-granata font-bold mb-2">PARTNERS STRATEGICI:</div>
+        <div class="pt-2 relative z-10">
+          <div class="ui-meta text-zero-red font-bold text-[10px] mb-1.5 tracking-wider">PARTNER</div>
           <div class="flex flex-wrap gap-2">
             {project.partners.map((partner) => (
-              <span class="px-2 py-1 text-xs uppercase font-mono bg-zero-bg">
+              <span class="px-2 py-0.5 text-[11px] uppercase font-mono text-neutral-600 bg-neutral-200/50">
                 {partner}
               </span>
             ))}
@@ -70,22 +69,9 @@ const statusColors = {
       )}
     </div>
 
-    <div class="pt-4 border-t border-zero-dark flex items-center justify-between">
-      <a
-        href={projectUrl}
-        class="ui-meta font-bold text-xs text-zero-granata flex items-center gap-1 hover:text-zero-black transition-colors"
-      >
-        SCHEDA PROGETTO COMPLETA →
-      </a>
-      {project.attachedDocUrl && (
-        <a
-          href={project.attachedDocUrl}
-          download
-          class="ui-meta font-bold text-xs text-zero-black hover:text-zero-granata transition-colors"
-        >
-          [ PDF ]
-        </a>
-      )}
+    <div class="pt-2 flex items-center gap-1 font-mono text-xs font-bold text-zero-black group-hover:text-zero-red transition-colors">
+      <span>SCOPRI IL PROGETTO</span>
+      <span>→</span>
     </div>
   </div>
 </article>

@@ -11,8 +11,22 @@ export default {
     },
     {
       name: 'subtitle',
-      title: 'Sottotitolo / Sommario',
+      title: 'Sottotitolo / Sommario / Hook sentence',
+      type: 'text',
+      rows: 3,
+      description: 'Sottotitolo descrittivo o frase gancio dell\'inchiesta.',
+    },
+    {
+      name: 'author',
+      title: 'Autore / Intervistatore / Protagonisti',
       type: 'string',
+      description: 'Es: Taima Sallami (22 anni, Abitante del quartiere da 9 anni) o Redazione VERACE',
+    },
+    {
+      name: 'credits',
+      title: 'Crediti & Fotografie',
+      type: 'string',
+      description: 'Es: Fotografie di Simone Todaro realizzate nel Luglio 2024',
     },
     {
       name: 'slug',
@@ -66,36 +80,46 @@ export default {
       ],
     },
     {
-      name: 'layoutType',
-      title: 'Layout Visualizzazione Articolo',
-      type: 'string',
-      description: 'Scegli la modalità di impaginazione del post',
-      options: {
-        list: [
-          { title: 'Layout Standard - Testo continuo con media in evidenza', value: 'standard' },
-          { title: 'Layout Split-view - Colonna testo affiancata a blocchi multimediali', value: 'split-view' },
-          { title: 'Layout PDF Reader - Sfoglia dossier/pubblicazione PDF originale', value: 'pdf-reader' },
-          { title: 'Layout Focus Editoriale - Titoli bold, quote e formattazione d\'impatto', value: 'editorial-focus' },
-          { title: 'Layout Fotogiornalismo - Griglie e lightbox fotografici', value: 'photo-journalism' },
-          { title: 'Layout Data Dossier - Tabelle, indicatori e schede analitiche', value: 'data-dossier' },
-          { title: 'Layout Manifesto - Tesi numerate e manifesto programmatico', value: 'manifesto-magazine' },
-        ],
-        layout: 'dropdown',
-      },
-      initialValue: 'standard',
+      name: 'pullquotes',
+      title: 'Frasi da mettere in risalto (Pull quotes / Citazioni in evidenza)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Inserisci una o più frasi chiave o citazioni d\'impatto da evidenziare graficamente nell\'articolo.',
     },
     {
-      name: 'pdfFile',
-      title: 'File PDF (per layout PDF Reader)',
-      type: 'file',
-      options: {
-        accept: '.pdf',
-      },
-      description: 'Carica il file PDF sfogliabile nell\'articolo.',
+      name: 'sideNotes',
+      title: 'Piccole didascalie, descrizioni o riquadretti nel tempo (Approfondimenti)',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          title: 'Riquadro di Approfondimento / Nota a Margine',
+          fields: [
+            {
+              name: 'title',
+              title: 'Titolo Riquadro (es: Origini, Vocabolario, Banca Interna)',
+              type: 'string',
+            },
+            {
+              name: 'text',
+              title: 'Testo della nota / Didascalia di approfondimento',
+              type: 'text',
+              rows: 4,
+              validation: (Rule: any) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {
+              title: 'title',
+              subtitle: 'text',
+            },
+          },
+        },
+      ],
     },
     {
       name: 'gallery',
-      title: 'Galleria Immagini (per reportage / fotogiornalismo)',
+      title: 'Galleria Immagini (Reportage Fotografico)',
       type: 'array',
       of: [
         {
@@ -110,10 +134,18 @@ export default {
     },
     {
       name: 'body',
-      title: 'Contenuto Testo & Paragrafi',
+      title: 'Corpo del Testo & Paragrafi',
       type: 'array',
       of: [
-        { type: 'block' },
+        {
+          type: 'block',
+          styles: [
+            { title: 'Paragrafo Normale', value: 'normal' },
+            { title: 'Titolo Sezione (H2)', value: 'h2' },
+            { title: 'Sottotitolo Sezione (H3)', value: 'h3' },
+            { title: 'Citazione Blockquote', value: 'blockquote' },
+          ],
+        },
         {
           type: 'image',
           options: { hotspot: true },
@@ -134,7 +166,7 @@ export default {
       name: 'readingTime',
       title: 'Tempo di lettura stimato (minuti)',
       type: 'number',
-      initialValue: 5,
+      initialValue: 6,
     },
   ],
   preview: {

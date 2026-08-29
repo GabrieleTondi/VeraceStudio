@@ -42,17 +42,18 @@ const magazineSchema = {
   customSchema={magazineSchema}
 >
   <div class="w-full">
-    <!-- Header Sezione Brutalista -->
-    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-8 bg-zero-paper gsap-fade-up">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <div class="ui-meta text-zero-granata mb-2">[ MAGAZINE ]</div>
-          <h1 class="hero-headline text-zero-black uppercase">
-            INCHIESTE<br/><span class="text-zero-red">&</span> REPORTAGE
+    <!-- Header Sezione -->
+    <header class="px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-16 md:pb-12 bg-zero-paper gsap-fade-up">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-12">
+        <div class="shrink-0">
+          <h1 class="hero-headline text-zero-black uppercase leading-none tracking-tight">
+            MAGAZINE
           </h1>
         </div>
-        <div class="ui-meta text-zero-black text-right max-w-xs">
-          REDAZIONE INDIPENDENTE<br/>AGGIORNATO MENSILMENTE
+        <div class="max-w-xl lg:max-w-2xl md:pb-1">
+          <p class="text-base md:text-lg text-zero-black font-light leading-relaxed text-balance">
+            Verace raccoglie storie del territorio di Reggio Emilia e dintorni, per conoscere ed esplorare i mondi nascosti che vivono a pochi passi da noi.
+          </p>
         </div>
       </div>
     </header>
@@ -60,7 +61,7 @@ const magazineSchema = {
     <div class="px-4 sm:px-6 lg:px-8 py-16 space-y-24">
       <!-- Articolo Hero In Evidenza -->
       {featuredCoverPost && (
-        <section class="bg-zero-paper group transition-transform duration-300 ease-out hover:scale-[1.015] flex flex-col lg:flex-row gsap-fade-up overflow-hidden">
+        <section class="bg-zero-paper shadow-sm group transition-transform duration-300 ease-out hover:scale-[1.015] flex flex-col lg:flex-row gsap-fade-up overflow-hidden">
           
           <div 
             class={`lg:w-3/5 relative overflow-hidden h-[400px] lg:h-auto min-h-[500px] ${videoEmbedUrl ? 'cursor-pointer group/video' : 'cursor-default'}`}
@@ -99,14 +100,13 @@ const magazineSchema = {
           </div>
 
           <div class="lg:w-2/5 p-8 md:p-12 flex flex-col justify-between bg-zero-paper relative">
-            <div class="absolute top-0 right-0 p-4 ui-meta text-zero-granata font-bold">
-              [ IN EVIDENZA ]
+            <div class="absolute top-0 right-0 p-4 ui-meta text-zero-red font-bold">
+              IN EVIDENZA
             </div>
             
             <div class="space-y-6 mt-8">
               <div class="flex items-center gap-3 ui-meta text-zero-black">
                 <span class="bg-zero-dark text-white px-2 py-1">{featuredCoverPost.category || 'INCHIESTA'}</span>
-                <span>{featuredCoverPost.readingTime || 6} MIN LETTURA</span>
               </div>
 
               <h2 class="font-display font-extrabold text-4xl lg:text-5xl uppercase text-zero-black leading-none group-hover:text-zero-red transition-colors">
@@ -125,9 +125,9 @@ const magazineSchema = {
 
       <!-- Griglia Articoli Secondari (3 Colonne) -->
       <section class="gsap-fade-up">
-        <div class="border-b border-zero-dark pb-4 mb-8 flex justify-between items-end">
+        <div class="pb-4 mb-8 flex justify-between items-end">
           <h2 class="font-display font-bold text-3xl uppercase text-zero-black">ARCHIVIO ARTICOLI</h2>
-          <span class="ui-meta text-zero-granata font-bold">[{secondaryPosts.length} PUBBLICAZIONI]</span>
+          <span class="ui-meta text-zero-red font-bold">{secondaryPosts.length} PUBBLICAZIONI</span>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -142,7 +142,7 @@ const magazineSchema = {
   <!-- Video Modal -->
   {videoEmbedUrl && (
     <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden p-4 sm:p-6 lg:p-12">
-      <div class="relative w-full max-w-4xl bg-black rounded-none overflow-hidden border border-zero-dark shadow-2xl aspect-video">
+      <div class="relative w-full max-w-4xl bg-black rounded-none overflow-hidden shadow-2xl aspect-video">
         <button
           id="close-video-modal"
           class="absolute top-4 right-4 z-20 text-white bg-black/70 hover:bg-zero-red p-2 transition-colors focus:outline-none"

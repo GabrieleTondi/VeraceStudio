@@ -3,6 +3,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEO from '../components/SEO.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import AudioWelcomePlayer from '../components/AudioWelcomePlayer.astro';
+import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
 
 interface Props {
@@ -198,8 +200,11 @@ const fullSchemaGraph = {
 
     <!-- Schema.org Rich Snippets JSON-LD Graph -->
     <script type="application/ld+json" is:inline set:html={JSON.stringify(fullSchemaGraph)}></script>
+
+    <!-- Astro View Transitions per navigazione fluida e audio continuo -->
+    <ViewTransitions />
   </head>
-  <body class="bg-zero-bg text-zero-black font-sans antialiased selection:bg-zero-granata selection:text-white flex flex-col min-h-screen">
+  <body class="bg-zero-bg text-zero-black font-sans antialiased selection:bg-zero-red selection:text-white flex flex-col min-h-screen">
     <!-- Skip to content link for accessibility -->
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-zero-red focus:text-white focus:outline-none">
       Salta al contenuto principale
@@ -216,13 +221,16 @@ const fullSchemaGraph = {
     <!-- Cookie & Performance Cache Consent Controller -->
     <CookieBanner />
 
+    <!-- Traccia Audio di Benvenuto con Player Dinamico -->
+    <AudioWelcomePlayer />
+
     <script>
       import { gsap } from "gsap";
       import { ScrollTrigger } from "gsap/ScrollTrigger";
       
       gsap.registerPlugin(ScrollTrigger);
 
-      document.addEventListener("DOMContentLoaded", () => {
+      function initScrollAnimations() {
         // Scroll fade-in per le sezioni
         const sections = document.querySelectorAll('.gsap-fade-up');
         sections.forEach(section => {
@@ -256,7 +264,10 @@ const fullSchemaGraph = {
               }
            });
         }
-      });
+      }
+
+      document.addEventListener("DOMContentLoaded", initScrollAnimations);
+      document.addEventListener("astro:page-load", initScrollAnimations);
     </script>
   </body>
 </html>

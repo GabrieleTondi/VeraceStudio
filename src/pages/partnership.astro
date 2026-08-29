@@ -7,24 +7,24 @@ const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu
 // Structured Data FAQPage & Service for Google Rich Snippets
 const faqs = [
   {
-    question: "Come possono le aziende di Reggio Emilia accedere ai Fondi Europei tramite VERACE?",
-    answer: "VERACE opera come partner del Terzo Settore abilitato alla co-progettazione e alla partecipazione a bandi europei (FESR, FSE+, PNRR, Horizon). Le aziende possono collaborare sia come co-finanziatori con sgravi fiscali e valorizzazione ESG, sia come partner tecnici e industriali nei consorzi di progetto sul territorio di Reggio Emilia ed Emilia-Romagna."
+    question: "Come collaborano le aziende con VERACE?",
+    answer: "VERACE sviluppa partnership strategiche su misura con le imprese del territorio: dall'ideazione e co-finanziamento di interventi sullo spazio pubblico e programmi culturali, fino alla misurazione dell'impatto sociale per i bilanci di sostenibilità aziendali (ESG e CSR)."
   },
   {
-    question: "Quali programmi di finanziamento europeo sono attivi su Reggio Emilia e provincia?",
-    answer: "I principali strumenti attivi includono il FESR Emilia-Romagna (innovazione, sostenibilità ed efficientamento), il FSE+ (competenze, occupabilità e inclusione sociale), le missioni del PNRR dedicate alla rigenerazione urbana e alle comunità energetiche (CER), oltre ai bandi territoriali congiunti con Fondazione Manodori e la Regione Emilia-Romagna."
+    question: "Quali tipologie di progetti possono essere realizzati insieme?",
+    answer: "Interventi di rigenerazione urbana a base culturale, valorizzazione del paesaggio e delle filiere tradizionali, laboratori educativi per le nuove generazioni ed eventi pubblici di aggregazione comunitaria a Reggio Emilia e provincia."
   },
   {
-    question: "Qual è il vantaggio per una società nel co-progettare iniziative con il Terzo Settore?",
-    answer: "La co-progettazione consente alle imprese di intercettare fondi altrimenti riservati ad enti non-profit, generare un impatto sociale tangibile e misurabile sul territorio emiliano, e integrare tali risultati nei propri report di sostenibilità e bilanci di sostenibilità ESG."
+    question: "Quali vantaggi ottiene l'impresa partner in termini di ESG e CSR?",
+    answer: "Le aziende possono misurare concretamente il valore generato sul territorio attraverso indicatori di impatto verificabili, migliorare il proprio rating ESG, valorizzare il proprio impegno civico e consolidare il legame con la comunità locale."
   },
   {
-    question: "Chi si occupa della rendicontazione e della conformità dei bandi europei?",
-    answer: "Il team di europrogettisti e revisori di VERACE gestisce l'intero ciclo di vita del progetto: dalla candidatura formale, al monitoraggio delle milestone, fino alla rendicontazione economica e qualitativa conforme ai regolamenti dell'Unione Europea."
+    question: "Chi cura la progettazione e la realizzazione operativa dell'intervento?",
+    answer: "Il team di VERACE coordina tutte le fasi: analisi dei bisogni del territorio, progettazione esecutiva, gestione delle relazioni con enti e istituzioni locali, esecuzione sul campo e monitoraggio continuo dei risultati."
   },
   {
-    question: "Come richiedere uno studio di fattibilità per un'opportunità di finanziamento a Reggio Emilia?",
-    answer: "È possibile compilare il modulo di contatto su questa pagina o inviare una richiesta direttamente a info@fondazioneverace.eu specificando l'ambito di attività dell'azienda e gli obiettivi di impatto territoriale."
+    question: "Come avviare una proposta di collaborazione o richiedere un incontro?",
+    answer: "È sufficiente compilare lo sportello di co-progettazione su questa pagina o inviare una richiesta diretta a info@fondazioneverace.eu per concordare un tavolo di confronto preliminare."
   }
 ];
 
@@ -34,8 +34,8 @@ const partnershipSchema = {
     {
       "@type": "Service",
       "@id": `${siteOrigin}/partnership#service`,
-      "name": "Partnership Imprese, Intercettazione e Co-progettazione Fondi Europei Reggio Emilia",
-      "serviceType": "Partnership Strategiche & Co-progettazione Fondi Europei (FSE+, FESR, PNRR)",
+      "name": "Partnership Imprese e Co-progettazione ad Alto Impatto Sociale",
+      "serviceType": "Partnership Strategiche & Rigenerazione Urbana",
       "provider": {
         "@type": "NGO",
         "name": "VERACE",
@@ -44,37 +44,9 @@ const partnershipSchema = {
       "areaServed": [
         { "@type": "AdministrativeArea", "name": "Reggio Emilia" },
         { "@type": "AdministrativeArea", "name": "Provincia di Reggio Emilia" },
-        { "@type": "AdministrativeArea", "name": "Emilia-Romagna" },
-        { "@type": "AdministrativeArea", "name": "Appennino Reggiano" }
+        { "@type": "AdministrativeArea", "name": "Emilia-Romagna" }
       ],
-      "description": "Sportello di europrogettazione, monitoraggio bandi e attivazione di partenariati pubblico-privati su Reggio Emilia e territorio emiliano per bandi FESR, FSE+, PNRR ed ESG.",
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Linee di Co-progettazione Europea & Partnership",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Rigenerazione Urbana & PNRR"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Transizione Ecologica & FESR Emilia-Romagna"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Inclusione Sociale & FSE+"
-            }
-          }
-        ]
-      }
+      "description": "Modello di collaborazione tra imprese e terzo settore basato sull'analisi dei bisogni del territorio e la creazione di progetti ad alto impatto sociale."
     },
     {
       "@type": "FAQPage",
@@ -93,34 +65,29 @@ const partnershipSchema = {
 ---
 
 <BaseLayout
-  title="Partnership & Fondi Europei Reggio Emilia | VERACE"
-  description="Hub strategico per partnership con imprese, PMI e Terzo Settore su Fondi Europei (FSE+, FESR, PNRR) a Reggio Emilia e provincia."
-  keywords="partnership imprese Reggio Emilia, fondi europei Reggio Emilia, bandi FSE+ FESR Emilia Romagna, PNRR Reggio Emilia, co-progettazione terzo settore, welfare territoriale, VERACE"
+  title="Partnership & Co-progettazione Imprese | VERACE"
+  description="Modello di collaborazione tra imprese e terzo settore a Reggio Emilia: progetti ad alto impatto sociale, rigenerazione urbana e valorizzazione ESG."
+  keywords="partnership imprese Reggio Emilia, co-progettazione terzo settore, CSR Reggio Emilia, rating ESG imprese, rigenerazione urbana, VERACE"
   customSchema={partnershipSchema}
 >
   <div class="w-full bg-zero-bg">
     
-    <!-- Hero Header Frameless & Pulito -->
-    <header class="border-b border-zero-dark px-4 sm:px-6 lg:px-8 py-16 lg:py-24 bg-zero-paper gsap-fade-up">
-      <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-        <div class="max-w-3xl">
-          <div class="ui-meta text-zero-granata font-bold mb-4 flex items-center gap-2">
-            <span>[ PARTNERSHIP & IMPATTO TERRITORIALE ]</span>
-            <span class="inline-block w-2 h-2 bg-zero-red rounded-full"></span>
-            <span class="text-neutral-500">REGGIO EMILIA & EMILIA-ROMAGNA</span>
-          </div>
-          <h1 class="hero-headline text-zero-black uppercase leading-[0.85]">
-            PARTNERSHIP<br/> PER LE <span class="text-zero-red">IMPRESE</span>
+    <!-- A) Apertura Sezione Partnership (Semplificata stile Magazine) -->
+    <header class="px-4 sm:px-6 lg:px-8 py-12 md:py-16 bg-zero-paper gsap-fade-up">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div>
+          <h1 class="hero-headline text-zero-black uppercase">
+            PARTNERSHIP
           </h1>
         </div>
-        <div class="max-w-md space-y-4">
-          <p class="text-lg font-light text-zero-black leading-relaxed">
-            VERACE è l'interlocutore di riferimento per aziende, enti locali e Terzo Settore intenzionati a <span class="font-bold">intercettare, gestire e mettere a terra i fondi europei e regionali</span> sul territorio di Reggio Emilia e provincia.
+        <div class="max-w-lg space-y-4">
+          <p class="text-sm md:text-base font-light text-zero-black leading-relaxed">
+            Verace ha sviluppato un modello di collaborazione tra imprese e terzo settore, che si basa sull’analisi dei bisogni del territorio e la creazione di progetti ad alto impatto sociale con imprese, fondazioni e enti no-profit.
           </p>
-          <div class="pt-2">
+          <div>
             <a
               href="#richiesta-partner"
-              class="inline-flex items-center gap-3 px-6 py-3.5 bg-zero-red text-white ui-meta font-bold hover:bg-zero-black transition-colors duration-300"
+              class="inline-flex items-center gap-3 px-6 py-3.5 bg-zero-red text-white ui-meta font-bold hover:bg-zero-black transition-colors duration-300 shadow-sm"
             >
               <span>RICHIEDI CO-PROGETTAZIONE</span>
               <span>→</span>
@@ -132,153 +99,69 @@ const partnershipSchema = {
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-24">
       
-      <!-- Sezione 4 Aree di Finanziamento Frameless -->
+      <!-- C) Sezione "Come Collaborare con VERACE" e Schema a 4 Step (Senza cornici, sfondo neutro #FFFCF9) -->
       <section class="space-y-12 gsap-fade-up">
-        <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-zero-dark pb-6 gap-4">
-          <div>
-            <div class="ui-meta text-zero-granata font-bold mb-2">01 / PROGRAMMI & STRUMENTI</div>
-            <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight">
-              LE LINEE DI FINANZIAMENTO INTERCETTATE
-            </h2>
-          </div>
-          <p class="text-sm font-mono text-neutral-600 max-w-sm">
-            Monitoraggio costante delle opportunità europee, nazionali e regionali per il territorio reggiano.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- Card 1 -->
-          <div class="bg-white/80 backdrop-blur-sm p-8 space-y-6 flex flex-col justify-between shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_8px_30px_rgba(55,50,50,0.07)] transition-all duration-300">
-            <div class="space-y-4">
-              <div class="font-mono text-xs text-zero-granata font-bold uppercase tracking-wider">[ 01. PNRR ]</div>
-              <h3 class="font-display font-black text-2xl uppercase text-zero-black leading-tight">
-                RIGENERAZIONE URBANA & SPAZI EX INDUSTRIALI
-              </h3>
-              <p class="text-sm text-neutral-700 font-light leading-relaxed">
-                Riqualificazione di manufatti storici, ex officine (es. Area Reggiane e poli periferici), creazione di hub socio-culturali e nuovi spazi civici condivisi.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-neutral-100 font-mono text-xs text-neutral-500">
-              Target: Missione 5 & 13 PNRR
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="bg-white/80 backdrop-blur-sm p-8 space-y-6 flex flex-col justify-between shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_8px_30px_rgba(55,50,50,0.07)] transition-all duration-300">
-            <div class="space-y-4">
-              <div class="font-mono text-xs text-zero-granata font-bold uppercase tracking-wider">[ 02. FESR EMILIA-ROMAGNA ]</div>
-              <h3 class="font-display font-black text-2xl uppercase text-zero-black leading-tight">
-                TRANSIZIONE ECOLOGICA & INNOVAZIONE
-              </h3>
-              <p class="text-sm text-neutral-700 font-light leading-relaxed">
-                Progetti di decarbonizzazione, Comunità Energetiche Rinnovabili (CER), riforestazione urbana e digitalizzazione del patrimonio materiale e immateriale.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-neutral-100 font-mono text-xs text-neutral-500">
-              Target: PR-FESR 2021-2027
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="bg-white/80 backdrop-blur-sm p-8 space-y-6 flex flex-col justify-between shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_8px_30px_rgba(55,50,50,0.07)] transition-all duration-300">
-            <div class="space-y-4">
-              <div class="font-mono text-xs text-zero-granata font-bold uppercase tracking-wider">[ 03. FSE+ & ERASMUS+ ]</div>
-              <h3 class="font-display font-black text-2xl uppercase text-zero-black leading-tight">
-                COMPETENZE, GIOVANI & INCLUSIONE
-              </h3>
-              <p class="text-sm text-neutral-700 font-light leading-relaxed">
-                Percorsi formativi all'aperto, laboratori creativi, reinserimento lavorativo in filiere tradizionali (lana, artigianato, agricoltura sociale) ed educazione civica.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-neutral-100 font-mono text-xs text-neutral-500">
-              Target: PR-FSE+ & Fondo Sociale Europeo
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="bg-white/80 backdrop-blur-sm p-8 space-y-6 flex flex-col justify-between shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_8px_30px_rgba(55,50,50,0.07)] transition-all duration-300">
-            <div class="space-y-4">
-              <div class="font-mono text-xs text-zero-granata font-bold uppercase tracking-wider">[ 04. BANDI TERRITORIALI ]</div>
-              <h3 class="font-display font-black text-2xl uppercase text-zero-black leading-tight">
-                FONDAZIONI BANCARIE & RETI LOCALI
-              </h3>
-              <p class="text-sm text-neutral-700 font-light leading-relaxed">
-                Iniziative congiunte con Fondazione Manodori, istituzioni comunali e provinciali, parchi e consorzi per la coesione delle comunità della Bassa e dell'Appennino.
-              </p>
-            </div>
-            <div class="pt-4 border-t border-neutral-100 font-mono text-xs text-neutral-500">
-              Target: Bandi Welfare & Territorio
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Modello B2B per le Imprese Frameless -->
-      <section class="bg-white/80 backdrop-blur-sm p-8 md:p-14 space-y-12 shadow-[0_4px_24px_rgba(55,50,50,0.03)] gsap-fade-up">
-        <div class="max-w-3xl space-y-4">
-          <div class="ui-meta text-zero-granata font-bold">[ MODELLO DI PARTNERSHIP B2B ]</div>
+        <div class="max-w-4xl space-y-4">
           <h2 class="font-display font-black text-3xl md:text-5xl uppercase text-zero-black tracking-tight leading-tight">
-            PERCHÉ E COME LE SOCIETÀ COLLABORANO CON VERACE
+            COME COLLABORARE CON VERACE
           </h2>
-          <p class="text-lg text-neutral-800 font-light leading-relaxed">
-            Spesso le aziende hanno l'interesse strategico o l'obbligo di investire in sostenibilità, ma mancano del veicolo operativo o del radicamento civico per partecipare ai bandi europei ad impatto sociale. VERACE colma questo divario.
+          <p class="text-lg md:text-xl text-zero-black font-light leading-relaxed">
+            Verace collabora con le aziende del territorio che desiderano investire in progetti ad alto impatto sociale realizzando: interventi sullo spazio pubblico, programmi culturali, progetti di rigenerazione urbana a base culturale. Aiutando a migliorare rating ESG, CSR e contribuendo allo sviluppo sociale ed economico della comunità.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-4">
-          <div class="space-y-3 font-mono">
-            <div class="text-zero-red font-bold text-lg">01 /</div>
-            <h4 class="font-bold text-zero-black text-sm uppercase">INTERCETTAZIONE & MATCHING</h4>
-            <p class="text-xs text-neutral-600 leading-relaxed font-sans">
-              Analisi dei bisogni aziendali e mappatura immediata dei bandi a fondo perduto e agevolati in uscita su Emilia-Romagna ed Europa.
-            </p>
+        <!-- 4 Step Numerati SENZA sottotesto descrittivo -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+          <div class="p-6 bg-zero-paper shadow-sm space-y-3">
+            <span class="text-4xl font-display font-black text-zero-red block">1</span>
+            <h3 class="font-display font-bold text-lg uppercase text-zero-black leading-snug">
+              analizziamo i bisogni del territorio
+            </h3>
           </div>
 
-          <div class="space-y-3 font-mono">
-            <div class="text-zero-red font-bold text-lg">02 /</div>
-            <h4 class="font-bold text-zero-black text-sm uppercase">CO-PROGETTAZIONE ESECUTIVA</h4>
-            <p class="text-xs text-neutral-600 leading-relaxed font-sans">
-              Stesura tecnica dei dossier di candidatura con indicatori di impatto, piano finanziario e coordinamento del consorzio di partner.
-            </p>
+          <div class="p-6 bg-zero-paper shadow-sm space-y-3">
+            <span class="text-4xl font-display font-black text-zero-red block">2</span>
+            <h3 class="font-display font-bold text-lg uppercase text-zero-black leading-snug">
+              costruiamo partnership virtuose
+            </h3>
           </div>
 
-          <div class="space-y-3 font-mono">
-            <div class="text-zero-red font-bold text-lg">03 /</div>
-            <h4 class="font-bold text-zero-black text-sm uppercase">MESSA A TERRA SUL TERRITORIO</h4>
-            <p class="text-xs text-neutral-600 leading-relaxed font-sans">
-              Esecuzione sul campo di workshop, micro-avventure, cammini e laboratori con le comunità locali di Reggio Emilia e provincia.
-            </p>
+          <div class="p-6 bg-zero-paper shadow-sm space-y-3">
+            <span class="text-4xl font-display font-black text-zero-red block">3</span>
+            <h3 class="font-display font-bold text-lg uppercase text-zero-black leading-snug">
+              progettiamo l’intervento
+            </h3>
           </div>
 
-          <div class="space-y-3 font-mono">
-            <div class="text-zero-red font-bold text-lg">04 /</div>
-            <h4 class="font-bold text-zero-black text-sm uppercase">RENDICONTAZIONE & METRICHE ESG</h4>
-            <p class="text-xs text-neutral-600 leading-relaxed font-sans">
-              Certificazione delle spese, audit formale e rilascio del report di impatto sociale da inserire nel Bilancio di Sostenibilità dell'azienda.
-            </p>
+          <div class="p-6 bg-zero-paper shadow-sm space-y-3">
+            <span class="text-4xl font-display font-black text-zero-red block">4</span>
+            <h3 class="font-display font-bold text-lg uppercase text-zero-black leading-snug">
+              misuriamo l’impatto con strumenti in linea con gli standard europei della sostenibilità
+            </h3>
           </div>
         </div>
 
-        <div class="pt-8 border-t border-neutral-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div class="font-mono text-xs text-neutral-600">
-            DISPONIBILE DOSSIER COMPLETO PER DIREZIONI SOSTENIBILITÀ, CSR ED ENTI LOCALI
+        <!-- D) Pulsante Scarica Dossier Progetti -->
+        <div class="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-neutral-200">
+          <div class="font-mono text-xs text-neutral-600 uppercase">
+            DISPONIBILE DOSSIER COMPLETO PER DIREZIONI SOSTENIBILITÀ, CSR ED ENTI DEL TERRITORIO
           </div>
           <DownloadButton
             href="/pdf/sample-project-presentation.pdf"
-            label="SCARICA GUIDA OPERATIVA CO-PROGETTAZIONE"
+            label="SCARICA IL DOSSIER PROGETTI"
             fileSize="PDF 2.4 MB"
             variant="solid"
           />
         </div>
       </section>
 
-      <!-- Casi Studio Territoriali Frameless -->
+      <!-- Casi Studio Territoriali -->
       <section class="space-y-12 gsap-fade-up">
-        <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-zero-dark pb-6 gap-4">
+        <div class="flex flex-col md:flex-row md:items-end justify-between pb-4 gap-4">
           <div>
-            <div class="ui-meta text-zero-granata font-bold mb-2">02 / TRACK RECORD SUL CAMPO</div>
+            <div class="ui-meta text-zero-red font-bold mb-1">PROGETTI ATTIVI</div>
             <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight">
-              PROGETTI PILOTA ATTIVI A REGGIO EMILIA E PROVINCIA
+              ESEMPI DI COLLABORAZIONE SUL TERRITORIO
             </h2>
           </div>
           <a href="/progetti" class="ui-meta text-zero-red font-bold hover:text-zero-black transition-colors">
@@ -288,7 +171,7 @@ const partnershipSchema = {
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Progetto 1 -->
-          <article class="bg-white shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_8px_30px_rgba(55,50,50,0.07)] transition-all duration-300 overflow-hidden group">
+          <article class="bg-zero-paper shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
             <div class="aspect-[16/10] overflow-hidden bg-neutral-100">
               <img
                 src="/projects/LA BELA/IMG_4931.webp"
@@ -298,23 +181,20 @@ const partnershipSchema = {
             </div>
             <div class="p-6 space-y-4">
               <div class="flex items-center justify-between font-mono text-xs">
-                <span class="text-zero-granata font-bold">APPENNINO REGGIANO</span>
+                <span class="text-zero-red font-bold">APPENNINO REGGIANO</span>
                 <span class="text-neutral-500">PARTNER: SALEWA / ALPINAFLORA</span>
               </div>
-              <h3 class="font-display font-black text-xl uppercase text-zero-black">
-                LA BELA: FILIERA DELLA LANA
+              <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-red transition-colors">
+                <a href="/progetti/progetto/la-bela">LA BELA: FILIERA DELLA LANA</a>
               </h3>
-              <p class="text-xs text-neutral-600 font-light leading-relaxed">
+              <p class="text-xs text-neutral-600 font-light leading-relaxed line-clamp-3">
                 Laboratorio itinerante in Appennino per 20 ragazzi per riscoprire la filiera della lana e supportare l'economia circolare montana.
               </p>
-              <a href="/progetti/progetto/la-bela" class="inline-block text-xs font-mono font-bold text-zero-red hover:underline">
-                LEGGI SCHEDA PROGETTO →
-              </a>
             </div>
           </article>
 
           <!-- Progetto 2 -->
-          <article class="bg-white shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_8px_30px_rgba(55,50,50,0.07)] transition-all duration-300 overflow-hidden group">
+          <article class="bg-zero-paper shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
             <div class="aspect-[16/10] overflow-hidden bg-neutral-100">
               <img
                 src="/projects/SCUOLA DI TERRITORIO/ST_2026-22.webp"
@@ -324,23 +204,20 @@ const partnershipSchema = {
             </div>
             <div class="p-6 space-y-4">
               <div class="flex items-center justify-between font-mono text-xs">
-                <span class="text-zero-granata font-bold">REGGIO EMILIA CITTÀ</span>
+                <span class="text-zero-red font-bold">REGGIO EMILIA CITTÀ</span>
                 <span class="text-neutral-500">FONDAZIONE MANODORI / ASINERIA</span>
               </div>
-              <h3 class="font-display font-black text-xl uppercase text-zero-black">
-                SCUOLA DI TERRITORIO
+              <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-red transition-colors">
+                <a href="/progetti/progetto/scuola-di-territorio">SCUOLA DI TERRITORIO</a>
               </h3>
-              <p class="text-xs text-neutral-600 font-light leading-relaxed">
+              <p class="text-xs text-neutral-600 font-light leading-relaxed line-clamp-3">
                 Percorso biennale per ragazzi 11-14 anni tra città e natura, cammini fluviali e micro-avventure urbane a Reggio Emilia.
               </p>
-              <a href="/progetti/progetto/scuola-di-territorio" class="inline-block text-xs font-mono font-bold text-zero-red hover:underline">
-                LEGGI SCHEDA PROGETTO →
-              </a>
             </div>
           </article>
 
           <!-- Progetto 3 -->
-          <article class="bg-white shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_8px_30px_rgba(55,50,50,0.07)] transition-all duration-300 overflow-hidden group">
+          <article class="bg-zero-paper shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
             <div class="aspect-[16/10] overflow-hidden bg-neutral-100">
               <img
                 src="/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-14.webp"
@@ -350,46 +227,43 @@ const partnershipSchema = {
             </div>
             <div class="p-6 space-y-4">
               <div class="flex items-center justify-between font-mono text-xs">
-                <span class="text-zero-granata font-bold">VALLE DEL CROSTOLO & BASSA</span>
+                <span class="text-zero-red font-bold">VALLE DEL CROSTOLO & BASSA</span>
                 <span class="text-neutral-500">FONDAZIONE LUIGI GHIRRI</span>
               </div>
-              <h3 class="font-display font-black text-xl uppercase text-zero-black">
-                VIAGGI DOMENICALI MINIMI
+              <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-red transition-colors">
+                <a href="/progetti/progetto/viaggi-domenicali-minimi">VIAGGI DOMENICALI MINIMI</a>
               </h3>
-              <p class="text-xs text-neutral-600 font-light leading-relaxed">
+              <p class="text-xs text-neutral-600 font-light leading-relaxed line-clamp-3">
                 10 viaggi minimi in bicicletta per valorizzare il paesaggio emiliano e riscoprire l'immaginario visivo di Luigi Ghirri.
               </p>
-              <a href="/progetti/progetto/viaggi-domenicali-minimi" class="inline-block text-xs font-mono font-bold text-zero-red hover:underline">
-                LEGGI SCHEDA PROGETTO →
-              </a>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- Form di Contatto / Co-progettazione Imprese Frameless -->
-      <section id="richiesta-partner" class="bg-white/90 backdrop-blur-sm p-8 md:p-14 space-y-8 shadow-[0_4px_24px_rgba(55,50,50,0.04)] scroll-mt-28 gsap-fade-up">
+      <!-- D) Sportello di Co-progettazione Imprese (Sfondo neutro / senza cornici bianche) -->
+      <section id="richiesta-partner" class="bg-zero-paper p-8 md:p-14 space-y-8 shadow-sm scroll-mt-28 gsap-fade-up">
         <div class="max-w-2xl">
-          <div class="ui-meta text-zero-granata font-bold mb-2">[ SPORTELLO IMPRESE & BANDI ]</div>
+          <div class="ui-meta text-zero-red font-bold mb-2">SPORTELLO DI CO-PROGETTAZIONE</div>
           <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight">
             RICHIEDI UN TAVOLO DI CO-PROGETTAZIONE
           </h2>
           <p class="text-sm text-neutral-700 mt-2 font-light">
-            Sei un'azienda, una PMI o un ente del Terzo Settore? Raccontaci la tua idea o richiedi una consulenza preliminare per intercettare i bandi attivi a Reggio Emilia.
+            Sei un'azienda, una fondazione o un ente del Terzo Settore? Raccontaci la tua idea o richiedi una consulenza preliminare per costruire insieme un progetto sul territorio.
           </p>
         </div>
 
         <form
           class="grid grid-cols-1 md:grid-cols-2 gap-6"
-          onsubmit="event.preventDefault(); alert('Grazie per la richiesta. Il team di europrogettazione di VERACE ti ricontatterà entro 24 ore lavorative.');"
+          onsubmit="event.preventDefault(); alert('Grazie per la richiesta. Il team di VERACE ti ricontatterà entro 24 ore lavorative.');"
         >
           <div class="space-y-2">
             <label class="block font-mono text-xs uppercase font-bold text-zero-black">Azienda / Ente *</label>
             <input
               type="text"
               required
-              placeholder="ES. COOPERATIVA REGGIO FUTURA SPA"
-              class="w-full px-4 py-3 bg-zero-bg/80 focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all"
+              placeholder="ES. AZIENDA O ENTE SOSTENITORE"
+              class="w-full px-4 py-3 bg-zero-bg focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all shadow-sm"
             />
           </div>
 
@@ -399,7 +273,7 @@ const partnershipSchema = {
               type="text"
               required
               placeholder="ES. MARCO BIANCHI"
-              class="w-full px-4 py-3 bg-zero-bg/80 focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all"
+              class="w-full px-4 py-3 bg-zero-bg focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all shadow-sm"
             />
           </div>
 
@@ -409,18 +283,18 @@ const partnershipSchema = {
               type="email"
               required
               placeholder="REFERENTE@AZIENDA.IT"
-              class="w-full px-4 py-3 bg-zero-bg/80 focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all"
+              class="w-full px-4 py-3 bg-zero-bg focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all shadow-sm"
             />
           </div>
 
           <div class="space-y-2">
             <label class="block font-mono text-xs uppercase font-bold text-zero-black">Ambito di Interesse</label>
-            <select class="w-full px-4 py-3 bg-zero-bg/80 focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all">
-              <option value="PNRR">PNRR & Rigenerazione Territoriale</option>
-              <option value="FESR">FESR Emilia-Romagna (Green & Tech)</option>
-              <option value="FSE">FSE+ (Formazione, Giovani, Inclusione)</option>
+            <select class="w-full px-4 py-3 bg-zero-bg focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all shadow-sm">
+              <option value="RIGENERAZIONE">Interventi sullo Spazio Pubblico & Rigenerazione Urbana</option>
+              <option value="CULTURA">Programmi Culturali & Editoriali</option>
+              <option value="GIOVANI">Progetti Educativi & Comunità</option>
               <option value="ESG">Partnership CSR & Rendicontazione ESG</option>
-              <option value="ALTRO">Altro / Analisi Bandi Generica</option>
+              <option value="ALTRO">Altro / Proposta Personalizzata</option>
             </select>
           </div>
 
@@ -428,18 +302,18 @@ const partnershipSchema = {
             <label class="block font-mono text-xs uppercase font-bold text-zero-black">Descrizione Sintetica dell'Iniziativa o Necessità</label>
             <textarea
               rows="4"
-              placeholder="Indica gli obiettivi aziendali, il budget stimato o l'area territoriale di Reggio Emilia su cui intendi intervenire..."
-              class="w-full px-4 py-3 bg-zero-bg/80 focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all"
+              placeholder="Indica gli obiettivi aziendali, il budget stimato o l'area territoriale di interesse..."
+              class="w-full px-4 py-3 bg-zero-bg focus:bg-white text-sm font-mono focus:outline-none focus:ring-1 focus:ring-zero-red transition-all shadow-sm"
             ></textarea>
           </div>
 
-          <div class="md:col-span-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-neutral-100">
+          <div class="md:col-span-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-neutral-200">
             <div class="font-mono text-xs text-neutral-500">
-              * I tuoi dati saranno trattati nel rispetto della Privacy Policy e utilizzati esclusivamente per la richiesta di contatto.
+              * I dati saranno trattati nel rispetto della Privacy Policy e utilizzati esclusivamente per ricontattarti.
             </div>
             <button
               type="submit"
-              class="px-8 py-4 bg-zero-red text-white ui-meta font-bold hover:bg-zero-black transition-colors duration-300 w-full sm:w-auto"
+              class="px-8 py-4 bg-zero-red text-white ui-meta font-bold hover:bg-zero-black transition-colors duration-300 w-full sm:w-auto shadow-sm cursor-pointer"
             >
               INVIA RICHIESTA CO-PROGETTAZIONE →
             </button>
@@ -447,23 +321,23 @@ const partnershipSchema = {
         </form>
       </section>
 
-      <!-- Domande Frequenti / FAQ Frameless per Google Rich Snippets -->
+      <!-- D) Domande Frequenti / FAQ (Font Lineare e Pulito, senza font display Populista) -->
       <section class="space-y-8 gsap-fade-up">
-        <div class="border-b border-zero-dark pb-4">
-          <div class="ui-meta text-zero-granata font-bold mb-2">[ FAQ PER LE IMPRESE & GLI ENTI ]</div>
-          <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black tracking-tight">
-            DOMANDE FREQUENTI SUI FONDI EUROPEI A REGGIO EMILIA
+        <div class="pb-2">
+          <div class="ui-meta text-zero-red font-bold mb-2">FAQ PARTNERSHIP</div>
+          <h2 class="font-sans font-bold text-2xl md:text-3xl text-zero-black tracking-tight">
+            Domande Frequenti sulla Co-progettazione
           </h2>
         </div>
 
         <div class="space-y-4">
-          {faqs.map((faq, idx) => (
-            <details class="group bg-white/80 backdrop-blur-sm p-6 shadow-[0_2px_12px_rgba(55,50,50,0.02)] transition-all duration-300 open:bg-white open:shadow-[0_4px_24px_rgba(55,50,50,0.04)]">
-              <summary class="flex items-center justify-between font-display font-bold text-lg md:text-xl text-zero-black cursor-pointer select-none">
+          {faqs.map((faq) => (
+            <details class="group bg-zero-paper p-6 shadow-sm transition-all duration-300">
+              <summary class="flex items-center justify-between font-sans font-bold text-base md:text-lg text-zero-black cursor-pointer select-none">
                 <span>{faq.question}</span>
                 <span class="font-mono text-zero-red text-xl transition-transform duration-300 group-open:rotate-45">+</span>
               </summary>
-              <div class="pt-4 text-neutral-700 font-light text-sm md:text-base leading-relaxed border-t border-neutral-100 mt-4">
+              <div class="pt-4 text-neutral-700 font-sans font-light text-sm md:text-base leading-relaxed border-t border-neutral-200/60 mt-4">
                 {faq.answer}
               </div>
             </details>

@@ -2,9 +2,9 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-zero-black text-white border-t border-zero-dark mt-auto relative z-10">
+<footer class="bg-zero-black text-white mt-auto relative z-10">
   <div class="w-full px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16 border-b border-zero-dark">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16">
       <!-- Col 1: Brand Foundation -->
       <div class="space-y-6">
         <div class="flex items-center">
@@ -15,13 +15,13 @@ const currentYear = new Date().getFullYear();
           />
         </div>
         <p class="ui-meta text-neutral-400 leading-relaxed normal-case tracking-normal">
-          Realtà no-profit per la ricerca culturale, la valorizzazione del paesaggio, l'intercettazione dei fondi europei e la rigenerazione urbana a Reggio Emilia e provincia.
+          media, cultura e rigenerazione urbana per il territorio
         </p>
-        <div class="ui-meta text-neutral-500 space-y-2 pt-4 border-t border-zero-dark">
-          <p>C.F. 97812340561</p>
-          <p>VIA SAN ZENONE 4, 42121 REGGIO EMILIA (RE)</p>
-          <p>TEL. +39 0522 1234567</p>
-          <p class="pt-1">
+        <div class="ui-meta text-neutral-400 space-y-1.5 pt-4 border-t border-neutral-800 text-xs">
+          <p class="font-bold text-white uppercase">Bruma ETS</p>
+          <p>Via Carlo Marx 53, Roncocesi, Reggio Emilia</p>
+          <p>CF: 91201950358 P.IVA: 03112030352</p>
+          <p class="pt-2">
             <a
               href="https://www.instagram.com/__verace__?igsh=MXBzbmxzM3A2emJsZg=="
               target="_blank"
@@ -37,52 +37,66 @@ const currentYear = new Date().getFullYear();
 
       <!-- Col 2: Piattaforma Navigazione -->
       <div class="space-y-6">
-        <h4 class="ui-meta text-zero-red">[ VERACE ]</h4>
+        <h4 class="ui-meta text-zero-red">VERACE</h4>
         <ul class="space-y-4 ui-meta">
           <li><a href="/" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ HOME PAGE</a></li>
           <li><a href="/magazine" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ MAGAZINE</a></li>
           <li><a href="/progetti" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ PROGETTI</a></li>
-          <li><a href="/partnership" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ PARTNERSHIP & FONDI</a></li>
-          <li><a href="/calendar" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ CALENDARIO EVENTI</a></li>
-          <li><a href="/team" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ TEAM & GOVERNANCE</a></li>
-          <li><a href="/contatti" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ CONTATTI & SEDE</a></li>
+          <li><a href="/partnership" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ PARTNERSHIP</a></li>
+          <li><a href="/calendar" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ CALENDARIO</a></li>
+          <li><a href="/team" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ TEAM & CHI SIAMO</a></li>
+          <li><a href="/contatti" class="hover:text-zero-red transition-colors inline-block hover:translate-x-1 duration-300">→ CONTATTACI</a></li>
         </ul>
       </div>
 
-      <!-- Col 3: Area Stakeholder & CMS -->
+      <!-- Col 3: Area Stakeholder & Login -->
       <div class="space-y-6">
-        <h4 class="ui-meta text-zero-red">[ AREA STAKEHOLDER & CMS ]</h4>
+        <h4 class="ui-meta text-zero-red">RISORSE</h4>
         <ul class="space-y-4 ui-meta">
           <li>
             <a href="/partnership#richiesta-partner" class="text-neutral-400 hover:text-white transition-colors block">
-              → SPORTELLO CO-PROGETTAZIONE IMPRESE
+              → SPORTELLO CO-PROGETTAZIONE
             </a>
           </li>
           <li>
-            <a href="/studio" class="text-neutral-400 hover:text-white transition-colors flex items-center gap-2">
-              <span>● ACCESSO SANITY STUDIO</span>
+            <a href="/progetti" class="text-neutral-400 hover:text-white transition-colors block">
+              → DOSSIER PROGETTI
             </a>
           </li>
-          <li><a href="/progetti#progetti" class="text-neutral-400 hover:text-white transition-colors block">DOSSIER PROGETTI IN CORSO</a></li>
+          <li>
+            <a href="/studio" data-astro-reload class="text-neutral-400 hover:text-white transition-colors flex items-center gap-2">
+              <span>→ login</span>
+            </a>
+          </li>
         </ul>
       </div>
 
       <!-- Col 4: Newsletter Foundation -->
       <div class="space-y-6">
-        <h4 class="ui-meta text-zero-red">[ NEWSLETTER ]</h4>
-        <form class="space-y-4" onsubmit="event.preventDefault(); alert('Iscrizione completata con successo!');">
-          <input
-            type="email"
-            placeholder="LATUAEMAIL@DOMINIO.IT"
-            required
-            class="w-full px-4 py-3 bg-transparent border border-zero-dark ui-meta text-white focus:outline-none focus:border-zero-red transition-colors placeholder:text-neutral-600"
-          />
+        <h4 class="ui-meta text-zero-red">NEWSLETTER</h4>
+        <form id="newsletter-form" class="space-y-4" novalidate>
+          <div class="relative">
+            <input
+              id="newsletter-email-input"
+              type="email"
+              name="email"
+              placeholder="LATUAEMAIL@DOMINIO.IT"
+              required
+              class="w-full px-4 py-3 bg-neutral-900/60 border border-neutral-700 ui-meta text-white focus:outline-none focus:border-zero-red transition-colors placeholder:text-neutral-600 disabled:opacity-50"
+            />
+          </div>
           <button
+            id="newsletter-submit-btn"
             type="submit"
-            class="w-full px-4 py-3 bg-zero-red hover:bg-white hover:text-zero-black ui-meta font-bold transition-colors duration-300"
+            class="w-full px-4 py-3 bg-zero-red hover:bg-white hover:text-zero-black ui-meta font-bold transition-colors duration-300 uppercase cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            ISCRIVITI AL BOLLETTINO
+            <span id="newsletter-btn-text">iscriviti alla newsletter</span>
+            <svg id="newsletter-spinner" class="animate-spin h-4 w-4 text-current hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
           </button>
+          <div id="newsletter-message" class="text-xs font-mono hidden transition-all duration-300"></div>
         </form>
       </div>
     </div>
@@ -117,3 +131,91 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
 </footer>
+
+<script>
+  function initNewsletterForm() {
+    const form = document.getElementById('newsletter-form') as HTMLFormElement | null;
+    const input = document.getElementById('newsletter-email-input') as HTMLInputElement | null;
+    const submitBtn = document.getElementById('newsletter-submit-btn') as HTMLButtonElement | null;
+    const btnText = document.getElementById('newsletter-btn-text');
+    const spinner = document.getElementById('newsletter-spinner');
+    const messageBox = document.getElementById('newsletter-message');
+
+    if (!form || !input || !submitBtn || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = input.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!email || !emailRegex.test(email)) {
+        if (messageBox) {
+          messageBox.className = 'text-xs font-mono text-zero-red block mt-2';
+          messageBox.textContent = 'Per favore, inserisci un indirizzo email valido.';
+        }
+        input.focus();
+        return;
+      }
+
+      // Stato caricamento
+      input.disabled = true;
+      submitBtn.disabled = true;
+      if (btnText) btnText.textContent = 'INVIO IN CORSO...';
+      if (spinner) spinner.classList.remove('hidden');
+      if (messageBox) {
+        messageBox.className = 'hidden';
+        messageBox.textContent = '';
+      }
+
+      try {
+        const response = await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.success) {
+          input.value = '';
+          if (messageBox) {
+            messageBox.className = 'text-xs font-mono text-emerald-400 block mt-2 leading-relaxed';
+            messageBox.innerHTML = '✓ Iscrizione confermata! Ti abbiamo inviato una mail di benvenuto da <strong class="text-white">info@verace-re.eu</strong>.';
+          }
+          if (btnText) btnText.textContent = 'ISCRITTO CON SUCCESSO';
+          submitBtn.classList.remove('bg-zero-red');
+          submitBtn.classList.add('bg-emerald-600');
+          setTimeout(() => {
+            if (btnText) btnText.textContent = 'ISCRIVITI ALLA NEWSLETTER';
+            submitBtn.classList.remove('bg-emerald-600');
+            submitBtn.classList.add('bg-zero-red');
+          }, 4000);
+        } else {
+          if (messageBox) {
+            messageBox.className = 'text-xs font-mono text-zero-red block mt-2 leading-relaxed';
+            messageBox.textContent = data.error || 'Si è verificato un errore durante l\'iscrizione. Riprova più tardi.';
+          }
+          if (btnText) btnText.textContent = 'ISCRIVITI ALLA NEWSLETTER';
+        }
+      } catch (err) {
+        if (messageBox) {
+          messageBox.className = 'text-xs font-mono text-zero-red block mt-2 leading-relaxed';
+          messageBox.textContent = 'Errore di connessione. Controlla la tua rete e riprova.';
+        }
+        if (btnText) btnText.textContent = 'ISCRIVITI ALLA NEWSLETTER';
+      } finally {
+        input.disabled = false;
+        submitBtn.disabled = false;
+        if (spinner) spinner.classList.add('hidden');
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initNewsletterForm);
+  document.addEventListener('astro:page-load', initNewsletterForm);
+</script>

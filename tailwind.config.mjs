@@ -5,21 +5,21 @@ export default {
     extend: {
       colors: {
         zero: {
-          bg: '#FFFDF0', // Canvas Background (Bianco Panna)
-          paper: '#FFFDF0', // Surface Cards (Bianco Panna)
-          card: '#FFFDF0',
+          bg: '#FFFCF9', // Canvas Background (Nuovo Bianco #FFFCF9)
+          paper: '#FFFCF9', // Surface Cards (Nuovo Bianco #FFFCF9)
+          card: '#FFFCF9',
           black: '#373232', // Deep Background / Text (Nero)
-          dark: '#373232', // Grid Borders (Nero)
+          dark: '#373232', // Dark Text / Accents
           muted: '#665e5e',
-          border: '#373232', // Nero tecnico 1px
-          lightborder: '#dcd7cd',
-          red: '#02271D', // Secondary Accent (Verde 02271D al posto del rosso)
-          redHover: '#011c15',
-          green: '#02271D', // Secondary Accent (Verde 02271D)
-          greenHover: '#011c15',
-          greenTint: '#e8f0ec',
-          granata: '#662025', // Details Accent (Granata 662025)
-          granataHover: '#50191d',
+          border: 'transparent',
+          lightborder: '#ebe6df',
+          red: '#B53D33', // Primary Accent (Nuovo Rosso #B53D33)
+          redHover: '#972f26',
+          green: '#B53D33', // Sostituito con Nuovo Rosso
+          greenHover: '#972f26',
+          greenTint: '#fcedeb',
+          granata: '#B53D33', // Sostituito con Nuovo Rosso
+          granataHover: '#972f26',
           yellow: '#ffe600',
         }
       },
