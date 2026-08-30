@@ -11,11 +11,24 @@ const dataset =
   'production';
 const apiVersion = '2024-01-01';
 
+const token =
+  (typeof process !== 'undefined' && process.env?.SANITY_AUTH_TOKEN) ||
+  (typeof import.meta !== 'undefined' && import.meta.env?.SANITY_AUTH_TOKEN) ||
+  '';
+
 export const sanityClient = createClient({
   projectId,
   dataset,
   apiVersion,
   useCdn: true,
+});
+
+export const sanityWriteClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  token: token || undefined,
+  useCdn: false,
 });
 
 const builder = imageUrlBuilder(sanityClient);
@@ -31,11 +44,17 @@ export interface SideNote {
   text: string;
 }
 
+export interface Interviewee {
+  name: string;
+  roleOrContext?: string;
+}
+
 export type ArticleBlock =
-  | { type: 'text'; content: string; heading?: string }
+  | { type: 'text'; content: string; heading?: string; style?: string; children?: any[]; markDefs?: any[] }
   | { type: 'image'; url: string; caption?: string; alt?: string }
-  | { type: 'didascalia'; title?: string; text: string }
-  | { type: 'quote'; quote: string };
+  | { type: 'didascalia' | 'approfondimento'; title?: string; text: string }
+  | { type: 'quote' | 'pullQuote'; quote: string; author?: string }
+  | { type: 'editorialDivider'; style?: string };
 
 export interface AuthorInfo {
   name: string;
@@ -51,12 +70,13 @@ export interface Post {
   slug: { current: string };
   author?: string;
   credits?: string;
+  interviewees?: Interviewee[];
   authorInfo?: AuthorInfo;
   pullquotes?: string[];
   sideNotes?: SideNote[];
   contentBlocks?: ArticleBlock[];
   coverMedia?: {
-    asset: { _ref: string };
+    asset?: { _ref?: string; url?: string };
     url?: string;
     caption?: string;
     altText?: string;
@@ -65,8 +85,8 @@ export interface Post {
   videoUrl?: string;
   galleryUrls?: string[];
   category?: string;
-  layoutType: 'standard' | 'split-view' | 'pdf-reader' | 'editorial-focus' | 'photo-journalism' | 'data-dossier' | 'manifesto-magazine';
-  body: any[];
+  layoutType?: 'standard' | 'split-view' | 'pdf-reader' | 'editorial-focus' | 'photo-journalism' | 'data-dossier' | 'manifesto-magazine';
+  body?: any[];
   publishedAt: string;
   readingTime?: number;
 }
@@ -644,6 +664,85 @@ export const FALLBACK_TEAM: TeamMember[] = [
 
 
 
+function mapSanityPost(p: any, fallback?: Post): Post {
+  const coverImageUrl = p.coverMedia ? (urlFor(p.coverMedia)?.url() || p.coverMedia.asset?.url) : fallback?.coverImageUrl;
+  
+  let contentBlocks: ArticleBlock[] = [];
+  if (Array.isArray(p.body) && p.body.length > 0) {
+    contentBlocks = p.body.map((b: any) => {
+      if (b._type === 'block') {
+        const textContent = (b.children || []).map((c: any) => c.text || '').join('');
+        return {
+          type: 'text',
+          heading: b.style === 'h2' || b.style === 'h3' ? textContent : undefined,
+          content: textContent,
+          style: b.style || 'normal',
+          children: b.children || [],
+          markDefs: b.markDefs || []
+        };
+      }
+      if (b._type === 'articleImage' || b._type === 'image') {
+        const imgUrl = b.url || (b.image ? urlFor(b.image)?.url() : null) || (b.asset ? urlFor(b.asset)?.url() : null);
+        return {
+          type: 'image',
+          url: imgUrl || '',
+          caption: b.caption || '',
+          alt: b.alt || b.altText || b.caption || ''
+        };
+      }
+      if (b._type === 'approfondimento' || b._type === 'didascalia') {
+        return {
+          type: 'didascalia',
+          title: b.title || '',
+          text: b.text || ''
+        };
+      }
+      if (b._type === 'pullQuote' || b._type === 'quote') {
+        return {
+          type: 'quote',
+          quote: b.quote || '',
+          author: b.author || ''
+        };
+      }
+      if (b._type === 'editorialDivider') {
+        return {
+          type: 'editorialDivider',
+          style: b.style || 'redLine'
+        };
+      }
+      return null;
+    }).filter(Boolean) as ArticleBlock[];
+  }
+
+  let galleryUrls: string[] = [];
+  if (Array.isArray(p.galleryUrls) && p.galleryUrls.length > 0) {
+    galleryUrls = p.galleryUrls.filter(Boolean);
+  } else if (Array.isArray(p.gallery) && p.gallery.length > 0) {
+    galleryUrls = p.gallery.map((g: any) => (g.asset?.url || urlFor(g)?.url() || '')).filter(Boolean);
+  }
+
+  return {
+    _id: p._id || fallback?._id || '',
+    title: p.title || fallback?.title || '',
+    subtitle: p.subtitle || fallback?.subtitle || '',
+    slug: p.slug || fallback?.slug || { current: '' },
+    category: p.category || fallback?.category || 'Inchieste',
+    layoutType: p.layoutType || fallback?.layoutType || 'standard',
+    author: p.author || fallback?.author || '',
+    credits: p.credits || fallback?.credits || '',
+    interviewees: (p.interviewees && p.interviewees.length > 0) ? p.interviewees : fallback?.interviewees,
+    authorInfo: p.authorInfo || fallback?.authorInfo || (p.author ? { name: p.author, credits: p.credits } : fallback?.authorInfo),
+    publishedAt: p.publishedAt || fallback?.publishedAt || new Date().toISOString(),
+    readingTime: p.readingTime || fallback?.readingTime || 6,
+    videoUrl: p.videoUrl || fallback?.videoUrl || '',
+    coverMedia: p.coverMedia || fallback?.coverMedia,
+    coverImageUrl: coverImageUrl || fallback?.coverImageUrl || '',
+    contentBlocks: contentBlocks.length > 0 ? contentBlocks : (fallback?.contentBlocks || []),
+    body: p.body || fallback?.body || [],
+    galleryUrls: galleryUrls.length > 0 ? galleryUrls : (fallback?.galleryUrls || []),
+  };
+}
+
 // Query Functions with Sanity check + fallback
 export async function getPosts(): Promise<Post[]> {
   try {
@@ -657,28 +756,31 @@ export async function getPosts(): Promise<Post[]> {
         layoutType,
         author,
         credits,
-        pullquotes,
-        sideNotes,
+        interviewees,
+        authorInfo,
         publishedAt,
         readingTime,
-        body,
+        videoUrl,
+        body[] {
+          ...,
+          _type == "articleImage" => {
+            "url": image.asset->url,
+            caption,
+            alt
+          },
+          _type == "image" => {
+            "url": asset->url,
+            caption,
+            altText
+          }
+        },
         coverMedia,
         "galleryUrls": gallery[].asset->url
       }`);
       if (posts && posts.length > 0) {
         return posts.map((p: any) => {
           const fallback = FALLBACK_POSTS.find(fb => fb.slug?.current === p.slug?.current || fb._id === p._id);
-          const coverImageUrl = p.coverMedia ? urlFor(p.coverMedia)?.url() : fallback?.coverImageUrl;
-          return {
-            ...fallback,
-            ...p,
-            title: fallback?.contentBlocks ? fallback.title : p.title,
-            subtitle: fallback?.contentBlocks ? fallback.subtitle : p.subtitle,
-            contentBlocks: fallback?.contentBlocks || p.contentBlocks,
-            authorInfo: fallback?.authorInfo || p.authorInfo,
-            coverImageUrl: coverImageUrl || fallback?.coverImageUrl,
-            galleryUrls: (p.galleryUrls && p.galleryUrls.length > 0) ? p.galleryUrls : fallback?.galleryUrls
-          };
+          return mapSanityPost(p, fallback);
         });
       }
     }
@@ -701,26 +803,29 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
         layoutType,
         author,
         credits,
-        pullquotes,
-        sideNotes,
+        interviewees,
+        authorInfo,
         publishedAt,
         readingTime,
-        body,
+        videoUrl,
+        body[] {
+          ...,
+          _type == "articleImage" => {
+            "url": image.asset->url,
+            caption,
+            alt
+          },
+          _type == "image" => {
+            "url": asset->url,
+            caption,
+            altText
+          }
+        },
         coverMedia,
         "galleryUrls": gallery[].asset->url
       }`, { slug });
       if (post) {
-        const coverImageUrl = post.coverMedia ? urlFor(post.coverMedia)?.url() : fallback?.coverImageUrl;
-        return {
-          ...fallback,
-          ...post,
-          title: fallback?.contentBlocks ? fallback.title : post.title,
-          subtitle: fallback?.contentBlocks ? fallback.subtitle : post.subtitle,
-          contentBlocks: fallback?.contentBlocks || post.contentBlocks,
-          authorInfo: fallback?.authorInfo || post.authorInfo,
-          coverImageUrl: coverImageUrl || fallback?.coverImageUrl,
-          galleryUrls: (post.galleryUrls && post.galleryUrls.length > 0) ? post.galleryUrls : fallback?.galleryUrls
-        };
+        return mapSanityPost(post, fallback);
       }
     }
   } catch (err) {
@@ -900,5 +1005,320 @@ export async function getEvents(): Promise<Event[]> {
     console.warn('Sanity query fallback for events:', err);
   }
   return FALLBACK_EVENTS;
+}
+
+// ==========================================
+// NEWSLETTER & CAMPAIGN MANAGEMENT HELPERS
+// ==========================================
+
+export interface NewsletterSubscriber {
+  _id?: string;
+  email: string;
+  name?: string;
+  status: 'active' | 'unsubscribed';
+  source?: string;
+  subscribedAt?: string;
+  unsubscribedAt?: string;
+  notes?: string;
+}
+
+/**
+ * Salva o aggiorna un iscritto alla newsletter su Sanity
+ */
+export async function addOrUpdateNewsletterSubscriber(
+  email: string,
+  name?: string,
+  source: string = 'Sito Web (Footer)'
+): Promise<{ success: boolean; subscriberId?: string; error?: string }> {
+  try {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    if (!cleanEmail) return { success: false, error: 'Email non valida' };
+
+    // Cerca se esiste già
+    const existing = await sanityWriteClient.fetch(
+      `*[_type == "newsletterSubscriber" && email == $email][0]`,
+      { email: cleanEmail }
+    );
+
+    if (existing) {
+      // Se era disiscritto, riattivalo
+      if (existing.status === 'unsubscribed') {
+        await sanityWriteClient
+          .patch(existing._id)
+          .set({
+            status: 'active',
+            subscribedAt: new Date().toISOString(),
+            source: source || existing.source,
+          })
+          .unset(['unsubscribedAt'])
+          .commit();
+      }
+      return { success: true, subscriberId: existing._id };
+    }
+
+    // Crea nuovo record
+    const newDoc = await sanityWriteClient.create({
+      _type: 'newsletterSubscriber',
+      email: cleanEmail,
+      name: name || undefined,
+      status: 'active',
+      source,
+      subscribedAt: new Date().toISOString(),
+    });
+
+    return { success: true, subscriberId: newDoc._id };
+  } catch (err: any) {
+    console.error('Error saving newsletter subscriber to Sanity:', err);
+    return { success: false, error: err?.message || 'Errore salvataggio Sanity' };
+  }
+}
+
+/**
+ * Recupera tutti gli iscritti attivi alla newsletter
+ */
+export async function getActiveNewsletterSubscribers(): Promise<NewsletterSubscriber[]> {
+  try {
+    const subscribers = await sanityWriteClient.fetch(
+      `*[_type == "newsletterSubscriber" && status == "active"] | order(subscribedAt desc) {
+        _id,
+        email,
+        name,
+        status,
+        source,
+        subscribedAt
+      }`
+    );
+    return subscribers || [];
+  } catch (err) {
+    console.error('Error fetching newsletter subscribers from Sanity:', err);
+    return [];
+  }
+}
+
+/**
+ * Disiscrive un utente dalla newsletter
+ */
+export async function unsubscribeNewsletterEmail(email: string): Promise<boolean> {
+  try {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const existing = await sanityWriteClient.fetch(
+      `*[_type == "newsletterSubscriber" && email == $email][0]`,
+      { email: cleanEmail }
+    );
+
+    if (existing) {
+      await sanityWriteClient
+        .patch(existing._id)
+        .set({
+          status: 'unsubscribed',
+          unsubscribedAt: new Date().toISOString(),
+        })
+        .commit();
+      return true;
+    }
+    return false;
+  } catch (err) {
+    console.error('Error unsubscribing email in Sanity:', err);
+    return false;
+  }
+}
+
+/**
+ * Recupera una campagna newsletter per ID con tutti i dettagli e riferimenti file
+ */
+export async function getNewsletterCampaignById(id: string): Promise<any> {
+  try {
+    const campaign = await sanityWriteClient.fetch(
+      `*[_type == "newsletterCampaign" && _id == $id][0] {
+        _id,
+        title,
+        subject,
+        preheader,
+        headerBadge,
+        senderName,
+        senderEmail,
+        content,
+        attachments[] {
+          title,
+          description,
+          "fileUrl": file.asset->url,
+          "fileName": file.asset->originalFilename,
+          "mimeType": file.asset->mimeType,
+          "size": file.asset->size
+        },
+        status,
+        sentAt,
+        recipientsCount,
+        sendLogs
+      }`,
+      { id }
+    );
+    return campaign;
+  } catch (err) {
+    console.error('Error fetching newsletter campaign from Sanity:', err);
+    return null;
+  }
+}
+
+/**
+ * Aggiorna lo stato di invio di una campagna su Sanity
+ */
+export async function updateNewsletterCampaignStatus(
+  id: string,
+  updateData: {
+    status?: 'draft' | 'ready' | 'sent';
+    sentAt?: string;
+    recipientsCount?: number;
+    sendLogs?: string;
+  }
+): Promise<boolean> {
+  try {
+    const patch = sanityWriteClient.patch(id);
+    if (updateData.status) patch.set({ status: updateData.status });
+    if (updateData.sentAt) patch.set({ sentAt: updateData.sentAt });
+    if (typeof updateData.recipientsCount === 'number') patch.set({ recipientsCount: updateData.recipientsCount });
+    if (updateData.sendLogs) patch.set({ sendLogs: updateData.sendLogs });
+    await patch.commit();
+    return true;
+  } catch (err) {
+    console.error('Error updating newsletter campaign status in Sanity:', err);
+    return false;
+  }
+}
+
+// ==========================================
+// HERO SLIDER & INTRO ANIMATION HELPERS
+// ==========================================
+
+export interface HeroSlideItem {
+  image: string;
+  title?: string;
+  category?: string;
+  alt?: string;
+}
+
+export interface HeroSliderSettings {
+  title?: string;
+  headline?: string;
+  primaryButtonText?: string;
+  primaryButtonLink?: string;
+  secondaryButtonText?: string;
+  secondaryButtonLink?: string;
+  slides: HeroSlideItem[];
+}
+
+export const FALLBACK_HERO_SLIDES: HeroSlideItem[] = [
+  {
+    image: '/projects/SCUOLA DI TERRITORIO/ST_2026-22.webp',
+    title: 'Scuola di Territorio',
+    category: 'Educazione & Territorio',
+    alt: 'Scuola di Territorio a Reggio Emilia',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=2000&q=85',
+    title: 'Spazi & Architetture',
+    category: 'Rigenerazione Urbana',
+    alt: 'Spazi di rigenerazione urbana e comunità',
+  },
+  {
+    image: '/projects/LA BELA/IMG_4931.webp',
+    title: 'La Bela - Filiera Lana',
+    category: 'Appennino Reggiano',
+    alt: "Progetto La Bela sull'Appennino Reggiano",
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=85',
+    title: 'Innovazione & Territorio',
+    category: 'Cultura Contemporanea',
+    alt: 'Cultura visiva ed innovazione territoriale',
+  },
+  {
+    image: '/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-14.webp',
+    title: 'Viaggi Domenicali Minimi',
+    category: 'Paesaggio Emiliano',
+    alt: 'Viaggi Domenicali Minimi nel paesaggio di Luigi Ghirri',
+  },
+];
+
+/**
+ * Recupera la configurazione e le fotografie dello slider hero / animazione da Sanity
+ */
+export async function getHeroSliderData(): Promise<HeroSliderSettings> {
+  try {
+    if (projectId) {
+      const doc = await sanityClient.fetch(
+        `*[_type == "heroSlider"][0] {
+          title,
+          headline,
+          primaryButtonText,
+          primaryButtonLink,
+          secondaryButtonText,
+          secondaryButtonLink,
+          slides[] {
+            title,
+            category,
+            alt,
+            image {
+              asset-> {
+                _id,
+                url
+              },
+              hotspot,
+              crop
+            }
+          }
+        }`
+      );
+
+      if (doc && Array.isArray(doc.slides) && doc.slides.length > 0) {
+        const mappedSlides: HeroSlideItem[] = doc.slides
+          .map((item: any) => {
+            let imgUrl = '';
+            if (item.image?.asset?.url) {
+              imgUrl = item.image.asset.url;
+            } else if (item.image) {
+              const built = urlFor(item.image);
+              if (built) imgUrl = built.width(2000).quality(90).auto('format').url();
+            }
+
+            if (!imgUrl) return null;
+
+            return {
+              image: imgUrl,
+              title: item.title || '',
+              category: item.category || '',
+              alt: item.alt || item.title || 'VERACE Slider Foto',
+            };
+          })
+          .filter(Boolean) as HeroSlideItem[];
+
+        if (mappedSlides.length > 0) {
+          // Limita a max 9 foto per sicurezza
+          const finalSlides = mappedSlides.slice(0, 9);
+          return {
+            title: doc.title || 'Slider Principale',
+            headline: doc.headline || 'Media cultura e rigenerazione per il territorio',
+            primaryButtonText: doc.primaryButtonText || 'scopri i progetti',
+            primaryButtonLink: doc.primaryButtonLink || '/progetti',
+            secondaryButtonText: doc.secondaryButtonText || 'esplora il nostro magazine',
+            secondaryButtonLink: doc.secondaryButtonLink || '/magazine',
+            slides: finalSlides,
+          };
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Sanity query fallback for hero slider:', err);
+  }
+
+  return {
+    title: 'Slider Principale',
+    headline: 'Media cultura e rigenerazione per il territorio',
+    primaryButtonText: 'scopri i progetti',
+    primaryButtonLink: '/progetti',
+    secondaryButtonText: 'esplora il nostro magazine',
+    secondaryButtonLink: '/magazine',
+    slides: FALLBACK_HERO_SLIDES,
+  };
 }
 

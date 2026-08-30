@@ -37,15 +37,27 @@ const variant = logoVariants[index % logoVariants.length];
 
 <article class="group flex flex-col space-y-4 relative w-full h-full bg-white/70 backdrop-blur-sm p-6 shadow-[0_4px_24px_rgba(55,50,50,0.03)] hover:shadow-[0_12px_32px_rgba(55,50,50,0.07)] hover:-translate-y-1 transition-all duration-300">
   
-  {/* Box Logo Brand a rotazione colori */}
-  <div class={`relative w-full aspect-[4/5] ${variant.bg} flex items-center justify-center p-8 overflow-hidden transition-transform duration-500 ease-out group-hover:scale-[1.02]`}>
-    <img
-      src={variant.logo}
-      alt={`${member.name} - ${variant.alt}`}
-      class="w-4/5 max-w-[170px] h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-105"
-      loading="lazy"
-      decoding="async"
-    />
+  {/* Foto Profilo del Membro o Box Logo Brand di fallback */}
+  <div class={`relative w-full aspect-[4/5] ${member.photoUrl ? 'bg-neutral-100' : variant.bg} flex items-center justify-center overflow-hidden transition-transform duration-500 ease-out group-hover:scale-[1.02]`}>
+    {member.photoUrl ? (
+      <img
+        src={member.photoUrl}
+        alt={`Foto di ${member.name} - ${member.role}`}
+        class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class="p-8 flex items-center justify-center w-full h-full">
+        <img
+          src={variant.logo}
+          alt={`${member.name} - ${variant.alt}`}
+          class="w-4/5 max-w-[170px] h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )}
   </div>
 
   <div class="flex flex-col flex-grow pt-2 space-y-2">

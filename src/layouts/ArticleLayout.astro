@@ -76,6 +76,65 @@ if (!hasStructuredBlocks && bodyBlocks.length > 0) {
     }
   });
 }
+
+// Helper per il rendering HTML dei blocchi di testo con formattazione ricca (grassetti, colori, capolettera, link)
+function renderBlockHtml(block: any, isFirstText: boolean) {
+  if (Array.isArray(block.children) && block.children.length > 0) {
+    const markDefsMap = new Map();
+    if (Array.isArray(block.markDefs)) {
+      block.markDefs.forEach((def: any) => markDefsMap.set(def._key, def));
+    }
+
+    const htmlSpans = block.children.map((child: any, spanIdx: number) => {
+      let text = child.text || '';
+      if (!text) return '';
+      // Escape HTML
+      text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+      const marks: string[] = child.marks || [];
+      const isDropCap = marks.includes('dropCap');
+      let customColorStyle = '';
+      let linkHref = '';
+
+      marks.forEach((m) => {
+        const def = markDefsMap.get(m);
+        if (def) {
+          if (def._type === 'link' || def.href) linkHref = def.href;
+          if (def._type === 'customColor' || def.color) customColorStyle = `color: ${def.color};`;
+        }
+      });
+
+      if (marks.includes('strong')) text = `<strong class="font-bold text-zero-black">${text}</strong>`;
+      if (marks.includes('em')) text = `<em class="italic">${text}</em>`;
+      if (marks.includes('underline')) text = `<span class="underline underline-offset-4 decoration-zero-red">${text}</span>`;
+      if (marks.includes('strike-through')) text = `<s class="line-through opacity-75">${text}</s>`;
+      if (marks.includes('colorRed')) text = `<span class="text-zero-red font-bold">${text}</span>`;
+      if (marks.includes('colorDark')) text = `<span class="text-zero-black font-bold">${text}</span>`;
+      if (marks.includes('colorGreen')) text = `<span class="text-emerald-800 font-bold">${text}</span>`;
+      if (marks.includes('colorGray')) text = `<span class="text-[#55504E]">${text}</span>`;
+
+      if (customColorStyle) {
+        text = `<span style="${customColorStyle}" class="font-bold">${text}</span>`;
+      }
+
+      if (linkHref) {
+        text = `<a href="${linkHref}" target="_blank" rel="noopener noreferrer" class="text-zero-red underline font-medium hover:text-zero-black transition-colors">${text}</a>`;
+      }
+
+      if (isDropCap && spanIdx === 0 && text.length > 0) {
+        const firstLetter = text.charAt(0);
+        const rest = text.slice(1);
+        text = `<span class="float-left text-6xl font-display font-bold mr-4 text-zero-red leading-none mt-1 select-none">${firstLetter}</span>${rest}`;
+      }
+
+      return text;
+    });
+
+    return htmlSpans.join('');
+  }
+
+  return block.content || '';
+}
 ---
 
 <BaseLayout
@@ -113,18 +172,30 @@ if (!hasStructuredBlocks && bodyBlocks.length > 0) {
           </p>
         )}
 
-        {(post.authorInfo || post.author) && (
-          <div class="pt-4 border-t border-neutral-200/80 flex items-center gap-2 text-xs font-mono text-neutral-600 flex-wrap">
-            <span class="text-zero-red font-bold uppercase">Intervistato / Autore:</span>
-            <span class="font-bold text-zero-black">
-              {post.authorInfo ? `${post.authorInfo.name} ${post.authorInfo.roleOrContext ? `(${post.authorInfo.roleOrContext})` : ''}` : post.author}
-            </span>
-          </div>
-        )}
+        <!-- Sezione Intervistati e Autori nell'Header -->
+        <div class="pt-4 border-t border-neutral-200/80 space-y-2">
+          {post.interviewees && post.interviewees.length > 0 && (
+            <div class="flex items-center gap-2 text-xs font-mono text-neutral-600 flex-wrap">
+              <span class="text-zero-red font-bold uppercase">Intervistati / Protagonisti:</span>
+              <span class="font-bold text-zero-black">
+                {post.interviewees.map((int: any) => `${int.name}${int.roleOrContext ? ` (${int.roleOrContext})` : ''}`).join(' • ')}
+              </span>
+            </div>
+          )}
+
+          {(post.authorInfo || post.author) && (
+            <div class="flex items-center gap-2 text-xs font-mono text-neutral-600 flex-wrap">
+              <span class="text-zero-red font-bold uppercase">Autore / Ricerca:</span>
+              <span class="font-bold text-zero-black">
+                {post.authorInfo ? `${post.authorInfo.name} ${post.authorInfo.roleOrContext ? `(${post.authorInfo.roleOrContext})` : ''}` : post.author}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </header>
 
-    <!-- 2. CORPO ARTICOLO: RITMO [TESTO] [FOTO] [TESTO] [BREVE DIDASCALIA] [TESTO] [FOTO] ... [AUTORI] -->
+    <!-- 2. CORPO ARTICOLO: RITMO [TESTO] [FOTO] [TESTO] [APPROFONDIMENTO] [TESTO] [FOTO] ... [AUTORI] -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-14 space-y-12 md:space-y-16">
       
       <!-- Foto Copertina Iniziale -->
@@ -165,6 +236,9 @@ if (!hasStructuredBlocks && bodyBlocks.length > 0) {
         {hasStructuredBlocks ? (
           post.contentBlocks!.map((block, idx) => {
             if (block.type === 'text') {
+              const htmlContent = renderBlockHtml(block, idx === 0);
+              const hasDropCapMarkup = htmlContent.includes('float-left');
+              const shouldApplyAutoDropCap = idx === 0 && !hasDropCapMarkup && !block.heading;
               return (
                 <div class="space-y-4">
                   {block.heading && (
@@ -172,9 +246,12 @@ if (!hasStructuredBlocks && bodyBlocks.length > 0) {
                       {block.heading}
                     </h2>
                   )}
-                  <p class={`text-lg md:text-xl font-light text-zero-black leading-relaxed ${idx === 0 ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red' : ''}`}>
-                    {block.content}
-                  </p>
+                  {htmlContent && (
+                    <p
+                      class={`text-lg md:text-xl font-light text-zero-black leading-relaxed ${shouldApplyAutoDropCap ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red first-letter:leading-none first-letter:mt-1' : ''}`}
+                      set:html={htmlContent}
+                    />
+                  )}
                 </div>
               );
             }
@@ -198,32 +275,50 @@ if (!hasStructuredBlocks && bodyBlocks.length > 0) {
               );
             }
 
-            if (block.type === 'didascalia') {
+            if (block.type === 'didascalia' || (block as any).type === 'approfondimento') {
               return (
                 <aside class="my-10 p-6 md:p-8 bg-zero-paper border-l-4 border-zero-red shadow-sm space-y-2">
                   {block.title && (
                     <div class="flex items-center gap-2">
-                      <span class="font-mono text-xs uppercase font-bold text-zero-red tracking-wider">SCHEDA DI APPROFONDIMENTO •</span>
+                      <span class="font-mono text-xs uppercase font-bold text-zero-red tracking-wider">APPROFONDIMENTO •</span>
                       <h3 class="font-display font-bold text-base md:text-lg uppercase text-zero-black tracking-tight">
                         {block.title}
                       </h3>
                     </div>
                   )}
-                  <p class="text-base md:text-lg font-light text-zero-black leading-relaxed">
+                  <p class="text-base md:text-lg font-light text-zero-black leading-relaxed whitespace-pre-line">
                     {block.text}
                   </p>
                 </aside>
               );
             }
 
-            if (block.type === 'quote') {
+            if (block.type === 'quote' || (block as any).type === 'pullQuote') {
               return (
-                <div class="my-12 py-4 text-center max-w-3xl mx-auto">
+                <div class="my-12 py-6 border-y border-neutral-200/80 text-center max-w-3xl mx-auto space-y-2">
                   <p class="font-display font-black text-2xl sm:text-3xl md:text-4xl uppercase text-zero-black leading-tight tracking-tight text-balance">
                     {block.quote}
                   </p>
+                  {(block as any).author && (
+                    <p class="font-mono text-xs text-zero-red font-bold uppercase tracking-wider">
+                      — {(block as any).author}
+                    </p>
+                  )}
                 </div>
               );
+            }
+
+            if (block.type === 'editorialDivider') {
+              if (block.style === 'thinLine') {
+                return <div class="my-10 border-t border-neutral-300 w-full"></div>;
+              }
+              if (block.style === 'dots') {
+                return <div class="my-10 text-center text-zero-red font-mono text-xl tracking-[12px] select-none">•••</div>;
+              }
+              if (block.style === 'space') {
+                return <div class="my-12"></div>;
+              }
+              return <div class="my-10 h-0.5 bg-zero-red w-full"></div>;
             }
 
             return null;
@@ -231,7 +326,7 @@ if (!hasStructuredBlocks && bodyBlocks.length > 0) {
         ) : fallbackPairs.length > 0 ? (
           fallbackPairs.map((pair, idx) => (
             <div class="space-y-8">
-              <p class={`text-lg md:text-xl font-light text-zero-black leading-relaxed ${idx === 0 ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red' : ''}`}>
+              <p class={`text-lg md:text-xl font-light text-zero-black leading-relaxed ${idx === 0 ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red first-letter:leading-none first-letter:mt-1' : ''}`}>
                 {pair.text}
               </p>
               {pair.image && (

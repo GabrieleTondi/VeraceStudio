@@ -244,7 +244,7 @@ const projectSchema = {
 </BaseLayout>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  function initProjectGalleryLightbox() {
     const modalTriggers = document.querySelectorAll('.gallery-modal-trigger');
     const lightboxModal = document.getElementById('project-lightbox-modal');
     const lightboxImg = document.getElementById('project-lightbox-img') as HTMLImageElement | null;
@@ -276,18 +276,35 @@ const projectSchema = {
       };
 
       modalTriggers.forEach((trig, idx) => {
-        trig.addEventListener('click', () => {
-          openLightbox(idx);
+        if (!trig.getAttribute('data-bound')) {
+          trig.setAttribute('data-bound', 'true');
+          trig.addEventListener('click', () => {
+            openLightbox(idx);
+          });
+        }
+      });
+
+      if (lightboxClose && !lightboxClose.getAttribute('data-bound')) {
+        lightboxClose.setAttribute('data-bound', 'true');
+        lightboxClose.addEventListener('click', closeLightbox);
+      }
+
+      if (lightboxPrev && !lightboxPrev.getAttribute('data-bound')) {
+        lightboxPrev.setAttribute('data-bound', 'true');
+        lightboxPrev.addEventListener('click', () => updateLightbox(currentIndex - 1));
+      }
+
+      if (lightboxNext && !lightboxNext.getAttribute('data-bound')) {
+        lightboxNext.setAttribute('data-bound', 'true');
+        lightboxNext.addEventListener('click', () => updateLightbox(currentIndex + 1));
+      }
+
+      if (!lightboxModal.getAttribute('data-bound')) {
+        lightboxModal.setAttribute('data-bound', 'true');
+        lightboxModal.addEventListener('click', (e) => {
+          if (e.target === lightboxModal) closeLightbox();
         });
-      });
-
-      if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-      if (lightboxPrev) lightboxPrev.addEventListener('click', () => updateLightbox(currentIndex - 1));
-      if (lightboxNext) lightboxNext.addEventListener('click', () => updateLightbox(currentIndex + 1));
-
-      lightboxModal.addEventListener('click', (e) => {
-        if (e.target === lightboxModal) closeLightbox();
-      });
+      }
 
       document.addEventListener('keydown', (e) => {
         if (lightboxModal.classList.contains('hidden')) return;
@@ -296,5 +313,8 @@ const projectSchema = {
         if (e.key === 'ArrowRight') updateLightbox(currentIndex + 1);
       });
     }
-  });
+  }
+
+  document.addEventListener('DOMContentLoaded', initProjectGalleryLightbox);
+  document.addEventListener('astro:page-load', initProjectGalleryLightbox);
 </script>

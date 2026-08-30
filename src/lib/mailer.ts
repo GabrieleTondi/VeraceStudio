@@ -176,11 +176,11 @@ export function generateNewsletterWelcomeEmail(recipientEmail: string, siteUrl: 
           <h1 class="hero-title">Benvenuta/o nella comunità editoriale di VERACE</h1>
 
           <p class="paragraph">
-            Gentile Lettorice o Lettore,
+            Gentile Lettrice o Lettore,
           </p>
 
           <p class="paragraph">
-            TI ringraziamo <strong>vivamente</strong> per essersi iscritta/o alla nostra newsletter, per aver scelto di seguire da vicino il lavoro di ricerca, documentazione e inchiesta sul campo portato avanti dalla redazione di <strong>VERACE</strong> e da <strong>Bruma ETS</strong>.
+            Ti ringraziamo di cuore per esserti iscritta/o alla nostra newsletter e per aver scelto di seguire da vicino il lavoro di ricerca, documentazione e inchiesta sul campo portato avanti dalla redazione di <strong>VERACE</strong> e da <strong>Bruma ETS</strong>.
           </p>
 
           <p class="paragraph">
@@ -203,7 +203,7 @@ export function generateNewsletterWelcomeEmail(recipientEmail: string, siteUrl: 
           </div>
 
           <p class="paragraph" style="margin-bottom: 8px;">
-            Per qualsiasi proposta editoriale, suggerimento o richiesta di chiarimento, può rispondere direttamente a questa email.
+            Per qualsiasi proposta editoriale, suggerimento o richiesta di chiarimento, puoi rispondere direttamente a questa email.
           </p>
 
           <p class="paragraph" style="margin-top: 24px; font-size: 14px; color: #55504E;">
@@ -223,7 +223,7 @@ export function generateNewsletterWelcomeEmail(recipientEmail: string, siteUrl: 
                 <p style="margin: 0 0 6px 0; font-weight: bold; color: #FFFFFF;">Bruma ETS – VERACE Studio</p>
                 <p style="margin: 0 0 10px 0;">Via Carlo Marx 53, Roncocesi, Reggio Emilia (RE)</p>
                 <p style="margin: 0 0 10px 0;">Email: <a href="mailto:info@verace-re.eu">info@verace-re.eu</a> | Sito web: <a href="${siteUrl}">${siteUrl.replace(/^https?:\/\//, '')}</a></p>
-                <p style="margin: 0; font-size: 11px; color: #6E6761;">Riceve questa comunicazione perché ha richiesto l'iscrizione alla newsletter tramite il modulo ufficiale sul nostro sito web.</p>
+                <p style="margin: 0; font-size: 11px; color: #6E6761;">Ricevi questa comunicazione perché hai richiesto l'iscrizione alla newsletter tramite il modulo ufficiale sul nostro sito web.</p>
               </td>
             </tr>
           </table>
@@ -237,17 +237,19 @@ export function generateNewsletterWelcomeEmail(recipientEmail: string, siteUrl: 
   `.trim();
 
   const text = `
-BENVGNÛ IN VERACE | CONFERMA ISCRIZIONE NEWSLETTER
+BENVENUTA/O IN VERACE | CONFERMA ISCRIZIONE NEWSLETTER
 ==================================================
 
-Gentile Lettore,
+Gentile Lettrice o Lettore,
 
-La ringraziamo vivamente per essersi iscritto/a alla nostra newsletter. A t'ringrasiom cun tòt al cōr per aver scelto di seguire da vicino il lavoro di ricerca, documentazione e inchiesta sul campo portato avanti dalla redazione di VERACE e da Bruma ETS.
+Ti ringraziamo di cuore per esserti iscritto/a alla nostra newsletter e per aver scelto di seguire da vicino il lavoro di ricerca, documentazione e inchiesta sul campo portato avanti dalla redazione di VERACE e da Bruma ETS.
 
-Con questa iscrizione riceverà periodicamente approfondimenti inediti dedicati alle memorie e alle trasformazioni urbane del territorio di Reggio Emilia e della provincia emiliana: reportage fotografici, inchieste nel sottosuolo sociale e culturale, e aggiornamenti sui nostri progetti di rigenerazione comunitaria.
+Con questa iscrizione riceverai periodicamente approfondimenti inediti dedicati alle memorie e alle trasformazioni urbane del territorio di Reggio Emilia e della provincia emiliana: reportage fotografici, inchieste nel sottosuolo sociale e culturale, e aggiornamenti sui nostri progetti di rigenerazione comunitaria.
 
-Per iniziare subito a leggere i nostri ultimi articoli e reportage, La invitiamo a visitare il nostro Magazine:
+Per iniziare subito a leggere i nostri ultimi articoli e reportage, ti invitiamo a visitare il nostro Magazine:
 ${magazineUrl}
+
+Per qualsiasi proposta editoriale, suggerimento o richiesta, puoi rispondere direttamente a questa email.
 
 «A s'arvdér prest tra le pagine del Magazine.»
 

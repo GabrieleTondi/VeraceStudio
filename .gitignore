@@ -26,3 +26,5 @@ Thumbs.db
 # Temporary / Artifact files
 .tempmediaStorage/
 .system_generated/
+.vercel/
+scratch/

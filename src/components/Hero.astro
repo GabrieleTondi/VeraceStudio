@@ -1,44 +1,26 @@
 ---
-export interface HeroSlide {
-  image: string;
-  title: string;
-  category: string;
-  alt: string;
+import { FALLBACK_HERO_SLIDES, type HeroSlideItem } from '../lib/sanity';
+
+export interface Props {
+  slides?: HeroSlideItem[];
+  headline?: string;
+  primaryButtonText?: string;
+  primaryButtonLink?: string;
+  secondaryButtonText?: string;
+  secondaryButtonLink?: string;
 }
 
-// Immagini dimostrative ad alta risoluzione del territorio e architettura
-export const heroSlides: HeroSlide[] = [
-  {
-    image: '/projects/SCUOLA DI TERRITORIO/ST_2026-22.webp',
-    title: 'Scuola di Territorio',
-    category: 'Educazione & Territorio',
-    alt: 'Scuola di Territorio a Reggio Emilia'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=2000&q=85',
-    title: 'Spazi & Architetture',
-    category: 'Rigenerazione Urbana',
-    alt: 'Spazi di rigenerazione urbana e comunità'
-  },
-  {
-    image: '/projects/LA BELA/IMG_4931.webp',
-    title: 'La Bela - Filiera Lana',
-    category: 'Appennino Reggiano',
-    alt: 'Progetto La Bela sull\'Appennino Reggiano'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=85',
-    title: 'Innovazione & Territorio',
-    category: 'Cultura Contemporanea',
-    alt: 'Cultura visiva ed innovazione territoriale'
-  },
-  {
-    image: '/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-14.webp',
-    title: 'Viaggi Domenicali Minimi',
-    category: 'Paesaggio Emiliano',
-    alt: 'Viaggi Domenicali Minimi nel paesaggio di Luigi Ghirri'
-  }
-];
+const {
+  slides = FALLBACK_HERO_SLIDES,
+  headline = "Media cultura e rigenerazione per il territorio",
+  primaryButtonText = "scopri i progetti",
+  primaryButtonLink = "/progetti",
+  secondaryButtonText = "esplora il nostro magazine",
+  secondaryButtonLink = "/magazine"
+} = Astro.props;
+
+// Assicura che le slides siano al massimo 9
+const heroSlides = (slides && slides.length > 0 ? slides : FALLBACK_HERO_SLIDES).slice(0, 9);
 ---
 
 <section
@@ -62,7 +44,7 @@ export const heroSlides: HeroSlide[] = [
         >
           <img
             src={slide.image}
-            alt={slide.alt}
+            alt={slide.alt || slide.title || `VERACE Foto ${index + 1}`}
             class="hero-slide-img w-full h-full object-cover select-none will-change-transform"
             loading={index === 0 ? "eager" : "lazy"}
             decoding="async"
@@ -107,22 +89,22 @@ export const heroSlides: HeroSlide[] = [
       
       <!-- Dicitura Sostitutiva al Logo -->
       <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold uppercase tracking-tight text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)] leading-tight max-w-3xl mx-auto">
-        Media cultura e rigenerazione per il territorio
+        {headline}
       </h1>
 
       <!-- Due Bottoni Affiancati al Centro -->
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
         <a
-          href="/progetti"
+          href={primaryButtonLink}
           class="inline-flex items-center justify-center bg-zero-red text-white hover:bg-white hover:text-zero-black transition-all duration-300 px-8 py-4 font-mono font-bold text-xs uppercase tracking-wider shadow-lg hover:shadow-xl w-full sm:w-auto text-center"
         >
-          scopri i progetti
+          {primaryButtonText}
         </a>
         <a
-          href="/magazine"
-          class="inline-flex items-center justify-center bg-black/40 backdrop-blur-md border border-white/80 text-white hover:bg-white hover:text-zero-black transition-all duration-300 px-8 py-4 font-mono font-bold text-xs uppercase tracking-wider shadow-lg hover:shadow-xl w-full sm:w-auto text-center"
+          href={secondaryButtonLink}
+          class="inline-flex items-center justify-center bg-black/40 backdrop-blur-md text-white hover:bg-white hover:text-zero-black transition-all duration-300 px-8 py-4 font-mono font-bold text-xs uppercase tracking-wider shadow-lg hover:shadow-xl w-full sm:w-auto text-center"
         >
-          esplora il nostro magazine
+          {secondaryButtonText}
         </a>
       </div>
 
@@ -130,47 +112,49 @@ export const heroSlides: HeroSlide[] = [
   </div>
 
   <!-- 4. CONTROLLI DI NAVIGAZIONE SLIDER POST-INTRO (FRECCE E DOTS IN BASSO) -->
-  <div
-    id="hero-controls"
-    class="absolute inset-x-0 bottom-6 sm:bottom-8 z-30 flex items-center justify-between px-4 sm:px-8 max-w-7xl mx-auto pointer-events-none opacity-0 transition-opacity duration-700"
-  >
-    <!-- Frecce Prev / Next Senza Sfondo -->
-    <div class="flex items-center gap-3 pointer-events-auto">
-      <button
-        id="hero-prev-btn"
-        type="button"
-        class="text-white hover:text-zero-red bg-transparent p-2 transition-all duration-300 cursor-pointer focus:outline-none hover:scale-125 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-        aria-label="Foto precedente"
-      >
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-
-      <button
-        id="hero-next-btn"
-        type="button"
-        class="text-white hover:text-zero-red bg-transparent p-2 transition-all duration-300 cursor-pointer focus:outline-none hover:scale-125 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-        aria-label="Foto successiva"
-      >
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-    </div>
-
-    <!-- Indicatori Dots Fluttuanti -->
-    <div class="flex items-center gap-2.5 bg-transparent pointer-events-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-      {heroSlides.map((_, index) => (
+  {heroSlides.length > 1 && (
+    <div
+      id="hero-controls"
+      class="absolute inset-x-0 bottom-6 sm:bottom-8 z-30 flex items-center justify-between px-4 sm:px-8 max-w-7xl mx-auto pointer-events-none opacity-0 transition-opacity duration-700"
+    >
+      <!-- Frecce Prev / Next Senza Sfondo -->
+      <div class="flex items-center gap-3 pointer-events-auto">
         <button
+          id="hero-prev-btn"
           type="button"
-          class={`hero-nav-dot w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer focus:outline-none ${index === 0 ? 'bg-zero-red scale-125' : 'bg-white/60 hover:bg-white'}`}
-          data-dot-index={index}
-          aria-label={`Slide ${index + 1}`}
-        />
-      ))}
+          class="text-white hover:text-zero-red bg-transparent p-2 transition-all duration-300 cursor-pointer focus:outline-none hover:scale-125 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
+          aria-label="Foto precedente"
+        >
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <button
+          id="hero-next-btn"
+          type="button"
+          class="text-white hover:text-zero-red bg-transparent p-2 transition-all duration-300 cursor-pointer focus:outline-none hover:scale-125 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
+          aria-label="Foto successiva"
+        >
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Indicatori Dots Fluttuanti -->
+      <div class="flex items-center gap-2.5 bg-transparent pointer-events-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+        {heroSlides.map((_, index) => (
+          <button
+            type="button"
+            class={`hero-nav-dot w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer focus:outline-none ${index === 0 ? 'bg-zero-red scale-125' : 'bg-white/60 hover:bg-white'}`}
+            data-dot-index={index}
+            aria-label={`Slide ${index + 1}`}
+          />
+        ))}
+      </div>
     </div>
-  </div>
+  )}
 </section>
 
 <script>
@@ -187,7 +171,7 @@ export const heroSlides: HeroSlide[] = [
     const dots = document.querySelectorAll<HTMLElement>('.hero-nav-dot');
     const totalSlides = slideLayers.length;
 
-    if (!stack || slideLayers.length === 0 || !introLogo || !centerContent) return;
+    if (!stack || totalSlides === 0 || !introLogo || !centerContent) return;
 
     let currentSlide = 0;
     let isIntroActive = true;
@@ -212,7 +196,7 @@ export const heroSlides: HeroSlide[] = [
     const hasSeenIntro = sessionStorage.getItem('verace_intro_seen') === 'true';
 
     if (hasSeenIntro) {
-      // Navigazione di ritorno: mostra subito la schermata finale stabile
+      // Navigazione di ritorno: mostra subito la schermata finale stabile (Slide 0)
       isIntroActive = false;
       showSlideInstant(0);
       stack.style.filter = 'grayscale(0%) saturate(100%)';
@@ -225,28 +209,42 @@ export const heroSlides: HeroSlide[] = [
         controls.classList.remove('opacity-0');
         controls.classList.add('opacity-100');
       }
-      startAutoplay();
+      if (totalSlides > 1) {
+        startAutoplay();
+      }
     } else {
       // Prima apertura del sito nella sessione: salva il flag ed esegui la sequenza
       sessionStorage.setItem('verace_intro_seen', 'true');
 
-      const shutterSequence = [
-        { time: 0.00, slide: 0 },
-        { time: 0.12, slide: 1 },
-        { time: 0.24, slide: 2 },
-        { time: 0.36, slide: 3 },
-        { time: 0.48, slide: 4 },
-        { time: 0.62, slide: 0 },
-        { time: 0.78, slide: 1 },
-        { time: 0.96, slide: 2 },
-        { time: 1.18, slide: 3 },
-        { time: 1.44, slide: 4 },
-        { time: 1.76, slide: 1 },
-        { time: 2.14, slide: 2 },
-        { time: 2.60, slide: 3 },
-        { time: 3.16, slide: 4 },
-        { time: 3.80, slide: 0 } // arresto sulla slide 0
-      ];
+      // Genera la sequenza di scatti dinamica in base al numero di slide (max 9)
+      // Garantendo che l'ultima dell'animazione sia SEMPRE la prima foto (indice 0)
+      function buildShutterSequence(count: number) {
+        if (count <= 1) {
+          return [{ time: 0.00, slide: 0 }];
+        }
+
+        const timePoints = [
+          0.00, 0.12, 0.24, 0.36, 0.48, 0.62, 0.78, 0.96, 
+          1.18, 1.44, 1.76, 2.14, 2.60, 3.16, 3.80
+        ];
+
+        const seq: { time: number; slide: number }[] = [];
+        let slideCursor = 0;
+
+        for (let i = 0; i < timePoints.length; i++) {
+          // L'ultimo scatto a t = 3.80s deve cadere SEMPRE sulla slide 0
+          if (i === timePoints.length - 1) {
+            seq.push({ time: timePoints[i], slide: 0 });
+          } else {
+            seq.push({ time: timePoints[i], slide: slideCursor % count });
+            slideCursor++;
+          }
+        }
+
+        return seq;
+      }
+
+      const shutterSequence = buildShutterSequence(totalSlides);
 
       const introTl = gsap.timeline({
         onComplete: () => {
@@ -256,8 +254,10 @@ export const heroSlides: HeroSlide[] = [
             controls.classList.remove('opacity-0');
             controls.classList.add('opacity-100');
           }
-          // Avvia autoplay regolare
-          startAutoplay();
+          // Avvia autoplay regolare se più di una slide
+          if (totalSlides > 1) {
+            startAutoplay();
+          }
         }
       });
 
@@ -312,7 +312,7 @@ export const heroSlides: HeroSlide[] = [
     // 2. SLIDER FOTOGRAFICO REGOLARE (POST-INTRO)
     // -------------------------------------------------------------
     function transitionToSlide(targetIndex: number) {
-      if (isIntroActive) return;
+      if (isIntroActive || totalSlides <= 1) return;
 
       if (targetIndex < 0) targetIndex = totalSlides - 1;
       if (targetIndex >= totalSlides) targetIndex = 0;
@@ -344,11 +344,11 @@ export const heroSlides: HeroSlide[] = [
       // Aggiorna Dots indicatori
       dots.forEach((dot, idx) => {
         if (idx === currentSlide) {
-          dot.classList.remove('bg-white/50');
+          dot.classList.remove('bg-white/60');
           dot.classList.add('bg-zero-red', 'scale-125');
         } else {
           dot.classList.remove('bg-zero-red', 'scale-125');
-          dot.classList.add('bg-white/50');
+          dot.classList.add('bg-white/60');
         }
       });
     }
@@ -381,6 +381,7 @@ export const heroSlides: HeroSlide[] = [
     }
 
     function startAutoplay() {
+      if (totalSlides <= 1) return;
       stopAutoplay();
       autoplayTimer = window.setInterval(nextSlide, slideInterval);
     }
@@ -439,7 +440,7 @@ export const heroSlides: HeroSlide[] = [
     if (heroSection) {
       heroSection.addEventListener('mouseenter', stopAutoplay);
       heroSection.addEventListener('mouseleave', () => {
-        if (!isIntroActive) startAutoplay();
+        if (!isIntroActive && totalSlides > 1) startAutoplay();
       });
     }
 
@@ -459,7 +460,7 @@ export const heroSlides: HeroSlide[] = [
         if (diff > 0) nextSlide();
         else prevSlide();
       }
-      if (!isIntroActive) startAutoplay();
+      if (!isIntroActive && totalSlides > 1) startAutoplay();
     }, { passive: true });
 
     // -------------------------------------------------------------

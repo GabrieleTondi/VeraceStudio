@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Disiscrizione Newsletter | VERACE Studio"
+  description="Gestisci la tua iscrizione alla newsletter di VERACE."
+>
+  <div class="w-full min-h-[75vh] flex items-center justify-center px-4 py-20 bg-zero-bg">
+    <div class="max-w-lg w-full bg-zero-paper border border-neutral-300 p-8 sm:p-12 shadow-sm text-center">
+      
+      <div class="inline-block px-3 py-1 bg-neutral-200 text-zero-black font-mono text-[10px] uppercase font-bold tracking-widest mb-6">
+        GESTORI PREFERENZE EMAIL
+      </div>
+
+      <h1 class="hero-headline text-2xl sm:text-3xl text-zero-black uppercase mb-4 leading-tight">
+        DISISCRIZIONE DALLA NEWSLETTER
+      </h1>
+
+      <p class="font-mono text-xs text-neutral-600 mb-8 leading-relaxed">
+        Inserisci o conferma la tua email per non ricevere più gli aggiornamenti periodici e le inchieste editoriali di VERACE.
+      </p>
+
+      <form id="unsubscribe-form" class="space-y-4 text-left">
+        <div>
+          <label for="email" class="block font-mono text-[11px] font-bold uppercase text-zero-black mb-2">
+            IL TUO INDIRIZZO EMAIL:
+          </label>
+          <input
+            type="email"
+            id="unsubscribe-email"
+            name="email"
+            required
+            placeholder="latuaemail@dominio.it"
+            class="w-full px-4 py-3 bg-white border border-neutral-300 font-mono text-sm text-zero-black focus:outline-none focus:border-zero-red transition-colors"
+          />
+        </div>
+
+        <button
+          type="submit"
+          id="unsubscribe-btn"
+          class="w-full py-4 bg-zero-red text-white font-mono text-xs uppercase font-bold tracking-wider hover:bg-zero-black transition-colors duration-300 cursor-pointer"
+        >
+          CONFERMA DISISCRIZIONE
+        </button>
+
+        <div id="unsubscribe-feedback" class="hidden p-4 font-mono text-xs mt-4"></div>
+      </form>
+
+      <div class="mt-8 pt-6 border-t border-neutral-200">
+        <a href="/" class="font-mono text-xs text-neutral-500 hover:text-zero-red transition-colors">
+          ← Torna alla Home Page di VERACE
+        </a>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const emailParam = urlParams.get('email');
+  const inputEl = document.getElementById('unsubscribe-email') as HTMLInputElement | null;
+  const formEl = document.getElementById('unsubscribe-form') as HTMLFormElement | null;
+  const btnEl = document.getElementById('unsubscribe-btn') as HTMLButtonElement | null;
+  const feedbackEl = document.getElementById('unsubscribe-feedback') as HTMLDivElement | null;
+
+  if (inputEl && emailParam) {
+    inputEl.value = emailParam;
+  }
+
+  if (formEl) {
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = inputEl?.value.trim() || '';
+
+      if (!email || !email.includes('@')) {
+        if (feedbackEl) {
+          feedbackEl.className = 'block p-3 bg-red-100 text-red-800 text-xs font-mono';
+          feedbackEl.textContent = 'Per favore, inserisci un indirizzo email valido.';
+        }
+        return;
+      }
+
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.textContent = 'ELABORAZIONE IN CORSO...';
+      }
+
+      try {
+        const res = await fetch('/api/newsletter/unsubscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+
+        if (feedbackEl) {
+          if (res.ok && data.success) {
+            feedbackEl.className = 'block p-4 bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-mono leading-relaxed';
+            feedbackEl.innerHTML = `✓ <strong>Disiscrizione avvenuta con successo.</strong><br/>L'indirizzo <em>${email}</em> è stato rimosso dalla lista di distribuzione.`;
+            if (formEl) formEl.reset();
+            if (btnEl) btnEl.style.display = 'none';
+          } else {
+            feedbackEl.className = 'block p-4 bg-red-50 border border-red-300 text-red-800 text-xs font-mono';
+            feedbackEl.textContent = data.error || 'Si è verificato un errore durante la disiscrizione.';
+            if (btnEl) {
+              btnEl.disabled = false;
+              btnEl.textContent = 'CONFERMA DISISCRIZIONE';
+            }
+          }
+        }
+      } catch (err) {
+        if (feedbackEl) {
+          feedbackEl.className = 'block p-4 bg-red-50 border border-red-300 text-red-800 text-xs font-mono';
+          feedbackEl.textContent = 'Errore di connessione. Riprova più tardi.';
+        }
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.textContent = 'CONFERMA DISISCRIZIONE';
+        }
+      }
+    });
+  }
+</script>

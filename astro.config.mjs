@@ -14,11 +14,4 @@ export default defineConfig({
     tailwind(),
     sitemap(),
   ],
-  vite: {
-    resolve: {
-      alias: {
-        'astro/jsx-dev-runtime': 'astro/jsx-runtime',
-      },
-    },
-  },
 });

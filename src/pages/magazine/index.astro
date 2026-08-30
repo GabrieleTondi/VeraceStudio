@@ -165,7 +165,7 @@ const magazineSchema = {
 </BaseLayout>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  function initFeaturedVideoModal() {
     const trigger = document.getElementById('featured-video-trigger');
     const modal = document.getElementById('video-modal');
     const iframe = document.getElementById('video-iframe') as HTMLIFrameElement | null;
@@ -188,20 +188,27 @@ const magazineSchema = {
         document.body.style.overflow = '';
       };
 
-      trigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal();
-      });
+      if (!trigger.dataset.bound) {
+        trigger.dataset.bound = 'true';
+        trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          openModal();
+        });
+      }
 
-      if (closeBtn) {
+      if (closeBtn && !closeBtn.dataset.bound) {
+        closeBtn.dataset.bound = 'true';
         closeBtn.addEventListener('click', closeModal);
       }
 
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          closeModal();
-        }
-      });
+      if (!modal.dataset.bound) {
+        modal.dataset.bound = 'true';
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+      }
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
@@ -209,5 +216,8 @@ const magazineSchema = {
         }
       });
     }
-  });
+  }
+
+  document.addEventListener('DOMContentLoaded', initFeaturedVideoModal);
+  document.addEventListener('astro:page-load', initFeaturedVideoModal);
 </script>

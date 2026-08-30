@@ -76,6 +76,48 @@ function formatEventDate(dateStr: string) {
   const year = d.getFullYear();
   return { day, month, year };
 }
+
+// Mese iniziale per Server Rendering
+const initialYear = now.getFullYear();
+const initialMonth = now.getMonth(); // 0-11
+const initialFirstDay = new Date(initialYear, initialMonth, 1);
+let initialStartingDay = initialFirstDay.getDay() - 1;
+if (initialStartingDay < 0) initialStartingDay = 6;
+const initialDaysInMonth = new Date(initialYear, initialMonth + 1, 0).getDate();
+const initialTodayStr = `${initialYear}-${String(initialMonth + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+const monthNamesList = [
+  "GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GIUGNO",
+  "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"
+];
+const initialMonthName = monthNamesList[initialMonth];
+
+interface CalendarDayItem {
+  isEmpty: boolean;
+  day?: number;
+  dateStr?: string;
+  hasEvents?: boolean;
+  isToday?: boolean;
+}
+
+const serverDays: CalendarDayItem[] = [];
+for (let i = 0; i < initialStartingDay; i++) {
+  serverDays.push({ isEmpty: true });
+}
+for (let day = 1; day <= initialDaysInMonth; day++) {
+  const dayFormatted = String(day).padStart(2, '0');
+  const monthFormatted = String(initialMonth + 1).padStart(2, '0');
+  const dateStr = `${initialYear}-${monthFormatted}-${dayFormatted}`;
+  const dayEvents = allEvents.filter(e => e.date === dateStr);
+  const isToday = dateStr === initialTodayStr;
+  serverDays.push({
+    isEmpty: false,
+    day,
+    dateStr,
+    hasEvents: dayEvents.length > 0,
+    isToday,
+  });
+}
 ---
 
 <BaseLayout
@@ -117,7 +159,7 @@ function formatEventDate(dateStr: string) {
             <div class="flex items-center justify-between pb-6 mb-6">
               <div class="flex items-center gap-3">
                 <h2 id="calendar-month-year" class="font-display font-black text-2xl sm:text-3xl text-zero-black uppercase tracking-tight">
-                  AGOSTO 2026
+                  {initialMonthName} {initialYear}
                 </h2>
                 <button
                   id="today-reset-btn"
@@ -168,9 +210,27 @@ function formatEventDate(dateStr: string) {
               <div>DOM</div>
             </div>
 
-            <!-- Griglia dei Giorni Frameless (Generata da Script Client) -->
+            <!-- Griglia dei Giorni Frameless (Pre-renderizzata dal Server + Hydrated dal Client) -->
             <div id="calendar-days-grid" class="grid grid-cols-7 gap-2 min-h-[320px]">
-              <!-- Inserito dinamicamente -->
+              {serverDays.map((d) => {
+                if (d.isEmpty) {
+                  return <div class="p-2 text-neutral-300 opacity-20 text-center font-mono text-sm select-none" />;
+                }
+                return (
+                  <button
+                    type="button"
+                    data-date={d.dateStr}
+                    class={`relative p-2.5 text-center flex flex-col items-center justify-between min-h-[56px] font-mono text-sm transition-all duration-200 cursor-pointer focus:outline-none ${d.hasEvents ? 'bg-red-50/80 text-zero-red font-bold hover:bg-zero-red hover:text-white shadow-sm' : 'hover:bg-zero-black/5 text-zero-black'} ${d.isToday ? 'ring-2 ring-zero-black/80 font-black' : ''}`}
+                  >
+                    <span class="text-sm">{d.day}</span>
+                    {d.hasEvents ? (
+                      <span class="w-2 h-2 bg-zero-red group-hover:bg-white mt-1 shrink-0" />
+                    ) : (
+                      <span class="w-2 h-2 opacity-0" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
             <!-- Legenda minimale & pulita -->
@@ -338,278 +398,296 @@ function formatEventDate(dateStr: string) {
 
 <!-- Client Script per Calendario Interattivo Mensile & Smart Calendar Export -->
 <script is:inline define:vars={{ allEventsJSON: JSON.stringify(allEvents) }}>
-  const eventsData = JSON.parse(allEventsJSON);
-  
-  let currentViewDate = new Date(); // Mese corrente
-  let selectedEvent = null;
-  
-  const monthNamesList = [
-    "GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GIUGNO",
-    "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"
-  ];
-
-  // Rilevamento dispositivo Apple (iOS, iPadOS, macOS)
-  function isAppleDevice() {
-    const ua = navigator.userAgent || navigator.vendor || (window.opera ? window.opera.toString() : '') || '';
-    const platform = navigator.platform || '';
-    return /iPad|iPhone|iPod|Macintosh|MacIntel|MacPPC|Mac68K/i.test(ua) ||
-           /iPad|iPhone|iPod|Mac/i.test(platform) ||
-           (navigator.maxTouchPoints && navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
-  }
-
-  function getGoogleCalUrl(evt) {
-    const [year, month, day] = evt.date.split('-');
-    const [hour, min] = (evt.time || '18:00').split(':');
-    const startStr = `${year}${month}${day}T${(hour || '18').padStart(2, '0')}${(min || '00').padStart(2, '0')}00`;
+  (function() {
+    const eventsData = JSON.parse(allEventsJSON || '[]');
     
-    const startDate = new Date(Number(year), Number(month) - 1, Number(day), Number(hour || 18), Number(min || 0));
-    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-    const endYear = endDate.getFullYear();
-    const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
-    const endDay = String(endDate.getDate()).padStart(2, '0');
-    const endHour = String(endDate.getHours()).padStart(2, '0');
-    const endMin = String(endDate.getMinutes()).padStart(2, '0');
-    const endStr = `${endYear}${endMonth}${endDay}T${endHour}${endMin}00`;
+    let currentViewDate = new Date();
+    let selectedEvent = null;
     
-    const guestsText = evt.speakers && evt.speakers.length > 0 ? `\n\nOspiti: ${evt.speakers.join(', ')}` : '';
-    const details = `${evt.description || ''}${guestsText}\n\nOrganizzato da VERACE`;
-    
-    const params = new URLSearchParams({
-      action: 'TEMPLATE',
-      text: evt.title,
-      dates: `${startStr}/${endStr}`,
-      details: details,
-      location: evt.location || 'Reggio Emilia',
-    });
-    
-    return `https://calendar.google.com/calendar/render?${params.toString()}`;
-  }
+    const monthNamesList = [
+      "GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GIUGNO",
+      "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"
+    ];
 
-  function downloadIcs(evt) {
-    const [year, month, day] = evt.date.split('-');
-    const [hour, min] = (evt.time || '18:00').split(':');
-    const startStr = `${year}${month}${day}T${(hour || '18').padStart(2, '0')}${(min || '00').padStart(2, '0')}00`;
-    
-    const startDate = new Date(Number(year), Number(month) - 1, Number(day), Number(hour || 18), Number(min || 0));
-    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-    const endYear = endDate.getFullYear();
-    const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
-    const endDay = String(endDate.getDate()).padStart(2, '0');
-    const endHour = String(endDate.getHours()).padStart(2, '0');
-    const endMin = String(endDate.getMinutes()).padStart(2, '0');
-    const endStr = `${endYear}${endMonth}${endDay}T${endHour}${endMin}00`;
-    
-    const nowStr = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-    const uid = `${evt._id || 'evt'}-${Date.now()}@fondazioneverace.eu`;
-    const guestsText = evt.speakers && evt.speakers.length > 0 ? ` - Ospiti: ${evt.speakers.join(', ')}` : '';
-    
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//VERACE//Calendario Eventi//IT',
-      'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH',
-      'BEGIN:VEVENT',
-      `UID:${uid}`,
-      `DTSTAMP:${nowStr}`,
-      `DTSTART:${startStr}`,
-      `DTEND:${endStr}`,
-      `SUMMARY:${evt.title.replace(/[,;]/g, ' ')}`,
-      `DESCRIPTION:${(evt.description || '').replace(/\n/g, ' ')}${guestsText}`,
-      `LOCATION:${(evt.location || 'Reggio Emilia').replace(/[,;]/g, ' ')}`,
-      'STATUS:CONFIRMED',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-    
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    const safeTitle = (evt.title || 'evento-verace').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 30);
-    a.download = `${safeTitle}.ics`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  // Gestione smart del click su aggiungi al calendario
-  function handleSmartAddToCalendar(evt) {
-    if (isAppleDevice()) {
-      downloadIcs(evt);
-    } else {
-      const googleUrl = getGoogleCalUrl(evt);
-      window.open(googleUrl, '_blank', 'noopener,noreferrer');
-    }
-  }
-
-  function renderCalendar() {
-    const gridEl = document.getElementById('calendar-days-grid');
-    const monthYearEl = document.getElementById('calendar-month-year');
-    if (!gridEl || !monthYearEl) return;
-
-    const year = currentViewDate.getFullYear();
-    const month = currentViewDate.getMonth();
-
-    monthYearEl.textContent = `${monthNamesList[month]} ${year}`;
-
-    gridEl.innerHTML = '';
-
-    // Primo giorno del mese (0 = Dom, 1 = Lun ...)
-    const firstDay = new Date(year, month, 1);
-    let startingDay = firstDay.getDay() - 1;
-    if (startingDay < 0) startingDay = 6;
-
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    // Celle vuote per i giorni del mese precedente
-    for (let i = 0; i < startingDay; i++) {
-      const emptyDiv = document.createElement('div');
-      emptyDiv.className = 'p-2 text-neutral-300 opacity-20 text-center font-mono text-sm select-none';
-      gridEl.appendChild(emptyDiv);
+    // Rilevamento dispositivo Apple (iOS, iPadOS, macOS)
+    function isAppleDevice() {
+      const ua = navigator.userAgent || navigator.vendor || (window.opera ? window.opera.toString() : '') || '';
+      const platform = navigator.platform || '';
+      return /iPad|iPhone|iPod|Macintosh|MacIntel|MacPPC|Mac68K/i.test(ua) ||
+             /iPad|iPhone|iPod|Mac/i.test(platform) ||
+             (navigator.maxTouchPoints && navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
     }
 
-    const todayObj = new Date();
-    const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
-
-    // Popolamento giorni
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dayFormatted = String(day).padStart(2, '0');
-      const monthFormatted = String(month + 1).padStart(2, '0');
-      const dateStr = `${year}-${monthFormatted}-${dayFormatted}`;
-
-      const dayEvents = eventsData.filter(e => e.date === dateStr);
-      const isToday = dateStr === todayStr;
-
-      const dayBtn = document.createElement('button');
-      dayBtn.type = 'button';
-
-      let baseClasses = 'relative p-2.5 text-center flex flex-col items-center justify-between min-h-[56px] font-mono text-sm transition-all duration-200 cursor-pointer focus:outline-none';
+    function getGoogleCalUrl(evt) {
+      const [year, month, day] = evt.date.split('-');
+      const [hour, min] = (evt.time || '18:00').split(':');
+      const startStr = `${year}${month}${day}T${(hour || '18').padStart(2, '0')}${(min || '00').padStart(2, '0')}00`;
       
-      if (dayEvents.length > 0) {
-        baseClasses += ' bg-red-50/80 text-zero-red font-bold hover:bg-zero-red hover:text-white shadow-sm';
+      const startDate = new Date(Number(year), Number(month) - 1, Number(day), Number(hour || 18), Number(min || 0));
+      const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+      const endYear = endDate.getFullYear();
+      const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
+      const endDay = String(endDate.getDate()).padStart(2, '0');
+      const endHour = String(endDate.getHours()).padStart(2, '0');
+      const endMin = String(endDate.getMinutes()).padStart(2, '0');
+      const endStr = `${endYear}${endMonth}${endDay}T${endHour}${endMin}00`;
+      
+      const guestsText = evt.speakers && evt.speakers.length > 0 ? `\n\nOspiti: ${evt.speakers.join(', ')}` : '';
+      const details = `${evt.description || ''}${guestsText}\n\nOrganizzato da VERACE`;
+      
+      const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: evt.title,
+        dates: `${startStr}/${endStr}`,
+        details: details,
+        location: evt.location || 'Reggio Emilia',
+      });
+      
+      return `https://calendar.google.com/calendar/render?${params.toString()}`;
+    }
+
+    function downloadIcs(evt) {
+      const [year, month, day] = evt.date.split('-');
+      const [hour, min] = (evt.time || '18:00').split(':');
+      const startStr = `${year}${month}${day}T${(hour || '18').padStart(2, '0')}${(min || '00').padStart(2, '0')}00`;
+      
+      const startDate = new Date(Number(year), Number(month) - 1, Number(day), Number(hour || 18), Number(min || 0));
+      const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+      const endYear = endDate.getFullYear();
+      const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
+      const endDay = String(endDate.getDate()).padStart(2, '0');
+      const endHour = String(endDate.getHours()).padStart(2, '0');
+      const endMin = String(endDate.getMinutes()).padStart(2, '0');
+      const endStr = `${endYear}${endMonth}${endDay}T${endHour}${endMin}00`;
+      
+      const nowStr = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const uid = `${evt._id || 'evt'}-${Date.now()}@fondazioneverace.eu`;
+      const guestsText = evt.speakers && evt.speakers.length > 0 ? ` - Ospiti: ${evt.speakers.join(', ')}` : '';
+      
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//VERACE//Calendario Eventi//IT',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        `UID:${uid}`,
+        `DTSTAMP:${nowStr}`,
+        `DTSTART:${startStr}`,
+        `DTEND:${endStr}`,
+        `SUMMARY:${evt.title.replace(/[,;]/g, ' ')}`,
+        `DESCRIPTION:${(evt.description || '').replace(/\n/g, ' ')}${guestsText}`,
+        `LOCATION:${(evt.location || 'Reggio Emilia').replace(/[,;]/g, ' ')}`,
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+      
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const safeTitle = (evt.title || 'evento-verace').toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 30);
+      a.download = `${safeTitle}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Gestione smart del click su aggiungi al calendario
+    function handleSmartAddToCalendar(evt) {
+      if (isAppleDevice()) {
+        downloadIcs(evt);
       } else {
-        baseClasses += ' hover:bg-zero-black/5 text-zero-black';
+        const googleUrl = getGoogleCalUrl(evt);
+        window.open(googleUrl, '_blank', 'noopener,noreferrer');
+      }
+    }
+
+    function renderCalendar() {
+      const gridEl = document.getElementById('calendar-days-grid');
+      const monthYearEl = document.getElementById('calendar-month-year');
+      if (!gridEl || !monthYearEl) return;
+
+      const year = currentViewDate.getFullYear();
+      const month = currentViewDate.getMonth();
+
+      monthYearEl.textContent = `${monthNamesList[month]} ${year}`;
+
+      gridEl.innerHTML = '';
+
+      // Primo giorno del mese (0 = Dom, 1 = Lun ...)
+      const firstDay = new Date(year, month, 1);
+      let startingDay = firstDay.getDay() - 1;
+      if (startingDay < 0) startingDay = 6;
+
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Celle vuote per i giorni del mese precedente
+      for (let i = 0; i < startingDay; i++) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'p-2 text-neutral-300 opacity-20 text-center font-mono text-sm select-none';
+        gridEl.appendChild(emptyDiv);
       }
 
-      if (isToday) {
-        baseClasses += ' ring-2 ring-zero-black/80 font-black';
-      }
+      const todayObj = new Date();
+      const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
 
-      dayBtn.className = baseClasses;
-      dayBtn.setAttribute('data-date', dateStr);
+      // Popolamento giorni
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayFormatted = String(day).padStart(2, '0');
+        const monthFormatted = String(month + 1).padStart(2, '0');
+        const dateStr = `${year}-${monthFormatted}-${dayFormatted}`;
 
-      const numberSpan = document.createElement('span');
-      numberSpan.className = 'text-sm';
-      numberSpan.textContent = String(day);
-      dayBtn.appendChild(numberSpan);
+        const dayEvents = eventsData.filter(e => e.date === dateStr);
+        const isToday = dateStr === todayStr;
 
-      if (dayEvents.length > 0) {
-        const dot = document.createElement('span');
-        dot.className = 'w-2 h-2 bg-zero-red group-hover:bg-white mt-1 shrink-0';
-        dayBtn.appendChild(dot);
+        const dayBtn = document.createElement('button');
+        dayBtn.type = 'button';
 
-        dayBtn.addEventListener('click', () => {
-          // Highlight selected state in grid
-          document.querySelectorAll('#calendar-days-grid button').forEach(b => {
-            b.classList.remove('ring-2', 'ring-zero-red', 'scale-105');
+        let baseClasses = 'relative p-2.5 text-center flex flex-col items-center justify-between min-h-[56px] font-mono text-sm transition-all duration-200 cursor-pointer focus:outline-none';
+        
+        if (dayEvents.length > 0) {
+          baseClasses += ' bg-red-50/80 text-zero-red font-bold hover:bg-zero-red hover:text-white shadow-sm';
+        } else {
+          baseClasses += ' hover:bg-zero-black/5 text-zero-black';
+        }
+
+        if (isToday) {
+          baseClasses += ' ring-2 ring-zero-black/80 font-black';
+        }
+
+        dayBtn.className = baseClasses;
+        dayBtn.setAttribute('data-date', dateStr);
+
+        const numberSpan = document.createElement('span');
+        numberSpan.className = 'text-sm';
+        numberSpan.textContent = String(day);
+        dayBtn.appendChild(numberSpan);
+
+        if (dayEvents.length > 0) {
+          const dot = document.createElement('span');
+          dot.className = 'w-2 h-2 bg-zero-red group-hover:bg-white mt-1 shrink-0';
+          dayBtn.appendChild(dot);
+
+          dayBtn.addEventListener('click', () => {
+            document.querySelectorAll('#calendar-days-grid button').forEach(b => {
+              b.classList.remove('ring-2', 'ring-zero-red', 'scale-105');
+            });
+            dayBtn.classList.add('ring-2', 'ring-zero-red', 'scale-105');
+            showEventDetail(dayEvents[0]);
           });
-          dayBtn.classList.add('ring-2', 'ring-zero-red', 'scale-105');
-          showEventDetail(dayEvents[0]);
-        });
-      } else {
-        const placeholderDot = document.createElement('span');
-        placeholderDot.className = 'w-2 h-2 opacity-0';
-        dayBtn.appendChild(placeholderDot);
-      }
-
-      gridEl.appendChild(dayBtn);
-    }
-  }
-
-  function showEventDetail(evt) {
-    selectedEvent = evt;
-    const detailBox = document.getElementById('selected-event-detail');
-    if (!detailBox) return;
-
-    document.getElementById('detail-category').textContent = evt.category;
-    document.getElementById('detail-date-time').textContent = `${evt.date} / ORE ${evt.time}`;
-    document.getElementById('detail-title').textContent = evt.title;
-    document.getElementById('detail-description').textContent = evt.description;
-    document.getElementById('detail-location').textContent = evt.location;
-
-    const speakersBox = document.getElementById('detail-speakers-box');
-    const speakersContainer = document.getElementById('detail-speakers');
-    if (speakersContainer) {
-      speakersContainer.innerHTML = '';
-      if (evt.speakers && evt.speakers.length > 0) {
-        speakersBox.classList.remove('hidden');
-        evt.speakers.forEach(speaker => {
-          const pill = document.createElement('span');
-          pill.className = 'bg-zero-black/5 px-2.5 py-0.5 text-xs font-mono text-zero-black';
-          pill.textContent = speaker;
-          speakersContainer.appendChild(pill);
-        });
-      } else {
-        speakersBox.classList.add('hidden');
-      }
-    }
-
-    detailBox.classList.remove('hidden');
-    detailBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    renderCalendar();
-
-    const prevBtn = document.getElementById('prev-month-btn');
-    const nextBtn = document.getElementById('next-month-btn');
-    const todayResetBtn = document.getElementById('today-reset-btn');
-
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
-        currentViewDate.setMonth(currentViewDate.getMonth() - 1);
-        renderCalendar();
-      });
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        currentViewDate.setMonth(currentViewDate.getMonth() + 1);
-        renderCalendar();
-      });
-    }
-
-    if (todayResetBtn) {
-      todayResetBtn.addEventListener('click', () => {
-        currentViewDate = new Date();
-        renderCalendar();
-      });
-    }
-
-    // Bind event per il pulsante smart nel box di dettaglio
-    const detailAddCalBtn = document.getElementById('detail-add-cal-btn');
-    if (detailAddCalBtn) {
-      detailAddCalBtn.addEventListener('click', () => {
-        if (selectedEvent) {
-          handleSmartAddToCalendar(selectedEvent);
+        } else {
+          const placeholderDot = document.createElement('span');
+          placeholderDot.className = 'w-2 h-2 opacity-0';
+          dayBtn.appendChild(placeholderDot);
         }
-      });
+
+        gridEl.appendChild(dayBtn);
+      }
     }
 
-    // Bind events per i pulsanti smart nella lista a destra
-    document.querySelectorAll('.smart-add-cal-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        try {
-          const evtData = JSON.parse(btn.getAttribute('data-event-json'));
-          if (evtData) {
-            handleSmartAddToCalendar(evtData);
+    function showEventDetail(evt) {
+      selectedEvent = evt;
+      const detailBox = document.getElementById('selected-event-detail');
+      if (!detailBox) return;
+
+      document.getElementById('detail-category').textContent = evt.category;
+      document.getElementById('detail-date-time').textContent = `${evt.date} / ORE ${evt.time}`;
+      document.getElementById('detail-title').textContent = evt.title;
+      document.getElementById('detail-description').textContent = evt.description;
+      document.getElementById('detail-location').textContent = evt.location;
+
+      const speakersBox = document.getElementById('detail-speakers-box');
+      const speakersContainer = document.getElementById('detail-speakers');
+      if (speakersContainer) {
+        speakersContainer.innerHTML = '';
+        if (evt.speakers && evt.speakers.length > 0) {
+          speakersBox.classList.remove('hidden');
+          evt.speakers.forEach(speaker => {
+            const pill = document.createElement('span');
+            pill.className = 'bg-zero-black/5 px-2.5 py-0.5 text-xs font-mono text-zero-black';
+            pill.textContent = speaker;
+            speakersContainer.appendChild(pill);
+          });
+        } else {
+          speakersBox.classList.add('hidden');
+        }
+      }
+
+      detailBox.classList.remove('hidden');
+      detailBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function initInteractiveCalendar() {
+      const gridEl = document.getElementById('calendar-days-grid');
+      if (!gridEl) return;
+
+      currentViewDate = new Date();
+      renderCalendar();
+
+      const prevBtn = document.getElementById('prev-month-btn');
+      const nextBtn = document.getElementById('next-month-btn');
+      const todayResetBtn = document.getElementById('today-reset-btn');
+
+      if (prevBtn && !prevBtn.dataset.bound) {
+        prevBtn.dataset.bound = 'true';
+        prevBtn.addEventListener('click', () => {
+          currentViewDate.setMonth(currentViewDate.getMonth() - 1);
+          renderCalendar();
+        });
+      }
+
+      if (nextBtn && !nextBtn.dataset.bound) {
+        nextBtn.dataset.bound = 'true';
+        nextBtn.addEventListener('click', () => {
+          currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+          renderCalendar();
+        });
+      }
+
+      if (todayResetBtn && !todayResetBtn.dataset.bound) {
+        todayResetBtn.dataset.bound = 'true';
+        todayResetBtn.addEventListener('click', () => {
+          currentViewDate = new Date();
+          renderCalendar();
+        });
+      }
+
+      const detailAddCalBtn = document.getElementById('detail-add-cal-btn');
+      if (detailAddCalBtn && !detailAddCalBtn.dataset.bound) {
+        detailAddCalBtn.dataset.bound = 'true';
+        detailAddCalBtn.addEventListener('click', () => {
+          if (selectedEvent) {
+            handleSmartAddToCalendar(selectedEvent);
           }
-        } catch (e) {
-          console.error('Error in smart calendar export:', e);
+        });
+      }
+
+      document.querySelectorAll('.smart-add-cal-btn').forEach(btn => {
+        if (!btn.dataset.bound) {
+          btn.dataset.bound = 'true';
+          btn.addEventListener('click', () => {
+            try {
+              const evtData = JSON.parse(btn.getAttribute('data-event-json') || '{}');
+              if (evtData && evtData.date) {
+                handleSmartAddToCalendar(evtData);
+              }
+            } catch (e) {
+              console.error('Error in smart calendar export:', e);
+            }
+          });
         }
       });
-    });
-  });
+    }
+
+    // Inizializza subito se il DOM è già disponibile
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      initInteractiveCalendar();
+    }
+
+    document.addEventListener('DOMContentLoaded', initInteractiveCalendar);
+    document.addEventListener('astro:page-load', initInteractiveCalendar);
+  })();
 </script>

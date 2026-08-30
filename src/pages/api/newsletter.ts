@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { sendNewsletterWelcomeEmail } from '../../lib/mailer';
+import { addOrUpdateNewsletterSubscriber } from '../../lib/sanity';
 
 export const prerender = false;
 
@@ -7,7 +8,7 @@ export const GET: APIRoute = async () => {
   return new Response(
     JSON.stringify({
       status: 'ok',
-      service: 'VERACE Newsletter Automated Mailer',
+      service: 'VERACE Newsletter Automated Mailer & Sanity Sync',
       sender: 'info@verace-re.eu'
     }),
     { status: 200, headers: { 'Content-Type': 'application/json' } }
@@ -17,19 +18,23 @@ export const GET: APIRoute = async () => {
 export const POST: APIRoute = async ({ request, site }) => {
   try {
     let email = '';
+    let name = '';
 
     const contentType = request.headers.get('content-type') || '';
     if (contentType.includes('application/json')) {
       const body = await request.json();
       email = body?.email;
+      name = body?.name || '';
     } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
       const formData = await request.formData();
       email = formData.get('email')?.toString() || '';
+      name = formData.get('name')?.toString() || '';
     } else {
       const text = await request.text();
       try {
         const parsed = JSON.parse(text);
         email = parsed?.email || '';
+        name = parsed?.name || '';
       } catch {
         email = text;
       }
@@ -47,6 +52,12 @@ export const POST: APIRoute = async ({ request, site }) => {
         }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Salva l'iscritto in Sanity Database
+    const sanityResult = await addOrUpdateNewsletterSubscriber(email, name, 'Sito Web (Footer)');
+    if (!sanityResult.success) {
+      console.warn('[NEWSLETTER API] Attenzione: salvataggio Sanity non riuscito, procedo comunque con invio email:', sanityResult.error);
     }
 
     const siteUrl = site ? site.origin : 'https://fondazioneverace.eu';
