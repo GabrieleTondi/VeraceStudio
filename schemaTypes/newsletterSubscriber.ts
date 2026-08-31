@@ -23,8 +23,8 @@ export default {
       type: 'string',
       options: {
         list: [
-          { title: '✓ Attivo (Riceve le newsletter)', value: 'active' },
-          { title: '✕ Disiscritto', value: 'unsubscribed' },
+          { title: 'Attivo (Riceve le newsletter)', value: 'active' },
+          { title: 'Disiscritto', value: 'unsubscribed' },
         ],
         layout: 'radio',
       },
@@ -72,7 +72,7 @@ export default {
       const isUnsubscribed = status === 'unsubscribed';
       return {
         title: email || 'Senza email',
-        subtitle: `${isUnsubscribed ? '✕ Disiscritto' : '✓ Attivo'}${name ? ` · ${name}` : ''} (${formattedDate})`,
+        subtitle: `${isUnsubscribed ? 'Disiscritto' : 'Attivo'}${name ? ` · ${name}` : ''} (${formattedDate})`,
       };
     },
   },

@@ -108,7 +108,7 @@ export default {
             },
             prepare({ title, subtitle }: any) {
               return {
-                title: `🎤 ${title || 'Intervistato'}`,
+                title: title || 'Intervistato',
                 subtitle: subtitle || 'Nessun dettaglio specificato',
               };
             },
@@ -225,7 +225,7 @@ export default {
             },
             prepare({ caption, alt, media }: any) {
               return {
-                title: '📷 Fotografia nel Testo',
+                title: 'Fotografia nel Testo',
                 subtitle: caption || alt || 'Senza didascalia',
                 media,
               };
@@ -261,7 +261,7 @@ export default {
             },
             prepare({ title, text }: any) {
               return {
-                title: `📑 APPROFONDIMENTO • ${title || 'Senza titolo'}`,
+                title: `APPROFONDIMENTO • ${title || 'Senza titolo'}`,
                 subtitle: text ? text.slice(0, 60) + '...' : '',
               };
             },
@@ -296,7 +296,7 @@ export default {
             },
             prepare({ quote, author }: any) {
               return {
-                title: `💬 «${quote ? quote.slice(0, 50) + '...' : ''}»`,
+                title: `«${quote ? quote.slice(0, 50) + '...' : ''}»`,
                 subtitle: author ? `Autore: ${author}` : 'Citazione in risalto',
               };
             },
@@ -330,7 +330,7 @@ export default {
             },
             prepare({ style }: any) {
               return {
-                title: `➖ Separatore: ${style || 'redLine'}`,
+                title: `Separatore: ${style || 'redLine'}`,
               };
             },
           },

@@ -19,7 +19,7 @@ export default defineConfig({
           .title('Contenuti & Redazione VERACE')
           .items([
             S.listItem()
-              .title('🖼️ Slider Home & Animazione')
+              .title('Slider Home & Animazione')
               .schemaType('heroSlider')
               .child(
                 S.documentTypeList('heroSlider').title('Slider Home Page & Intro (Max 9 Foto)')
@@ -43,7 +43,7 @@ export default defineConfig({
               .child(S.documentTypeList('teamMember').title('Membri del Team')),
             S.divider(),
             S.listItem()
-              .title('✉️ NEWSLETTER & COMUNICAZIONI')
+              .title('Newsletter & Comunicazioni')
               .child(
                 S.list()
                   .title('Gestione Newsletter')

@@ -114,7 +114,7 @@ export default {
       const count = Array.isArray(slides) ? slides.length : 0;
       return {
         title: title || 'Slider Home Page',
-        subtitle: `📷 ${count} ${count === 1 ? 'foto caricata' : 'foto caricate'} (Max 9)`,
+        subtitle: `${count} ${count === 1 ? 'foto caricata' : 'foto caricate'} (Max 9)`,
       };
     },
   },

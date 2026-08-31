@@ -40,7 +40,7 @@ export const SendCampaignAction: DocumentActionComponent = (props: DocumentActio
       if (res.ok && data.success) {
         setFeedback({
           type: 'success',
-          text: `✓ Email di test inviata con successo a ${testEmail}!`,
+          text: `Email di test inviata con successo a ${testEmail}!`,
         });
       } else {
         setFeedback({
@@ -81,7 +81,7 @@ export const SendCampaignAction: DocumentActionComponent = (props: DocumentActio
       if (res.ok && data.success) {
         setFeedback({
           type: 'success',
-          text: `✓ BROADCAST COMPLETATO! Inviate ${data.sentCount} email su ${data.totalSubscribers} iscritti.`,
+          text: `BROADCAST COMPLETATO: Inviate ${data.sentCount} email su ${data.totalSubscribers} iscritti.`,
         });
       } else {
         setFeedback({
@@ -137,7 +137,7 @@ export const SendCampaignAction: DocumentActionComponent = (props: DocumentActio
             React.createElement(
               'strong',
               null,
-              status === 'sent' ? '✓ Già inviata' : status === 'ready' ? 'Pronta' : 'Bozza'
+              status === 'sent' ? 'Già inviata' : status === 'ready' ? 'Pronta' : 'Bozza'
             )
           )
         ),
@@ -255,7 +255,7 @@ export const SendCampaignAction: DocumentActionComponent = (props: DocumentActio
                 cursor: isSending ? 'not-allowed' : 'pointer',
               },
             },
-            isSending ? 'Elaborazione broadcast in corso...' : '🚀 Invia a Tutti gli Iscritti Ora'
+            isSending ? 'Elaborazione broadcast in corso...' : 'Invia a Tutti gli Iscritti Ora'
           )
         )
       ),

@@ -375,7 +375,7 @@ export default {
             },
             prepare({ title, description }: any) {
               return {
-                title: `📎 ${title || 'Allegato'}`,
+                title: title || 'Allegato',
                 subtitle: description || 'File allegato',
               };
             },
@@ -391,9 +391,9 @@ export default {
       type: 'string',
       options: {
         list: [
-          { title: '📝 Bozza (In lavorazione)', value: 'draft' },
-          { title: '🚀 Pronta per l\'Invio', value: 'ready' },
-          { title: '✓ Inviata con Successo', value: 'sent' },
+          { title: 'Bozza (In lavorazione)', value: 'draft' },
+          { title: 'Pronta per l\'Invio', value: 'ready' },
+          { title: 'Inviata con Successo', value: 'sent' },
         ],
         layout: 'radio',
       },
@@ -431,11 +431,11 @@ export default {
       recipients: 'recipientsCount',
     },
     prepare({ title, subject, status, sentAt, recipients }: any) {
-      let statusBadge = '📝 Bozza';
-      if (status === 'ready') statusBadge = '🚀 Pronta';
+      let statusBadge = 'Bozza';
+      if (status === 'ready') statusBadge = 'Pronta';
       if (status === 'sent') {
         const dateStr = sentAt ? new Date(sentAt).toLocaleDateString('it-IT') : '';
-        statusBadge = `✓ Inviata (${recipients || 0} iscritti - ${dateStr})`;
+        statusBadge = `Inviata (${recipients || 0} iscritti - ${dateStr})`;
       }
       return {
         title: title || 'Campagna senza titolo',
