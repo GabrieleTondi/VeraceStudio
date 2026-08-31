@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/fix-vercel-runtime.mjs",
     "preview": "astro preview",
     "astro": "astro"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "dependencies": {
     "@astrojs/react": "^3.6.3",

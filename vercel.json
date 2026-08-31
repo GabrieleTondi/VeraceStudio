@@ -1,4 +1,4 @@
 {
   "framework": "astro",
-  "buildCommand": "astro build"
+  "buildCommand": "npm run build"
 }
