@@ -120,7 +120,7 @@ export function renderPortableTextToEmail(blocks: any[] = []): { html: string; t
         if (block.listItem === 'bullet') {
           if (inList !== 'bullet') {
             closeListIfNeeded();
-            htmlResult += '<ul style="margin: 0 0 18px 0; padding-left: 24px; color: #373232; font-size: 15px; line-height: 1.65;">\n';
+            htmlResult += '<ul style="margin: 0 0 18px 0; padding-left: 24px; color: #000000; font-size: 15px; line-height: 1.65;">\n';
             inList = 'bullet';
           }
           htmlResult += `  <li style="margin-bottom: 6px;">${renderedSpans}</li>\n`;
@@ -128,7 +128,7 @@ export function renderPortableTextToEmail(blocks: any[] = []): { html: string; t
         } else if (block.listItem === 'number') {
           if (inList !== 'number') {
             closeListIfNeeded();
-            htmlResult += '<ol style="margin: 0 0 18px 0; padding-left: 24px; color: #373232; font-size: 15px; line-height: 1.65;">\n';
+            htmlResult += '<ol style="margin: 0 0 18px 0; padding-left: 24px; color: #000000; font-size: 15px; line-height: 1.65;">\n';
             inList = 'number';
           }
           htmlResult += `  <li style="margin-bottom: 6px;">${renderedSpans}</li>\n`;
@@ -168,7 +168,7 @@ export function renderPortableTextToEmail(blocks: any[] = []): { html: string; t
           break;
         case 'normal':
         default:
-          htmlResult += `<p style="font-size: 15px; line-height: 1.65; color: #373232; margin: 0 0 18px 0;">${renderedSpans}</p>\n`;
+          htmlResult += `<p style="font-size: 15px; line-height: 1.65; color: #000000; margin: 0 0 18px 0;">${renderedSpans}</p>\n`;
           textResult += `${plainSpans}\n\n`;
           break;
       }
@@ -191,7 +191,7 @@ export function renderPortableTextToEmail(blocks: any[] = []): { html: string; t
         btnColor = '#FFFFFF';
         btnBorder = '1px solid #1A1A1A';
       } else if (styleVariant === 'outline') {
-        btnBg = '#FFFCF9';
+        btnBg = '#FFFEF3';
         btnColor = '#B53D33';
         btnBorder = '2px solid #B53D33';
       } else if (styleVariant === 'green') {
@@ -337,7 +337,7 @@ export function generateCampaignEmailHtml(options: EmailRenderOptions): Rendered
         <div style="font-family: 'Courier New', monospace; font-size: 11px; font-weight: bold; color: #B53D33; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">
           📎 DOCUMENTI E ALLEGATI DISPONIBILI (${campaign.attachments.length})
         </div>
-        <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #373232; line-height: 1.6;">
+        <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #000000; line-height: 1.6;">
           ${campaign.attachments
             .map(
               (att) =>
@@ -386,7 +386,7 @@ export function generateCampaignEmailHtml(options: EmailRenderOptions): Rendered
       padding-bottom: 40px;
     }
     .main-table {
-      background-color: #FFFCF9;
+      background-color: #FFFEF3;
       margin: 0 auto;
       width: 100%;
       max-width: 600px;

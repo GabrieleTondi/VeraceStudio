@@ -28,6 +28,17 @@ const faqs = [
   }
 ];
 
+const partnersList = [
+  "Fondazione Manodori",
+  "Fondazione Luigi Ghirri",
+  "Salewa",
+  "Alpinaflora",
+  "Asineria di Reggio Emilia",
+  "Giro del Cielo",
+  "Bruma ETS",
+  "Territorio Reggiano"
+];
+
 const partnershipSchema = {
   "@context": "https://schema.org",
   "@graph": [
@@ -72,22 +83,22 @@ const partnershipSchema = {
 >
   <div class="w-full bg-zero-bg">
     
-    <!-- A) Apertura Sezione Partnership (Semplificata stile Magazine) -->
-    <header class="px-4 sm:px-6 lg:px-8 py-12 md:py-16 bg-zero-paper gsap-fade-up">
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8">
+    <!-- A) Apertura Sezione Partnership (Stile Editoriale Minimale) -->
+    <header class="px-4 sm:px-8 lg:px-12 py-16 md:py-24 bg-zero-bg border-b border-black/[0.04] gsap-fade-up">
+      <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-16">
         <div>
-          <h1 class="hero-headline text-zero-black uppercase">
+          <h1 class="hero-headline text-zero-black uppercase leading-none">
             PARTNERSHIP
           </h1>
         </div>
-        <div class="max-w-lg space-y-4">
-          <p class="text-sm md:text-base font-light text-zero-black leading-relaxed">
+        <div class="max-w-xl space-y-6">
+          <p class="text-base md:text-lg font-light text-zero-black leading-relaxed">
             Verace ha sviluppato un modello di collaborazione tra imprese e terzo settore, che si basa sull’analisi dei bisogni del territorio e la creazione di progetti ad alto impatto sociale con imprese, fondazioni e enti no-profit.
           </p>
           <div>
             <a
               href="#richiesta-partner"
-              class="inline-flex items-center gap-3 px-6 py-3.5 bg-zero-red text-white ui-meta font-bold hover:bg-zero-black transition-colors duration-300 shadow-sm"
+              class="inline-flex items-center gap-3 px-7 py-3.5 bg-zero-red text-white ui-meta font-bold text-xs uppercase tracking-wider hover:bg-zero-black transition-colors duration-200 shadow-sm"
             >
               <span>RICHIEDI CO-PROGETTAZIONE</span>
               <span>→</span>
@@ -97,9 +108,9 @@ const partnershipSchema = {
       </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-24">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-20 md:py-32 space-y-28 md:space-y-40">
       
-      <!-- C) Sezione "Come Collaborare con VERACE" e Schema a 4 Step (Senza cornici, sfondo neutro #FFFCF9) -->
+      <!-- B) Sezione "Come Collaborare con VERACE" (Modello Ispirato a Patagonia Activism) -->
       <section class="space-y-12 gsap-fade-up">
         <div class="max-w-4xl space-y-4">
           <h2 class="font-display font-black text-3xl md:text-5xl uppercase text-zero-black tracking-tight leading-tight">
@@ -110,52 +121,88 @@ const partnershipSchema = {
           </p>
         </div>
 
-        <!-- 4 Step Numerati SENZA sottotesto descrittivo -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
-          <div class="p-6 bg-zero-paper shadow-sm space-y-3">
-            <span class="text-4xl font-display font-black text-zero-red block">1</span>
-            <h3 class="font-display font-bold text-lg uppercase text-zero-black leading-snug">
+        <!-- Schema a 4 Fasi con Tessere Minimali e Numerazione Pulita (Senza sottotesti prolissi) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+          
+          <div class="p-8 bg-zero-paper border-t-2 border-zero-red flex flex-col justify-between space-y-6 group hover:bg-black hover:text-white transition-all duration-300">
+            <span class="font-mono font-bold text-xs text-zero-red group-hover:text-white tracking-widest uppercase">FASE 01</span>
+            <h3 class="font-display font-bold text-xl uppercase text-zero-black group-hover:text-white leading-snug">
               analizziamo i bisogni del territorio
             </h3>
           </div>
 
-          <div class="p-6 bg-zero-paper shadow-sm space-y-3">
-            <span class="text-4xl font-display font-black text-zero-red block">2</span>
-            <h3 class="font-display font-bold text-lg uppercase text-zero-black leading-snug">
+          <div class="p-8 bg-zero-paper border-t-2 border-zero-red flex flex-col justify-between space-y-6 group hover:bg-black hover:text-white transition-all duration-300">
+            <span class="font-mono font-bold text-xs text-zero-red group-hover:text-white tracking-widest uppercase">FASE 02</span>
+            <h3 class="font-display font-bold text-xl uppercase text-zero-black group-hover:text-white leading-snug">
               costruiamo partnership virtuose
             </h3>
           </div>
 
-          <div class="p-6 bg-zero-paper shadow-sm space-y-3">
-            <span class="text-4xl font-display font-black text-zero-red block">3</span>
-            <h3 class="font-display font-bold text-lg uppercase text-zero-black leading-snug">
+          <div class="p-8 bg-zero-paper border-t-2 border-zero-red flex flex-col justify-between space-y-6 group hover:bg-black hover:text-white transition-all duration-300">
+            <span class="font-mono font-bold text-xs text-zero-red group-hover:text-white tracking-widest uppercase">FASE 03</span>
+            <h3 class="font-display font-bold text-xl uppercase text-zero-black group-hover:text-white leading-snug">
               progettiamo l’intervento
             </h3>
           </div>
 
-          <div class="p-6 bg-zero-paper shadow-sm space-y-3">
-            <span class="text-4xl font-display font-black text-zero-red block">4</span>
-            <h3 class="font-display font-bold text-lg uppercase text-zero-black leading-snug">
+          <div class="p-8 bg-zero-paper border-t-2 border-zero-red flex flex-col justify-between space-y-6 group hover:bg-black hover:text-white transition-all duration-300">
+            <span class="font-mono font-bold text-xs text-zero-red group-hover:text-white tracking-widest uppercase">FASE 04</span>
+            <h3 class="font-display font-bold text-xl uppercase text-zero-black group-hover:text-white leading-snug">
               misuriamo l’impatto con strumenti in linea con gli standard europei della sostenibilità
             </h3>
           </div>
+
         </div>
 
-        <!-- D) Pulsante Scarica Dossier Progetti -->
-        <div class="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-neutral-200">
-          <div class="font-mono text-xs text-neutral-600 uppercase">
-            DISPONIBILE DOSSIER COMPLETO PER DIREZIONI SOSTENIBILITÀ, CSR ED ENTI DEL TERRITORIO
+        <!-- C) Bottone Scarica Dossier con Badge Distintivo -->
+        <div class="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-black/[0.06]">
+          <div class="font-mono text-xs text-zero-black/70 uppercase tracking-wide">
+            DOSSIER COMPLETO PER DIREZIONI SOSTENIBILITÀ, CSR ED ENTI DEL TERRITORIO
           </div>
-          <DownloadButton
+          <a
             href="/pdf/sample-project-presentation.pdf"
-            label="SCARICA IL DOSSIER PROGETTI"
-            fileSize="PDF 2.4 MB"
-            variant="solid"
-          />
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-4 px-6 py-4 bg-zero-black text-white ui-meta font-bold text-xs uppercase tracking-wider hover:bg-zero-red transition-colors duration-200 shadow-sm group"
+          >
+            <span class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 bg-zero-red inline-block mr-1"></span>
+              <span>SCARICA IL DOSSIER PROGETTI</span>
+              <span class="text-[9px] opacity-60 font-normal lowercase">(pdf 2.4 mb)</span>
+            </span>
+            <svg class="w-4 h-4 flex-shrink-0 text-current transition-transform duration-300 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </a>
         </div>
       </section>
 
-      <!-- Casi Studio Territoriali -->
+      <!-- D) Nuova Sezione Partner "CON CHI ABBIAMO LAVORATO" (Marquee Orizzontale Continuo) -->
+      <section class="space-y-8 gsap-fade-up overflow-hidden">
+        <div class="flex items-end justify-between border-b border-black/[0.06] pb-4">
+          <h2 class="font-display font-bold text-xs uppercase tracking-widest text-zero-red">
+            CON CHI ABBIAMO LAVORATO
+          </h2>
+          <span class="font-mono text-xs text-zero-black/50">RETE TERRITORIALE</span>
+        </div>
+
+        <!-- Fascia a Scorrimento Continuo (Marquee) -->
+        <div class="relative w-full overflow-hidden py-4">
+          <div class="flex items-center gap-12 whitespace-nowrap animate-marquee">
+            {partnersList.concat(partnersList).map((partner) => (
+              <div class="flex items-center gap-12 flex-shrink-0">
+                <span class="font-display font-bold text-xl md:text-2xl uppercase tracking-wider text-zero-black/80 hover:text-zero-red transition-colors cursor-default">
+                  {partner}
+                </span>
+                <span class="text-zero-red/40 font-mono text-xs">/</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- E) Casi Studio Territoriali -->
       <section class="space-y-12 gsap-fade-up">
         <div class="flex flex-col md:flex-row md:items-end justify-between pb-4 gap-4">
           <div>
@@ -164,76 +211,73 @@ const partnershipSchema = {
               ESEMPI DI COLLABORAZIONE SUL TERRITORIO
             </h2>
           </div>
-          <a href="/progetti" class="ui-meta text-zero-red font-bold hover:text-zero-black transition-colors">
+          <a href="/progetti" class="ui-meta text-zero-black font-bold hover:text-zero-red transition-colors">
             VEDI TUTTI I PROGETTI →
           </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Progetto 1 -->
-          <article class="bg-zero-paper shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
-            <div class="aspect-[16/10] overflow-hidden bg-neutral-100">
-              <img
-                src="/projects/LA BELA/IMG_4931.webp"
-                alt="Progetto LA BELA filiera lana Appennino Reggiano"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+          <article class="bg-transparent space-y-4 group">
+            <div class="aspect-[4/3] overflow-hidden bg-black/5">
+              <a href="/progetti/progetto/la-bela" class="block w-full h-full">
+                <img
+                  src="/projects/LA BELA/IMG_4931.webp"
+                  alt="Progetto LA BELA filiera lana Appennino Reggiano"
+                  class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  loading="lazy"
+                />
+              </a>
             </div>
-            <div class="p-6 space-y-4">
-              <div class="flex items-center justify-between font-mono text-xs">
-                <span class="text-zero-red font-bold">APPENNINO REGGIANO</span>
-                <span class="text-neutral-500">PARTNER: SALEWA / ALPINAFLORA</span>
-              </div>
-              <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-red transition-colors">
+            <div class="space-y-2">
+              <h3 class="font-display font-bold text-lg uppercase text-zero-black group-hover:text-zero-red transition-colors">
                 <a href="/progetti/progetto/la-bela">LA BELA: FILIERA DELLA LANA</a>
               </h3>
-              <p class="text-xs text-neutral-600 font-light leading-relaxed line-clamp-3">
+              <p class="text-xs text-zero-black/70 font-light leading-relaxed line-clamp-2">
                 Laboratorio itinerante in Appennino per 20 ragazzi per riscoprire la filiera della lana e supportare l'economia circolare montana.
               </p>
             </div>
           </article>
 
           <!-- Progetto 2 -->
-          <article class="bg-zero-paper shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
-            <div class="aspect-[16/10] overflow-hidden bg-neutral-100">
-              <img
-                src="/projects/SCUOLA DI TERRITORIO/ST_2026-22.webp"
-                alt="Scuola di Territorio Reggio Emilia con Fondazione Manodori"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+          <article class="bg-transparent space-y-4 group">
+            <div class="aspect-[4/3] overflow-hidden bg-black/5">
+              <a href="/progetti/progetto/scuola-di-territorio" class="block w-full h-full">
+                <img
+                  src="/projects/SCUOLA DI TERRITORIO/ST_2026-22.webp"
+                  alt="Scuola di Territorio Reggio Emilia con Fondazione Manodori"
+                  class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  loading="lazy"
+                />
+              </a>
             </div>
-            <div class="p-6 space-y-4">
-              <div class="flex items-center justify-between font-mono text-xs">
-                <span class="text-zero-red font-bold">REGGIO EMILIA CITTÀ</span>
-                <span class="text-neutral-500">FONDAZIONE MANODORI / ASINERIA</span>
-              </div>
-              <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-red transition-colors">
+            <div class="space-y-2">
+              <h3 class="font-display font-bold text-lg uppercase text-zero-black group-hover:text-zero-red transition-colors">
                 <a href="/progetti/progetto/scuola-di-territorio">SCUOLA DI TERRITORIO</a>
               </h3>
-              <p class="text-xs text-neutral-600 font-light leading-relaxed line-clamp-3">
+              <p class="text-xs text-zero-black/70 font-light leading-relaxed line-clamp-2">
                 Percorso biennale per ragazzi 11-14 anni tra città e natura, cammini fluviali e micro-avventure urbane a Reggio Emilia.
               </p>
             </div>
           </article>
 
           <!-- Progetto 3 -->
-          <article class="bg-zero-paper shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
-            <div class="aspect-[16/10] overflow-hidden bg-neutral-100">
-              <img
-                src="/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-14.webp"
-                alt="Viaggi Domenicali Minimi Luigi Ghirri Reggio Emilia"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+          <article class="bg-transparent space-y-4 group">
+            <div class="aspect-[4/3] overflow-hidden bg-black/5">
+              <a href="/progetti/progetto/viaggi-domenicali-minimi" class="block w-full h-full">
+                <img
+                  src="/projects/VIAGGI DOMENICALI MINIMI/2_POST_DEFINITIVI_VIAGGIDOMENICALI-14.webp"
+                  alt="Viaggi Domenicali Minimi Luigi Ghirri Reggio Emilia"
+                  class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  loading="lazy"
+                />
+              </a>
             </div>
-            <div class="p-6 space-y-4">
-              <div class="flex items-center justify-between font-mono text-xs">
-                <span class="text-zero-red font-bold">VALLE DEL CROSTOLO & BASSA</span>
-                <span class="text-neutral-500">FONDAZIONE LUIGI GHIRRI</span>
-              </div>
-              <h3 class="font-display font-black text-xl uppercase text-zero-black group-hover:text-zero-red transition-colors">
+            <div class="space-y-2">
+              <h3 class="font-display font-bold text-lg uppercase text-zero-black group-hover:text-zero-red transition-colors">
                 <a href="/progetti/progetto/viaggi-domenicali-minimi">VIAGGI DOMENICALI MINIMI</a>
               </h3>
-              <p class="text-xs text-neutral-600 font-light leading-relaxed line-clamp-3">
+              <p class="text-xs text-zero-black/70 font-light leading-relaxed line-clamp-2">
                 10 viaggi minimi in bicicletta per valorizzare il paesaggio emiliano e riscoprire l'immaginario visivo di Luigi Ghirri.
               </p>
             </div>
@@ -241,14 +285,14 @@ const partnershipSchema = {
         </div>
       </section>
 
-      <!-- D) Sportello di Co-progettazione Imprese (Sfondo neutro / senza cornici bianche) -->
+      <!-- F) Sportello di Co-progettazione Imprese (Integrato su sfondo senza boxature) -->
       <section id="richiesta-partner" class="bg-zero-paper p-8 md:p-14 space-y-8 shadow-sm scroll-mt-28 gsap-fade-up">
         <div class="max-w-2xl">
           <div class="ui-meta text-zero-red font-bold mb-2">SPORTELLO DI CO-PROGETTAZIONE</div>
           <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight">
             RICHIEDI UN TAVOLO DI CO-PROGETTAZIONE
           </h2>
-          <p class="text-sm text-neutral-700 mt-2 font-light">
+          <p class="text-sm text-zero-black/80 mt-2 font-light">
             Sei un'azienda, una fondazione o un ente del Terzo Settore? Raccontaci la tua idea o richiedi una consulenza preliminare per costruire insieme un progetto sul territorio.
           </p>
         </div>
@@ -307,13 +351,13 @@ const partnershipSchema = {
             ></textarea>
           </div>
 
-          <div class="md:col-span-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-neutral-200">
+          <div class="md:col-span-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-black/[0.06]">
             <div class="font-mono text-xs text-neutral-500">
               * I dati saranno trattati nel rispetto della Privacy Policy e utilizzati esclusivamente per ricontattarti.
             </div>
             <button
               type="submit"
-              class="px-8 py-4 bg-zero-red text-white ui-meta font-bold hover:bg-zero-black transition-colors duration-300 w-full sm:w-auto shadow-sm cursor-pointer"
+              class="px-8 py-4 bg-zero-red text-white ui-meta font-bold text-xs uppercase tracking-wider hover:bg-zero-black transition-colors duration-200 w-full sm:w-auto shadow-sm cursor-pointer"
             >
               INVIA RICHIESTA CO-PROGETTAZIONE →
             </button>
@@ -321,7 +365,7 @@ const partnershipSchema = {
         </form>
       </section>
 
-      <!-- D) Domande Frequenti / FAQ (Font Lineare e Pulito, senza font display Populista) -->
+      <!-- G) Domande Frequenti / FAQ (Font Lineare e Pulito, senza font display Populista) -->
       <section class="space-y-8 gsap-fade-up">
         <div class="pb-2">
           <div class="ui-meta text-zero-red font-bold mb-2">FAQ PARTNERSHIP</div>
@@ -337,7 +381,7 @@ const partnershipSchema = {
                 <span>{faq.question}</span>
                 <span class="font-mono text-zero-red text-xl transition-transform duration-300 group-open:rotate-45">+</span>
               </summary>
-              <div class="pt-4 text-neutral-700 font-sans font-light text-sm md:text-base leading-relaxed border-t border-neutral-200/60 mt-4">
+              <div class="pt-4 text-neutral-700 font-sans font-light text-sm md:text-base leading-relaxed border-t border-black/[0.04] mt-4">
                 {faq.answer}
               </div>
             </details>
@@ -348,3 +392,19 @@ const partnershipSchema = {
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 30s linear infinite;
+  }
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+</style>
+

@@ -83,17 +83,17 @@ const projectSchema = {
     </div>
 
     <!-- Horizontal Specifications Ribbon Bar (3 Colonne pulite, senza documentazione e senza conteggio numerico enti) -->
-    <div class="bg-zero-paper py-10 md:py-14 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 ui-meta">
-        <div class="border-l-2 border-zero-red pl-4 py-1 space-y-2">
+    <div class="bg-zero-paper py-14 md:py-20 px-4 sm:px-8 lg:px-12">
+      <div class="max-w-[1600px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-10 ui-meta">
+        <div class="border-l-2 border-zero-red pl-6 py-2 space-y-2">
           <div class="text-neutral-500 text-xs uppercase tracking-wider">STATO ESECUZIONE</div>
           <div class="font-bold text-zero-black text-sm sm:text-base">{project.status}</div>
         </div>
-        <div class="border-l-2 border-zero-red pl-4 py-1 space-y-2">
+        <div class="border-l-2 border-zero-red pl-6 py-2 space-y-2">
           <div class="text-neutral-500 text-xs uppercase tracking-wider">PARTNERSHIP</div>
           <div class="font-bold text-zero-black text-sm sm:text-base">Rete di Territorio</div>
         </div>
-        <div class="border-l-2 border-zero-red pl-4 py-1 space-y-2">
+        <div class="border-l-2 border-zero-red pl-6 py-2 space-y-2">
           <div class="text-neutral-500 text-xs uppercase tracking-wider">CATEGORIA</div>
           <div class="font-bold text-zero-black text-sm sm:text-base">Rigenerazione & Cultura</div>
         </div>
@@ -101,15 +101,12 @@ const projectSchema = {
     </div>
 
     <!-- Main Content Horizontal Split Grid -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-16 md:py-24">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
         
-        <!-- Left Column: Executive Summary & Description -->
+        <!-- Left Column: Description & Partners -->
         <div class="lg:col-span-7 space-y-10">
-          <section class="space-y-6">
-            <h2 class="ui-meta font-bold text-zero-red pb-2 text-sm uppercase">
-              SINTESI ESECUTIVA DEL PROGETTO
-            </h2>
+          <section>
             <div class="prose prose-lg prose-p:font-light prose-p:text-zero-black prose-p:leading-relaxed max-w-none space-y-6">
               <p class="text-xl font-normal text-zero-black leading-relaxed">
                 {project.summary}
@@ -123,23 +120,20 @@ const projectSchema = {
             </div>
           </section>
 
-          <!-- Partners Section (Senza conteggio numerico, solo nomi dei partner) -->
+          <!-- Partners Section (Senza badge o etichette ridondanti, solo nomi dei partner) -->
           {project.partners && project.partners.length > 0 && (
-            <section class="pt-8 mt-8 space-y-6">
-              <div class="pb-2">
-                <h2 class="ui-meta font-bold text-zero-red text-sm uppercase">
+            <section class="pt-6 space-y-4">
+              <div class="pb-1">
+                <h2 class="ui-meta font-bold text-zero-red text-xs uppercase tracking-wider">
                   RETE DEI PARTNER
                 </h2>
               </div>
               
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {project.partners.map((partner) => (
-                  <div class="p-4 bg-zero-paper shadow-sm flex items-center justify-between group">
+                  <div class="p-3.5 bg-zero-paper flex items-center group">
                     <span class="font-display font-bold uppercase text-sm text-zero-black group-hover:text-zero-red transition-colors">
                       {partner}
-                    </span>
-                    <span class="ui-meta text-xs text-zero-black font-mono font-bold bg-zero-bg px-2 py-0.5">
-                      PARTNER
                     </span>
                   </div>
                 ))}

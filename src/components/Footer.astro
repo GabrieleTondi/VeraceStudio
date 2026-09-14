@@ -3,8 +3,8 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer class="bg-zero-black text-white mt-auto relative z-10">
-  <div class="w-full px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16">
+  <div class="w-full px-4 sm:px-8 lg:px-12 py-20 md:py-32 max-w-[1600px] mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:gap-20 pb-20">
       <!-- Col 1: Brand Foundation -->
       <div class="space-y-6">
         <div class="flex items-center">
@@ -191,7 +191,7 @@ const currentYear = new Date().getFullYear();
           submitBtn.classList.remove('bg-zero-red');
           submitBtn.classList.add('bg-emerald-600');
           setTimeout(() => {
-            if (btnText) btnText.textContent = 'ISCRIVITI ALLA NEWSLETTER';
+            if (btnText) btnText.textContent = 'iscriviti alla newsletter';
             submitBtn.classList.remove('bg-emerald-600');
             submitBtn.classList.add('bg-zero-red');
           }, 4000);
@@ -200,14 +200,14 @@ const currentYear = new Date().getFullYear();
             messageBox.className = 'text-xs font-mono text-zero-red block mt-2 leading-relaxed';
             messageBox.textContent = data.error || 'Si è verificato un errore durante l\'iscrizione. Riprova più tardi.';
           }
-          if (btnText) btnText.textContent = 'ISCRIVITI ALLA NEWSLETTER';
+          if (btnText) btnText.textContent = 'iscriviti alla newsletter';
         }
       } catch (err) {
         if (messageBox) {
           messageBox.className = 'text-xs font-mono text-zero-red block mt-2 leading-relaxed';
           messageBox.textContent = 'Errore di connessione. Controlla la tua rete e riprova.';
         }
-        if (btnText) btnText.textContent = 'ISCRIVITI ALLA NEWSLETTER';
+        if (btnText) btnText.textContent = 'iscriviti alla newsletter';
       } finally {
         input.disabled = false;
         submitBtn.disabled = false;

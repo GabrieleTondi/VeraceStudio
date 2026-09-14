@@ -5,12 +5,12 @@ export default {
     extend: {
       colors: {
         zero: {
-          bg: '#FFFCF9', // Canvas Background (Nuovo Bianco #FFFCF9)
-          paper: '#FFFCF9', // Surface Cards (Nuovo Bianco #FFFCF9)
-          card: '#FFFCF9',
-          black: '#373232', // Deep Background / Text (Nero)
-          dark: '#373232', // Dark Text / Accents
-          muted: '#665e5e',
+          bg: '#FFFEF3', // Canvas Background (Nuovo Bianco #FFFEF3)
+          paper: '#FFFEF3', // Surface Cards (Nuovo Bianco #FFFEF3)
+          card: '#FFFEF3',
+          black: '#000000', // Deep Background / Text (Nero Puro #000000)
+          dark: '#000000', // Dark Text / Accents
+          muted: '#555555',
           border: 'transparent',
           lightborder: '#ebe6df',
           red: '#B53D33', // Primary Accent (Nuovo Rosso #B53D33)

@@ -23,36 +23,36 @@ const featuredProjects = projects.slice(0, 3);
   <!-- 1. Nuova Hero Home Page con Slider e Bottoni -->
   <Hero {...heroSliderData} />
 
-  <div class="w-full px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-20 md:space-y-28">
+  <div class="w-full px-4 sm:px-8 lg:px-12 py-24 md:py-36 lg:py-48 space-y-32 md:space-y-48 lg:space-y-56 max-w-[1600px] mx-auto">
     
-    <!-- 2. Sezione Progetti in Evidenza (Mantenuta la struttura e ingranditi i titoli) -->
-    <section class="space-y-8 gsap-fade-up">
-      <div class="flex flex-col md:flex-row md:items-end justify-between pb-4 gap-4">
-        <div>
-          <div class="text-xs font-mono font-bold text-zero-red uppercase tracking-widest mb-1">PROGETTI SUL TERRITORIO</div>
-          <h2 class="text-4xl md:text-5xl lg:text-6xl font-black font-display uppercase tracking-tight text-zero-black">
-            PROGETTI IN EVIDENZA
-          </h2>
-          <p class="text-xs font-mono text-neutral-500 mt-1 uppercase">INIZIATIVE ATTIVE DI RIGENERAZIONE E CULTURA</p>
-        </div>
-        <a
-          href="/progetti"
-          class="inline-flex items-center px-4 py-2 bg-zero-black text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-zero-red transition-colors shadow-sm"
-        >
-          VEDI TUTTI I PROGETTI →
-        </a>
+    <!-- 2. Sezione Progetti -->
+    <section class="space-y-6 md:space-y-8 gsap-fade-up">
+      <div>
+        <h2 class="text-4xl md:text-5xl lg:text-6xl font-black font-display uppercase tracking-tight text-zero-black">
+          PROGETTI
+        </h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 lg:gap-20">
         {featuredProjects.map((project) => (
           <ProjectCard project={project} />
         ))}
       </div>
+
+      <!-- Bottone Centrato Sotto la Griglia -->
+      <div class="flex justify-center pt-8 md:pt-12">
+        <a
+          href="/progetti"
+          class="inline-flex items-center px-8 py-3.5 bg-zero-black text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-zero-red transition-colors shadow-sm"
+        >
+          VEDI TUTTI I PROGETTI →
+        </a>
+      </div>
     </section>
 
-    <!-- 3. Sezione Articoli / Magazine (Mantenuta la struttura e ingranditi i titoli) -->
+    <!-- 3. Sezione Articoli / Magazine -->
     <div class="gsap-fade-up">
-      <MagazineGrid posts={recentPosts} title="ULTIME PUBBLICAZIONI" subtitle="DALLA REDAZIONE" />
+      <MagazineGrid posts={recentPosts} title="MAGAZINE" subtitle="storie, racconti, reportage" />
     </div>
 
   </div>

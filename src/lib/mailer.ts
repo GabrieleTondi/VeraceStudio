@@ -58,7 +58,7 @@ export function generateNewsletterWelcomeEmail(recipientEmail: string, siteUrl: 
       padding-bottom: 40px;
     }
     .main-table {
-      background-color: #FFFCF9;
+      background-color: #FFFEF3;
       margin: 0 auto;
       width: 100%;
       max-width: 600px;
@@ -96,7 +96,7 @@ export function generateNewsletterWelcomeEmail(recipientEmail: string, siteUrl: 
     .paragraph {
       font-size: 15px;
       line-height: 1.65;
-      color: #373232;
+      color: #000000;
       margin: 0 0 20px 0;
     }
     .quote-box {

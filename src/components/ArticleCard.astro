@@ -3,6 +3,7 @@ import type { Post } from '../lib/sanity';
 
 interface Props {
   post: Post;
+  featured?: boolean;
 }
 
 const { post } = Astro.props;
@@ -14,54 +15,58 @@ const formattedDate = new Date(post.publishedAt).toLocaleDateString('it-IT', {
 });
 ---
 
-<article class="group bg-zero-paper flex flex-col h-full overflow-hidden relative transition-transform duration-300 ease-out hover:scale-[1.025]">
+<article class="group bg-transparent flex flex-col h-full relative overflow-hidden">
   
-  <!-- Immagine di copertina (Opzionale o Fallback pattern) -->
-  <div class="relative h-48 sm:h-56 bg-zero-bg overflow-hidden shrink-0">
-    {post.coverImageUrl ? (
-      <img
-        src={post.coverImageUrl}
-        alt={`Immagine di copertina per l'articolo: ${post.title}`}
-        class="w-full h-full object-cover"
-        loading="lazy"
-        decoding="async"
-      />
-    ) : (
-      <div class="w-full h-full flex flex-col items-center justify-center bg-zero-dark p-6">
-        <img src="/logos/Verace_Logo_Bianco.png" alt="VERACE Magazine" class="h-8 w-auto object-contain opacity-40 mb-2" />
-        <span class="ui-meta text-xs text-white opacity-40">MAGAZINE</span>
+  <!-- Immagine di copertina fotografica con taglio netto (Formato 3:2 ampliato) -->
+  <div class="relative w-full aspect-[3/2] bg-black/5 overflow-hidden">
+    <a href={`/magazine/articolo/${post.slug.current}`} class="block w-full h-full overflow-hidden" aria-label={`Leggi l'articolo: ${post.title}`}>
+      {post.coverImageUrl ? (
+        <img
+          src={post.coverImageUrl}
+          alt={`Immagine di copertina per l'articolo: ${post.title}`}
+          class="w-full h-full object-cover grayscale transition-all duration-700 ease-out group-hover:grayscale-0 group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div class="w-full h-full flex flex-col items-center justify-center bg-black/10 p-6">
+          <img src="/logos/Verace_Logo_Nero.png" alt="VERACE Magazine" class="h-6 w-auto object-contain opacity-30 mb-2" />
+          <span class="ui-meta text-xs text-zero-black opacity-40">MAGAZINE</span>
+        </div>
+      )}
+    </a>
+    
+    {post.category && (
+      <div class="absolute top-3 left-3">
+        <span class="bg-zero-bg/95 backdrop-blur-sm text-zero-red px-2 py-0.5 ui-meta text-[10px] font-bold uppercase tracking-wider shadow-sm">
+          {post.category}
+        </span>
       </div>
     )}
-    
-    <!-- Meta tag assoluti -->
-    <div class="absolute top-3 left-3 flex flex-col gap-1">
-      <span class="bg-zero-paper text-zero-red px-2.5 py-1 ui-meta font-bold shadow-sm">
-        {post.category || 'INCHIESTA'}
-      </span>
-    </div>
   </div>
 
-  <!-- Contenuto Testuale -->
-  <div class="p-6 flex flex-col flex-grow justify-between bg-zero-paper">
-    <div class="space-y-4">
-      <h3 class="font-display font-bold text-2xl uppercase text-zero-black leading-none group-hover:text-zero-red transition-colors">
+  <!-- Contenuto Testuale Sotto la Foto -->
+  <div class="pt-4 flex flex-col flex-grow justify-between space-y-4">
+    <div class="space-y-2">
+      <h3 class="font-display font-bold text-xl sm:text-2xl uppercase text-zero-black leading-snug group-hover:text-zero-red transition-colors">
         <a href={`/magazine/articolo/${post.slug.current}`} class="focus:outline-none before:absolute before:inset-0">
           {post.title}
         </a>
       </h3>
 
       {post.subtitle && (
-        <p class="text-sm font-light text-zero-black leading-relaxed line-clamp-3">
+        <p class="text-xs sm:text-sm font-light text-zero-black/70 leading-relaxed line-clamp-2">
           {post.subtitle}
         </p>
       )}
     </div>
 
-    <div class="mt-8 pt-4 flex items-center justify-between ui-meta text-zero-black group-hover:text-zero-red transition-colors">
-      <span class="text-neutral-500">{formattedDate}</span>
+    <div class="pt-2 flex items-center justify-between ui-meta text-xs text-zero-black group-hover:text-zero-red transition-colors">
+      <span class="text-neutral-500 font-mono">{formattedDate}</span>
       <span class="font-bold flex items-center gap-1">
         LEGGI →
       </span>
     </div>
   </div>
 </article>
+

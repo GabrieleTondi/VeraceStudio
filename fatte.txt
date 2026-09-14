@@ -269,6 +269,74 @@ Per agevolare l'esecuzione delle modifiche nel codice sorgente, di seguito la ma
    - src/components/Footer.astro (dati Bruma ETS, testino sotto logo, link login, bottone newsletter)
 
 ================================================================================
+AGGIORNAMENTO - 2 SETTEMBRE 2026 (MINIMAL RESTYLING)
+================================================================================
+
+1. Visione Estetica & Direzione Artistica: [COMPLETATO]
+   - Spazio e Respiro: Incrementate le spaziature verticali tra sezioni per respiro editoriale (ispirazione Cesura / Patagonia / TwoJeys).
+   - Tagli Netti: Rimossa la dissolvenza e gradiente dal fondo della hero image (taglio geometrico secco).
+   - Tipografia: Testo scuro in nero assoluto #000000, testo degli articoli giustificato per impostazione editoriale d'autore.
+   - Palette Essenziale: #FFFEF3 (fondo), #000000 (testo), #B53D33 (rosso primario).
+
+2. Design System & Impostazioni Globali: [COMPLETATO]
+   - Nuovo Bianco Sfondo: #FFFEF3 (aggiornato in tailwind.config.mjs, global.css, mailer.ts, emailRenderer.ts)
+   - Testi Scuri / Headings: Nero Puro #000000 (sostituito ovunque al posto del grigio scuro #373232)
+   - Pulizia Cornici: eliminati i box bianchi spuri a favore di card integrate su sfondo #FFFEF3
+   - Parentesi Quadre: verificate e rimosse in tutti i titoli e label del sito
+
+3. Header & Navigazione Principale: [COMPLETATO]
+   - Dimensioni Logo: ridotto a formato discreto, elegante e raffinato in alto a sinistra (altezza 36-46px) con Verace_Logo_Nero.png
+   - Sfondo Header: uniformato a #FFFEF3 con sottile linea di demarcazione
+   - Link di Navigazione: tipografia monospazio/meta in nero puro #000000 con hover in rosso #B53D33 e freccia animata
+   - Menu Mobile: drawer coerente su sfondo #FFFEF3, link puliti in nero puro e accento rosso
+
+4. Home Page — Schermata Hero: [COMPLETATO]
+   - Formato Riquadro Immagine: slider a tutta larghezza (w-full da lato a lato) con altezza calibrata sul viewport desktop (h-[44vh] - h-[56vh], max-h-[560px]) per una composizione proporzionata
+   - Spaziature e Taglio Netto: distacco calibrato dalla navbar e respiro verticale prima della fine del desktop visualizzato; rimosso qualsiasi bordo sfumato o gradiente di dissolvenza (#hero-bottom-scroll-fade) per un perimetro geometrico secco
+   - Elementi Sotto la Foto: inserita la dicitura "Media cultura e rigenerazione per il territorio" in nero puro #000000 e posizionati al centro i due bottoni "scopri i progetti" (primario) ed "esplora il nostro magazine" (secondario)
+   - Pulizia Controlli: rimossi barra del volume, puntini di paginazione e testi sparsi in alto; mantenute unicamente le frecce direzionali essenziali (Prev / Next)
+
+5. Home Page — Sezione Progetti: [COMPLETATO]
+   - Titolo Sezione: semplificato unicamente in "PROGETTI" in grande nero assoluto; rimossi sovratitolo ("PROGETTI SUL TERRITORIO"), sottotitolo ("INIZIATIVE ATTIVE...") e dicitura "IN EVIDENZA"
+   - Card Progetto: convertite in formato quadrato grande (aspect-square) con transizione monocromatica/colore fluida all'hover; titolo sobrio e summary essenziale sotto l'immagine; rimossi badge PARTNER ed etichette pill di stato
+   - Bottone CTA: bottone "VEDI TUTTI I PROGETTI →" allineato e centrato sotto la griglia di progetti
+
+6. Home Page — Sezione Magazine (Anteprima): [COMPLETATO]
+   - Titolo e Sottotitolo: rimosso sovratitolo "PUBBLICAZIONI", titolo principale "MAGAZINE" e sottotitolo impostato su "storie, racconti, reportage" in font mono pulito
+   - Card Articoli: proporzione fotografica (aspect-3/2 classico), sfondo trasparente integrato con #FFFEF3, transizione B&W -> Colore all'hover, rimozione cornici pesanti, metadati essenziali (data e link LEGGI →)
+
+7. Pagina Progetti & Scheda Singolo Progetto: [COMPLETATO]
+   - Pagina Indice (/progetti): parificata la dimensione del font e lo stile dei due bottoni "PROPONI UN PROGETTO" e "SCARICA IL DOSSIER PROGETTI"; griglia e layout puliti senza sovrastrutture
+   - Scheda Singolo Progetto (/progetti/progetto/[slug]): rimossa dicitura "SINTESI ESECUTIVA DEL PROGETTO" (inizio immediato del testo descrittivo); rimossi i badge/pill "PARTNER" e il conteggio numerico degli enti; galleria fotografica pulita senza indicazione conteggio scatti
+
+8. Pagina Partnership: [COMPLETATO]
+   - Header e Apertura: titolo "PARTNERSHIP" a sinistra e testo descrittivo a destra con bottone "RICHIEDI CO-PROGETTAZIONE"
+   - Sezione "Come Collaborare con VERACE" (stile Patagonia Activism): schema a 4 fasi con tessere minimali, numerazione "FASE 01-04" e bordi d'accento senza testi prolissi
+   - Bottone Scarica Dossier: pulsante con badge/quadratino rosso distintivo brand
+   - Nuova Sezione "Con Chi Abbiamo Lavorato": marquee orizzontale a scorrimento continuo con la rete dei partner territoriali
+   - Form e FAQ: sportello di co-progettazione integrato su sfondo neutro #FFFEF3 senza boxature; FAQ con font moderno sans-serif lineare
+
+9. Pagina Contatti: [COMPLETATO]
+   - Titolo Pagina: semplificato unicamente in "CONTATTACI" con intestazione pulita ed editoriale
+   - Etichetta Recapiti: posizionata a sinistra (non più isolata a destra come badge)
+   - Blocco Informazioni Sede: rimossi i prefissi numerici 01 /, 02 /, 03 /; recapiti puliti e leggibili (Indirizzo Via Carlo Marx 53, Roncocesi; Posta Elettronica; Instagram @__verace__)
+   - Form di Contatto: integrato con lo sfondo neutro #FFFEF3, campi input borderless/minimali e pulsante di invio ad alto contrasto ("INVIA MESSAGGIO →")
+
+10. Pagina Team & Chi Siamo: [COMPLETATO]
+    - Sezione Chi Siamo: testo ufficiale aggiornato ("Verace è una piattaforma indipendente fondata nel 2025 da un team under 30 composto da urbanisti, architetti e fotografi...") integrato nell'header editoriale borderless
+    - Sezione Team: griglia schede membri con foto in 4:5 (transizione fluida b/n - colore all'hover), nomi, ruoli e bio minimali senza boxature o ombre pesanti
+    - Sezione Trasparenza: blocco minimale con dicitura legale del RUNTS e pulsante "scarica il bilancio 2025 ↓" ad alto contrasto
+
+11. Footer Globale: [COMPLETATO]
+    - Dati Societari & Fiscali Ufficiali: confermati i dati legali (Bruma ETS, Via Carlo Marx 53, Roncocesi, Reggio Emilia - CF: 91201950358 P.IVA: 03112030352)
+    - Dicitura sotto il Logo: "media, cultura e rigenerazione urbana per il territorio"
+    - Accesso Riservato: dicitura pulita "login" (sostituito "accesso a sanity studio")
+    - Newsletter: testo bottone confermato su "iscriviti alla newsletter"
+
+================================================================================
 FINE DOCUMENTO - SPECIFICHE AGGIORNAMENTO VERACE STUDIO
 ================================================================================
+
+
+
 

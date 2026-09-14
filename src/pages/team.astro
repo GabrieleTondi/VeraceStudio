@@ -29,33 +29,33 @@ const aboutSchema = {
   <div class="w-full bg-zero-bg">
     
     <!-- A) Apertura Pagina: Sezione "CHI SIAMO" -->
-    <header class="px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 bg-zero-paper gsap-fade-up">
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8">
-        <div>
-          <h1 class="hero-headline text-zero-black uppercase">
+    <header class="px-4 sm:px-8 lg:px-12 pt-12 md:pt-16 pb-12 border-b border-black/10 gsap-fade-up">
+      <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div class="lg:col-span-5">
+          <h1 class="section-heading text-zero-black uppercase leading-none">
             CHI SIAMO
           </h1>
         </div>
-        <div class="max-w-xl">
+        <div class="lg:col-span-7">
           <p class="text-base md:text-lg font-light text-zero-black leading-relaxed">
-            Verace è una piattaforma indipendente fondata nel 2025 da un team under 30 composto da urbanisti, architetti e fotografi con l’obiettivo di contribuire ad attivare il territorio attraverso progetti culturali, media e di rigenerazione urbana. Di base a Reggio Emilia, lavoriamo con team multidisciplinari collaborando con imprese, fondazioni e enti no-profit.
+            Verace è una piattaforma indipendente fondata nel 2025 da un team under 30 composto da urbanisti, architetti e fotografi con l’obiettivo di contribuire ad attivare il territorio di Reggio Emilia attraverso progetti culturali, media e di rigenerazione urbana. Lavoriamo con team multidisciplinari collaborando con imprese, fondazioni e enti no-profit.
           </p>
         </div>
       </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-20">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-16 md:py-24 lg:py-32 space-y-24 md:space-y-36">
       
       <!-- B) Sezione TEAM: Schede dei membri con foto e descrizioni -->
-      <section class="space-y-10 gsap-fade-up">
-        <div class="pb-2">
-          <div class="ui-meta text-zero-red font-bold mb-1">MEMBRI & CURATORI</div>
-          <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight">
+      <section class="space-y-12 md:space-y-16 gsap-fade-up">
+        <div class="pb-6 border-b border-black/10 flex items-end justify-between">
+          <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight leading-none">
             IL TEAM
           </h2>
+          <span class="ui-meta text-zero-red font-bold text-xs uppercase tracking-wider">{members.length} MEMBRI</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
           {members.map((member, idx) => (
             <TeamMemberCard member={member} index={idx} />
           ))}
@@ -63,24 +63,25 @@ const aboutSchema = {
       </section>
 
       <!-- C) Sezione TRASPARENZA (Subito dopo il Team con tasto 'scarica il bilancio 2025') -->
-      <section class="bg-zero-paper p-8 md:p-14 space-y-8 shadow-sm gsap-fade-up">
+      <section class="border border-black/10 p-8 md:p-14 space-y-8 bg-transparent gsap-fade-up">
         <div class="max-w-3xl space-y-3">
-          <div class="ui-meta text-zero-red font-bold">ADEMPIMENTI NORMATIVI & RENDICONTAZIONE</div>
+          <div class="ui-meta text-zero-red font-bold text-xs uppercase tracking-wider">ADEMPIMENTI NORMATIVI & RENDICONTAZIONE</div>
           <h2 class="font-display font-black text-2xl md:text-3xl uppercase text-zero-black tracking-tight">
             TRASPARENZA
           </h2>
-          <p class="text-base text-neutral-800 font-light leading-relaxed">
+          <p class="text-base text-zero-black/85 font-light leading-relaxed">
             In ottemperanza agli obblighi di trasparenza, pubblicità e rendicontazione previsti per gli enti del Terzo Settore (D.Lgs. 117/2017 e L. 124/2017), VERACE pubblica annualmente il proprio bilancio d'esercizio, i contributi pubblici ricevuti e la relazione di impatto sulle attività svolte sul territorio.
           </p>
         </div>
 
-        <div class="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-neutral-200">
-          <div class="font-mono text-xs text-neutral-600 uppercase">
-            DOCUMENTO UFFICIALE DEPOSITATO AL REGISTRO UNICO NAZIONALE DEL TERZO SETTORE          </div>
+        <div class="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-black/10">
+          <div class="font-mono text-xs text-zero-black/60 uppercase">
+            DOCUMENTO UFFICIALE DEPOSITATO AL REGISTRO UNICO NAZIONALE DEL TERZO SETTORE
+          </div>
           <a
             href="/pdf/sample-project-presentation.pdf"
             download
-            class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-zero-red text-white ui-meta font-bold text-xs uppercase hover:bg-zero-black transition-colors duration-300 shadow-sm cursor-pointer"
+            class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-zero-black text-white ui-meta font-bold text-xs uppercase tracking-widest hover:bg-zero-red transition-colors duration-300 shadow-sm cursor-pointer"
           >
             <span>scarica il bilancio 2025</span>
             <span>↓</span>

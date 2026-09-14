@@ -15,10 +15,10 @@ const contactSchema = {
     "email": "info@fondazioneverace.eu",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Via San Zenone 4",
+      "streetAddress": "Via Carlo Marx 53, Roncocesi",
       "addressLocality": "Reggio Emilia",
       "addressRegion": "Emilia-Romagna",
-      "postalCode": "42121",
+      "postalCode": "42124",
       "addressCountry": "IT"
     },
     "geo": {
@@ -38,21 +38,21 @@ const contactSchema = {
 >
   <div class="w-full bg-zero-bg">
     <!-- Header Sezione Semplificato -->
-    <header class="px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 bg-zero-paper gsap-fade-up">
-      <div class="max-w-7xl mx-auto">
-        <h1 class="hero-headline text-zero-black uppercase leading-[0.85]">
+    <header class="px-4 sm:px-8 lg:px-12 pt-12 md:pt-16 pb-12 border-b border-black/10 gsap-fade-up">
+      <div class="max-w-[1600px] mx-auto">
+        <h1 class="section-heading text-zero-black uppercase leading-none">
           CONTATTACI
         </h1>
       </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start gsap-fade-up">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-16 md:py-24 lg:py-32">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start gsap-fade-up">
         
         <!-- Info di Contatto Tonale -->
         <div class="lg:col-span-5 space-y-8">
-          <div class="bg-zero-paper p-8 md:p-12 shadow-sm relative space-y-8">
-            <div class="absolute top-6 right-8 font-mono text-xs text-zero-red font-bold uppercase tracking-wider">
+          <div class="space-y-8">
+            <div class="font-mono text-xs text-zero-red font-bold uppercase tracking-wider">
               RECAPITI
             </div>
             
@@ -62,30 +62,30 @@ const contactSchema = {
               </h2>
             </div>
 
-            <div class="space-y-6 font-mono">
+            <div class="space-y-8 font-mono">
               <div>
-                <div class="text-zero-red font-bold text-xs uppercase tracking-wider mb-1">01 / INDIRIZZO</div>
-                <div class="text-zero-black text-sm leading-relaxed">
-                  VIA CARLO MARX 53, RONCOCESI<br/>42124 REGGIO EMILIA (RE), ITALIA
+                <div class="text-zero-black/60 font-bold text-xs uppercase tracking-wider mb-1.5">INDIRIZZO:</div>
+                <div class="text-zero-black text-sm font-medium leading-relaxed uppercase">
+                  VIA CARLO MARX 53, RONCOCESI - 42124 REGGIO EMILIA (RE), ITALIA
                 </div>
               </div>
 
               <div>
-                <div class="text-zero-red font-bold text-xs uppercase tracking-wider mb-1">02 / POSTA ELETTRONICA</div>
-                <div class="text-zero-black text-sm leading-relaxed">
-                  <a href="mailto:info@fondazioneverace.eu" class="hover:text-zero-red transition-colors">INFO@FONDAZIONEVERACE.EU</a><br/>
-                  <a href="mailto:fondazioneverace@pec.it" class="hover:text-zero-red transition-colors">FONDAZIONEVERACE@PEC.IT</a> <span class="text-xs text-neutral-500">(PEC)</span>
+                <div class="text-zero-black/60 font-bold text-xs uppercase tracking-wider mb-1.5">POSTA ELETTRONICA:</div>
+                <div class="text-zero-black text-sm font-medium leading-relaxed">
+                  <a href="mailto:info@fondazioneverace.eu" class="hover:text-zero-red transition-colors block">INFO@FONDAZIONEVERACE.EU</a>
+                  <a href="mailto:fondazioneverace@pec.it" class="hover:text-zero-red transition-colors block mt-1">FONDAZIONEVERACE@PEC.IT <span class="text-xs text-neutral-500 font-normal">(PEC)</span></a>
                 </div>
               </div>
 
               <div>
-                <div class="text-zero-red font-bold text-xs uppercase tracking-wider mb-1">03 / SOCIAL MEDIA</div>
+                <div class="text-zero-black/60 font-bold text-xs uppercase tracking-wider mb-1.5">SOCIAL MEDIA:</div>
                 <div class="text-zero-black text-sm leading-relaxed">
                   <a
                     href="https://www.instagram.com/__verace__?igsh=MXBzbmxzM3A2emJsZg=="
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="hover:text-zero-red transition-colors inline-flex items-center gap-1 font-bold text-zero-red"
+                    class="hover:text-zero-red transition-colors inline-flex items-center gap-1 font-bold text-zero-red uppercase"
                   >
                     <span>→ INSTAGRAM: @__verace__</span>
                   </a>
@@ -97,7 +97,7 @@ const contactSchema = {
 
         <!-- Form Contatto Tonale -->
         <div class="lg:col-span-7">
-          <div class="bg-zero-paper p-8 md:p-12 shadow-sm">
+          <div class="p-8 md:p-12 border border-black/10 bg-transparent">
             <form id="contact-form" class="space-y-6" novalidate>
               
               <!-- Status Feedback -->
@@ -113,7 +113,7 @@ const contactSchema = {
                     name="fullName"
                     required
                     placeholder="MARIO ROSSI"
-                    class="w-full px-4 py-3.5 bg-zero-bg/80 focus:bg-white text-sm font-mono text-zero-black uppercase focus:outline-none focus:ring-2 focus:ring-zero-red/40 transition-all"
+                    class="w-full px-4 py-3.5 bg-transparent border border-black/20 focus:border-zero-black text-sm font-mono text-zero-black uppercase focus:outline-none transition-all placeholder:text-neutral-400"
                   />
                   <span class="font-mono text-[10px] text-zero-red font-bold absolute -bottom-5 left-0 hidden" id="error-fullName">CAMPO OBBLIGATORIO</span>
                 </div>
@@ -127,7 +127,7 @@ const contactSchema = {
                     name="email"
                     required
                     placeholder="MARIO@AZIENDA.IT"
-                    class="w-full px-4 py-3.5 bg-zero-bg/80 focus:bg-white text-sm font-mono text-zero-black uppercase focus:outline-none focus:ring-2 focus:ring-zero-red/40 transition-all"
+                    class="w-full px-4 py-3.5 bg-transparent border border-black/20 focus:border-zero-black text-sm font-mono text-zero-black uppercase focus:outline-none transition-all placeholder:text-neutral-400"
                   />
                   <span class="font-mono text-[10px] text-zero-red font-bold absolute -bottom-5 left-0 hidden" id="error-email">EMAIL NON VALIDA</span>
                 </div>
@@ -142,7 +142,7 @@ const contactSchema = {
                     id="organization"
                     name="organization"
                     placeholder="TECHCORP SPA"
-                    class="w-full px-4 py-3.5 bg-zero-bg/80 focus:bg-white text-sm font-mono text-zero-black uppercase focus:outline-none focus:ring-2 focus:ring-zero-red/40 transition-all"
+                    class="w-full px-4 py-3.5 bg-transparent border border-black/20 focus:border-zero-black text-sm font-mono text-zero-black uppercase focus:outline-none transition-all placeholder:text-neutral-400"
                   />
                 </div>
 
@@ -153,7 +153,7 @@ const contactSchema = {
                     id="subject"
                     name="subject"
                     required
-                    class="w-full px-4 py-3.5 bg-zero-bg/80 focus:bg-white text-sm font-mono text-zero-black uppercase focus:outline-none focus:ring-2 focus:ring-zero-red/40 transition-all cursor-pointer"
+                    class="w-full px-4 py-3.5 bg-transparent border border-black/20 focus:border-zero-black text-sm font-mono text-zero-black uppercase focus:outline-none transition-all cursor-pointer"
                   >
                     <option value="">-- SELEZIONA --</option>
                     <option value="Proposta Partnership">PARTNERSHIP B2B</option>
@@ -174,7 +174,7 @@ const contactSchema = {
                   rows="5"
                   required
                   placeholder="SCRIVI QUI IL TUO MESSAGGIO..."
-                  class="w-full px-4 py-3.5 bg-zero-bg/80 focus:bg-white text-sm font-mono text-zero-black uppercase focus:outline-none focus:ring-2 focus:ring-zero-red/40 transition-all resize-none"
+                  class="w-full px-4 py-3.5 bg-transparent border border-black/20 focus:border-zero-black text-sm font-mono text-zero-black uppercase focus:outline-none transition-all resize-none placeholder:text-neutral-400"
                 ></textarea>
                 <span class="font-mono text-[10px] text-zero-red font-bold absolute -bottom-5 left-0 hidden" id="error-message">MESSAGGIO TROPPO CORTO</span>
               </div>
@@ -199,7 +199,7 @@ const contactSchema = {
               <!-- Submit Button -->
               <button
                 type="submit"
-                class="w-full py-4 mt-4 bg-zero-red text-white font-mono font-bold text-sm uppercase hover:bg-zero-black transition-colors duration-300 shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-2"
+                class="w-full py-4 mt-4 bg-zero-black text-white font-mono font-bold text-xs uppercase tracking-widest hover:bg-zero-red transition-colors duration-300 shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>INVIA MESSAGGIO</span>
                 <span>→</span>

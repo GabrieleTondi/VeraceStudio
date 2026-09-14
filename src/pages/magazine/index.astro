@@ -43,8 +43,8 @@ const magazineSchema = {
 >
   <div class="w-full">
     <!-- Header Sezione -->
-    <header class="px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-16 md:pb-12 bg-zero-paper gsap-fade-up">
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-12">
+    <header class="px-4 sm:px-8 lg:px-12 pt-16 pb-12 md:pt-24 md:pb-20 bg-zero-paper gsap-fade-up">
+      <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-16">
         <div class="shrink-0">
           <h1 class="hero-headline text-zero-black uppercase leading-none tracking-tight">
             MAGAZINE
@@ -58,13 +58,13 @@ const magazineSchema = {
       </div>
     </header>
 
-    <div class="px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+    <div class="px-4 sm:px-8 lg:px-12 py-24 md:py-36 space-y-32 md:space-y-44 max-w-[1600px] mx-auto">
       <!-- Articolo Hero In Evidenza -->
       {featuredCoverPost && (
-        <section class="bg-zero-paper shadow-sm group transition-transform duration-300 ease-out hover:scale-[1.015] flex flex-col lg:flex-row gsap-fade-up overflow-hidden">
+        <section class="bg-zero-paper shadow-sm group transition-transform duration-300 ease-out hover:scale-[1.01] flex flex-col lg:flex-row gsap-fade-up overflow-hidden">
           
           <div 
-            class={`lg:w-3/5 relative overflow-hidden h-[400px] lg:h-auto min-h-[500px] ${videoEmbedUrl ? 'cursor-pointer group/video' : 'cursor-default'}`}
+            class={`lg:w-3/5 relative overflow-hidden h-[400px] lg:h-auto min-h-[520px] ${videoEmbedUrl ? 'cursor-pointer group/video' : 'cursor-default'}`}
             id={videoEmbedUrl ? "featured-video-trigger" : undefined}
             data-video-url={videoEmbedUrl || undefined}
           >
@@ -99,14 +99,14 @@ const magazineSchema = {
             )}
           </div>
 
-          <div class="lg:w-2/5 p-8 md:p-12 flex flex-col justify-between bg-zero-paper relative">
-            <div class="absolute top-0 right-0 p-4 ui-meta text-zero-red font-bold">
+          <div class="lg:w-2/5 p-8 md:p-14 lg:p-16 flex flex-col justify-between bg-zero-paper relative">
+            <div class="absolute top-0 right-0 p-6 ui-meta text-zero-red font-bold">
               IN EVIDENZA
             </div>
             
             <div class="space-y-6 mt-8">
               <div class="flex items-center gap-3 ui-meta text-zero-black">
-                <span class="bg-zero-dark text-white px-2 py-1">{featuredCoverPost.category || 'INCHIESTA'}</span>
+                <span class="bg-zero-dark text-white px-2.5 py-1">{featuredCoverPost.category || 'INCHIESTA'}</span>
               </div>
 
               <h2 class="font-display font-extrabold text-4xl lg:text-5xl uppercase text-zero-black leading-none group-hover:text-zero-red transition-colors">
@@ -124,13 +124,13 @@ const magazineSchema = {
       )}
 
       <!-- Griglia Articoli Secondari (3 Colonne) -->
-      <section class="gsap-fade-up">
-        <div class="pb-4 mb-8 flex justify-between items-end">
+      <section class="gsap-fade-up space-y-12 md:space-y-16">
+        <div class="pb-6 flex justify-between items-end border-b border-neutral-200/60">
           <h2 class="font-display font-bold text-3xl uppercase text-zero-black">ARCHIVIO ARTICOLI</h2>
           <span class="ui-meta text-zero-red font-bold">{secondaryPosts.length} PUBBLICAZIONI</span>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 lg:gap-16">
           {secondaryPosts.map((post) => (
             <ArticleCard post={post} />
           ))}
