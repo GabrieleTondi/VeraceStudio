@@ -20,8 +20,8 @@ if (project.galleryUrls && project.galleryUrls.length > 0 && project.galleryUrls
 ---
 
 <article class="group bg-transparent flex flex-col relative overflow-hidden">
-  <!-- Immagine di Copertina Progetto (Dimensione Rettangolare Classica h-64 sm:h-72) -->
-  <div class="relative w-full h-64 sm:h-72 overflow-hidden bg-black/5">
+  <!-- Immagine di Copertina Progetto (Riquadro Fotografico Ampio con Taglio Netto) -->
+  <div class="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-black/5">
     <a href={projectUrl} class="block w-full h-full overflow-hidden" aria-label={`Vai al progetto ${project.title}`}>
       <img
         src={imageUrl}
@@ -33,15 +33,15 @@ if (project.galleryUrls && project.galleryUrls.length > 0 && project.galleryUrls
     </a>
   </div>
 
-  <!-- Dettagli Sotto la Foto: Titolo Piccolo e Sottotitolo/Summary Essenziale -->
-  <div class="pt-4 space-y-1.5 flex-grow">
-    <h3 class="font-display font-bold text-lg sm:text-xl uppercase text-zero-black leading-tight group-hover:text-zero-red transition-colors">
+  <!-- Dettagli Sotto la Foto: Titolo Sobrio ed Elegante e Summary Essenziale -->
+  <div class="pt-5 space-y-2 flex-grow">
+    <h3 class="font-display font-bold text-xl sm:text-2xl uppercase text-zero-black leading-tight group-hover:text-zero-red transition-colors">
       <a href={projectUrl} class="focus:outline-none before:absolute before:inset-0">
         {project.title}
       </a>
     </h3>
     {project.summary && (
-      <p class="text-xs sm:text-sm text-zero-black/70 font-light leading-relaxed line-clamp-2">
+      <p class="text-sm text-zero-black/75 font-light leading-relaxed line-clamp-3">
         {project.summary}
       </p>
     )}

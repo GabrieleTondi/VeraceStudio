@@ -63,9 +63,10 @@ L'obiettivo primario di questa iterazione è trasformare l'identità visiva del 
 * **Titolo Sezione:**
   * ✅ Intestazione semplificata unicamente in **`PROGETTI`** in grande (`text-4xl md:text-5xl lg:text-6xl font-black font-display text-zero-black`).
   * ✅ Rimossi sovratitolo (*"PROGETTI SUL TERRITORIO"*), sottotitolo (*"INIZIATIVE ATTIVE..."*) e dicitura *"IN EVIDENZA"*.
-* **Layout Card Progetto:**
-  * ✅ **Immagine:** Formato **rettangolare classico** (`h-64 sm:h-72`), con taglio netto geometrico e transizione monocromatica/colore fluida all'hover.
-  * ✅ **Dettagli sotto la foto:** Titolo sobrio ed elegante sotto l'immagine, seguito dal summary essenziale.
+* **Griglia & Layout Card Progetto:**
+  * ✅ **Griglia a 2 Colonne:** Layout su **colonna da 2** (`grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-20`) per dare massimo respiro e maestosità fotografica.
+  * ✅ **Riquadri Fotografici Ampi:** Formato fotografico proporzionato e generoso (`aspect-[4/3] sm:aspect-[16/10]`), con taglio netto geometrico e transizione monocromatica/colore fluida all'hover.
+  * ✅ **Dettagli sotto la foto:** Titolo sobrio ed elegante sotto l'immagine (`text-xl sm:text-2xl`), seguito dal summary essenziale.
   * ✅ **Rimossi:** Badge "PARTNER", etichette di stato (pill) ingombranti e pulsanti ridondanti sulla card.
 * **Bottone Call To Action:**
   * ✅ Bottone di rimando alla pagina completa (`"VEDI TUTTI I PROGETTI →"`) allineato al centro sotto la griglia.
@@ -103,8 +104,10 @@ L'obiettivo primario di questa iterazione è trasformare l'identità visiva del 
 
 ### 3.6 Pagina Progetti & Scheda Singolo Progetto [COMPLETATA - 10 SETTEMBRE 2026] ✅
 #### A) Pagina Indice Progetti (`/progetti`)
-* **Bottone Call to Action:** ✅ Dimensione del font e padding della voce `"PROPONI UN PROGETTO"` parificata alla voce `"SCARICA IL DOSSIER PROGETTI"` (`ui-meta font-bold text-xs uppercase tracking-wider`).
-* **Griglia:** ✅ Pulita, frameless e ariosa con card fotografiche a rapporto quadrato senza boxature pesanti.
+* **Header Editoriale a Tutta Larghezza:** ✅ Titolo **`PROGETTI`** monumentale, testo descrittivo arioso e i due bottoni di azione in apertura (`"PROPONI UN PROGETTO"` e `"SCARICA IL DOSSIER PROGETTI"`).
+* **Sticky Action Docker:** ✅ Barra sticky ancorata sotto l'header allo scroll (`sticky top-[68px] md:top-[78px] z-40 bg-zero-bg/95 backdrop-blur-md`), con titolo compatto/conteggio (`PROGETTI / X ATTIVI`) e bottoni di azione (su smartphone compattata con solo il pulsante primario per preservare spazio).
+* **Matrice Progetti a 2 Colonne:** ✅ Griglia su colonna da 2 (`grid-cols-1 md:grid-cols-2`) con riquadri fotografici ampi (`aspect-[4/3] sm:aspect-[16/10]`), transizione hover fluida b/n-colore e titoli eleganti.
+* **Archivio Progetti Conclusi:** ✅ Sezione dedicata su matrice a 2 colonne con metadati di stato.
 
 #### B) Scheda Singolo Progetto (`/progetti/progetto/[slug]`)
 * **Intestazione e Sintesi:**

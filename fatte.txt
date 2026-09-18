@@ -298,7 +298,7 @@ AGGIORNAMENTO - 2 SETTEMBRE 2026 (MINIMAL RESTYLING)
 
 5. Home Page — Sezione Progetti: [COMPLETATO]
    - Titolo Sezione: semplificato unicamente in "PROGETTI" in grande nero assoluto; rimossi sovratitolo ("PROGETTI SUL TERRITORIO"), sottotitolo ("INIZIATIVE ATTIVE...") e dicitura "IN EVIDENZA"
-   - Card Progetto: convertite in formato quadrato grande (aspect-square) con transizione monocromatica/colore fluida all'hover; titolo sobrio e summary essenziale sotto l'immagine; rimossi badge PARTNER ed etichette pill di stato
+   - Griglia e Card Progetto: convertite su griglia a 2 colonne (grid-cols-1 md:grid-cols-2) con riquadri fotografici ampi (aspect-[4/3] sm:aspect-[16/10]) e transizione monocromatica/colore fluida all'hover; titolo sobrio ed elegante (text-xl sm:text-2xl) e summary essenziale sotto l'immagine; rimossi badge PARTNER ed etichette pill di stato
    - Bottone CTA: bottone "VEDI TUTTI I PROGETTI →" allineato e centrato sotto la griglia di progetti
 
 6. Home Page — Sezione Magazine (Anteprima): [COMPLETATO]
@@ -306,7 +306,7 @@ AGGIORNAMENTO - 2 SETTEMBRE 2026 (MINIMAL RESTYLING)
    - Card Articoli: proporzione fotografica (aspect-3/2 classico), sfondo trasparente integrato con #FFFEF3, transizione B&W -> Colore all'hover, rimozione cornici pesanti, metadati essenziali (data e link LEGGI →)
 
 7. Pagina Progetti & Scheda Singolo Progetto: [COMPLETATO]
-   - Pagina Indice (/progetti): parificata la dimensione del font e lo stile dei due bottoni "PROPONI UN PROGETTO" e "SCARICA IL DOSSIER PROGETTI"; griglia e layout puliti senza sovrastrutture
+   - Pagina Indice (/progetti): header editoriale a tutta larghezza con titolo PROGETTI e bottoni di azione in apertura; sticky action docker ancorato sotto l'header durante lo scroll con titolo compatto e bottoni (su mobile compattato con solo il bottone primario); matrice progetti attivi su 2 colonne con riquadri fotografici ampi; sezione archivio progetti conclusi su 2 colonne
    - Scheda Singolo Progetto (/progetti/progetto/[slug]): rimossa dicitura "SINTESI ESECUTIVA DEL PROGETTO" (inizio immediato del testo descrittivo); rimossi i badge/pill "PARTNER" e il conteggio numerico degli enti; galleria fotografica pulita senza indicazione conteggio scatti
 
 8. Pagina Partnership: [COMPLETATO]

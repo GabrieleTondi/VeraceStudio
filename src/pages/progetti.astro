@@ -1,99 +1,159 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import DownloadButton from '../components/DownloadButton.astro';
 import { getProjects } from '../lib/sanity';
 
 const projects = await getProjects();
 
 const activeProjects = projects.filter(p => p.status !== 'Concluso');
 const completedProjects = projects.filter(p => p.status === 'Concluso');
+
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
+
+const progettiSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": `${siteOrigin}/progetti#collection`,
+      "name": "Progetti & Iniziative sul Territorio | VERACE",
+      "description": "Scopri i progetti di rigenerazione urbana, valorizzazione dell'Appennino Reggiano e co-progettazione con fondi europei ed enti partner promossi da VERACE.",
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": activeProjects.map((proj, idx) => ({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "url": `${siteOrigin}/progetti/progetto/${proj.slug?.current || 'la-bela'}`,
+          "name": proj.title
+        }))
+      }
+    }
+  ]
+};
 ---
 
 <BaseLayout
   title="Progetti & Iniziative sul Territorio di Reggio Emilia | VERACE"
   description="Scopri i progetti di rigenerazione urbana, valorizzazione dell'Appennino Reggiano e co-progettazione con fondi europei ed enti partner promossi da VERACE."
   keywords="progetti Reggio Emilia, rigenerazione territoriale Appennino Reggiano, progetti Fondazione Manodori, Luigi Ghirri progetti, co-progettazione fondi europei, innovazione sociale Emilia Romagna, VERACE"
+  customSchema={progettiSchema}
 >
-  <div class="w-full">
-    <div class="flex flex-col lg:flex-row relative min-h-screen">
-      
-      <!-- Colonna Sinistra Fissa (40%) -->
-      <div class="lg:w-2/5 lg:sticky lg:top-20 lg:h-[calc(100vh-5rem)] bg-zero-bg p-8 md:p-16 lg:p-20 flex flex-col justify-between z-10">
-        <div class="space-y-8">
-          <div>
-            <h1 class="section-heading text-zero-black">
-              PROGETTI
-            </h1>
-          </div>
-          
-          <p class="text-lg text-zero-black font-light leading-relaxed">
+  <div class="w-full bg-zero-bg">
+    
+    <!-- 1. Header Sezione Progetti (Apertura Editoriale a Tutta Larghezza) -->
+    <header class="px-4 sm:px-8 lg:px-12 pt-16 pb-12 md:pt-24 md:pb-16 bg-zero-bg border-b border-black/[0.04] gsap-fade-up">
+      <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-16">
+        <div class="shrink-0">
+          <h1 class="hero-headline text-zero-black uppercase leading-none tracking-tight">
+            PROGETTI
+          </h1>
+        </div>
+        <div class="max-w-xl lg:max-w-2xl space-y-6">
+          <p class="text-base md:text-lg text-zero-black font-light leading-relaxed text-balance">
             Sviluppiamo progetti ad alto valore strategico affiancando comunità, enti territoriali e partner trasversali. Un impegno diretto in innovazione sociale, sostenibilità ed educazione visiva.
           </p>
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+            <a
+              href="/contatti?oggetto=Proposta%20Progetto"
+              class="inline-flex items-center justify-center gap-3 px-7 py-3.5 bg-zero-black text-white ui-meta font-bold text-xs uppercase tracking-wider hover:bg-zero-red transition-colors duration-200 shadow-sm group"
+            >
+              <span>PROPONI UN PROGETTO</span>
+              <span class="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+            </a>
+            <a
+              href="/pdf/sample-project-presentation.pdf"
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center gap-3 px-6 py-3.5 border border-zero-black text-zero-black ui-meta font-bold text-xs uppercase tracking-wider hover:bg-zero-black hover:text-white transition-colors duration-200 shadow-sm group"
+            >
+              <span class="flex items-center gap-2">
+                <span>SCARICA IL DOSSIER PROGETTI</span>
+                <span class="text-[9px] opacity-60 font-normal lowercase">(pdf 2.4 mb)</span>
+              </span>
+              <svg class="w-4 h-4 flex-shrink-0 text-current transition-transform duration-300 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. Sticky Action Docker Bar (Sub-navbar ancorata sotto l'header durante lo scroll) -->
+    <div id="sticky-project-docker" class="sticky top-[68px] sm:top-[74px] md:top-[78px] z-40 bg-zero-bg/95 backdrop-blur-md border-b border-black/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-200">
+      <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-3 md:py-3.5 flex items-center justify-between gap-4">
+        <!-- Titolo compatto con conteggio progetti attivi -->
+        <div class="flex items-center gap-2.5">
+          <span class="font-display font-black text-sm md:text-base uppercase tracking-wider text-zero-black">
+            PROGETTI
+          </span>
+          <span class="text-neutral-400 font-mono text-xs">/</span>
+          <span class="ui-meta text-zero-red font-bold text-xs">
+            {activeProjects.length} ATTIVI
+          </span>
         </div>
 
-        <div class="mt-12 lg:mt-0 pt-8 space-y-3.5">
+        <!-- Bottoni di Azione nel Docker -->
+        <div class="flex items-center gap-3">
+          <!-- Bottone Primario (Sempre Visibile) -->
           <a
             href="/contatti?oggetto=Proposta%20Progetto"
-            class="inline-flex items-center justify-between w-full px-6 py-4 bg-zero-black text-white ui-meta font-bold text-xs uppercase tracking-wider hover:bg-zero-red transition-colors duration-200 shadow-sm group"
+            class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 bg-zero-black text-white ui-meta font-bold text-[11px] md:text-xs uppercase tracking-wider hover:bg-zero-red transition-colors duration-200 shadow-sm group"
           >
             <span>PROPONI UN PROGETTO</span>
-            <span class="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+            <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
+
+          <!-- Bottone Secondario Dossier (Nascosto su Mobile per Preservare Spazio) -->
           <a
             href="/pdf/sample-project-presentation.pdf"
             download
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center justify-between w-full px-6 py-4 border border-zero-black text-zero-black ui-meta font-bold text-xs uppercase tracking-wider hover:bg-zero-black hover:text-white transition-colors duration-200 shadow-sm group"
+            class="hidden sm:inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 border border-zero-black text-zero-black ui-meta font-bold text-[11px] md:text-xs uppercase tracking-wider hover:bg-zero-black hover:text-white transition-colors duration-200 shadow-sm group"
           >
-            <span class="flex items-center gap-2">
-              <span>SCARICA IL DOSSIER PROGETTI</span>
-              <span class="text-[9px] opacity-60 font-normal lowercase">(pdf 2.4 mb)</span>
-            </span>
-            <svg class="w-4 h-4 flex-shrink-0 text-current transition-transform duration-300 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span>SCARICA DOSSIER</span>
+            <svg class="w-3.5 h-3.5 flex-shrink-0 text-current transition-transform duration-300 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
           </a>
         </div>
       </div>
+    </div>
 
-      <!-- Colonna Destra Scrollabile (60%) -->
-      <div class="lg:w-3/5 bg-zero-paper p-8 md:p-16 lg:p-20 space-y-20 md:space-y-28 overflow-hidden">
+    <!-- 3. Contenuto Principale: Matrice Progetti a 2 Colonne -->
+    <main class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-16 md:py-24 lg:py-28 space-y-28 md:space-y-36">
+      
+      <!-- Progetti Attivi (Matrice a 2 Colonne) -->
+      <section id="progetti-attivi" class="space-y-12 md:space-y-16 gsap-fade-up">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-20">
+          {activeProjects.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      </section>
 
-        <!-- Progetti In Corso & Attivi -->
-        <section id="progetti" class="space-y-12 md:space-y-16 gsap-fade-up">
-          <div class="pb-6 flex items-end justify-between border-b border-neutral-200/60">
-            <h2 class="font-display font-extrabold text-3xl uppercase text-zero-black">PROGETTI ATTIVI</h2>
-            <span class="ui-meta text-zero-red font-bold">{activeProjects.length} ATTIVI</span>
+      <!-- 4. Archivio Progetti Conclusi (Matrice a 2 Colonne) -->
+      {completedProjects.length > 0 && (
+        <section id="archivio-conclusi" class="pt-12 border-t border-black/[0.08] space-y-12 gsap-fade-up">
+          <div class="flex items-end justify-between pb-4">
+            <h2 class="font-display font-extrabold text-2xl md:text-3xl uppercase text-zero-black">
+              ARCHIVIO PROGETTI CONCLUSI
+            </h2>
+            <span class="ui-meta text-neutral-500 font-bold">
+              {completedProjects.length} CONCLUSI
+            </span>
           </div>
-          <div class="space-y-20 md:space-y-28">
-            {activeProjects.map((project) => (
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 lg:gap-16 opacity-90 hover:opacity-100 transition-opacity">
+            {completedProjects.map((project) => (
               <ProjectCard project={project} />
             ))}
           </div>
         </section>
+      )}
 
-        <!-- Archivio Progetti Conclusi (Scroll Orizzontale) -->
-        {completedProjects.length > 0 && (
-          <section class="pt-12 space-y-6 gsap-fade-up">
-            <div class="pb-4 flex items-end justify-between">
-              <h2 class="font-display font-extrabold text-2xl uppercase text-zero-black">ARCHIVIO PROGETTI CONCLUSI</h2>
-              <span class="ui-meta text-neutral-500 font-bold">{completedProjects.length} CONCLUSI</span>
-            </div>
-            
-            <!-- Horizontal Scroll Container -->
-            <div class="flex overflow-x-auto gap-6 pb-6 pt-2 snap-x snap-mandatory focus:outline-none scrollbar-thin">
-              {completedProjects.map((project) => (
-                <div class="w-[300px] sm:w-[350px] flex-shrink-0 snap-start opacity-90 hover:opacity-100 transition-opacity">
-                  <ProjectCard project={project} />
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-        
-      </div>
-    </div>
+    </main>
   </div>
 </BaseLayout>

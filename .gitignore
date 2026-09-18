@@ -1,30 +1,49 @@
-# Build output
+# Build output & deployment artifacts
 dist/
 .astro/
+.vercel/
 
 # Dependencies
 node_modules/
+.pnp
+.pnp.js
 
-# Environment Variables
+# Environment variables & secrets
 .env
 .env.production
 .env.local
 .env.*.local
+.env.*
+!.env.example
+*.pem
+*.key
 
-# Logs
+# Logs & Debugging
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
 
-# Editor & OS files
+# Editor, IDE & OS artifacts
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
 
-# Temporary / Artifact files
+# Temporary, scratch & system-generated files
+scratch/
 .tempmediaStorage/
 .system_generated/
-.vercel/
-scratch/
+*.ndjson
+correzioni.txt
+articolo in pdf da visualizzare a s.txt
+RASD + DD VERACE studio.pdf
+/sample-project-presentation.pdf
+

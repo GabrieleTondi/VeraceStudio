@@ -1,4 +1,0 @@
-sistemare mailer
-
-far apparire le foto del team (verificare cosa succede con 5 membri del team)
-
