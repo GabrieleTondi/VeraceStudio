@@ -12,121 +12,160 @@ export interface Props {
 
 const {
   slides = FALLBACK_HERO_SLIDES,
-  headline = "Media cultura e rigenerazione per il territorio",
+  headline = "media cultura e rigenerazione per il territorio",
   primaryButtonText = "scopri i progetti",
   primaryButtonLink = "/progetti",
   secondaryButtonText = "esplora il nostro magazine",
   secondaryButtonLink = "/magazine"
 } = Astro.props;
 
-// Assicura che le slides siano al massimo 9
-const heroSlides = (slides && slides.length > 0 ? slides : FALLBACK_HERO_SLIDES).slice(0, 9);
+// Prende tutte e soltanto le foto fornite (se non ci sono foto fornite, ricorre al fallback)
+const heroSlides = slides && slides.length > 0 ? slides : FALLBACK_HERO_SLIDES;
+
+// Assicura che la parola "media" sia rigorosamente senza la M maiuscola
+const formattedHeadline = (headline || "media cultura e rigenerazione per il territorio")
+  .replace(/^Media\b/i, 'media');
 ---
 
 <section
   id="hero-section"
-  class="relative w-full bg-zero-bg pt-3 sm:pt-5 md:pt-6 pb-8 sm:pb-12 md:pb-16 select-none"
+  class="relative w-full bg-zero-bg pt-0 pb-8 sm:pb-12 md:pb-16 select-none"
   aria-label="Hero VERACE"
 >
-  <!-- 1. RIQUADRO FOTOGRAFICO A TUTTA LARGHEZZA, CON ALTEZZA CALIBRATA PER IL DESKTOP -->
-  <div class="relative w-full h-[44vh] sm:h-[48vh] md:h-[52vh] lg:h-[56vh] min-h-[260px] max-h-[560px] overflow-hidden bg-black/5 shadow-sm">
-    
-    <!-- Slides sovrapposte una sopra l'altra (Stack fotografico) -->
-    <div
-      id="hero-slides-stack"
-      class="relative w-full h-full will-change-transform"
-      style="filter: grayscale(100%) saturate(0%);"
-    >
-      {heroSlides.map((slide, index) => (
-        <div
-          class={`hero-slide-layer absolute inset-0 w-full h-full overflow-hidden transition-opacity will-change-transform ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-          data-slide-index={index}
-        >
-          <img
-            src={slide.image}
-            alt={slide.alt || slide.title || `VERACE Foto ${index + 1}`}
-            class="hero-slide-img w-full h-full object-cover select-none will-change-transform"
-            loading={index === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
-        </div>
-      ))}
-    </div>
-
-    <!-- Logo VERACE durante intro (compare e svanisce nello scatto) -->
-    <div
-      id="hero-intro-logo"
-      class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none will-change-transform"
-      style="opacity: 0; transform: scale(0.92);"
-    >
-      <img
-        src="/logos/Verace_Logo_Bianco.png"
-        alt="VERACE Logo"
-        class="h-14 sm:h-20 md:h-28 w-auto object-contain drop-shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
-      />
-    </div>
-
-    <!-- FRECCE DIREZIONALI ESSENZIALI (PREV / NEXT) -->
-    {heroSlides.length > 1 && (
+  <!-- 1. RIQUADRO FOTOGRAFICO GRANDE IN FORMATO NORMALE ORIZZONTALE (RAPPORTO 3:2) -->
+  <div class="w-full max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
+    <div class="relative w-full aspect-[8/4] overflow-hidden bg-black/5 shadow-sm">
+      
+      <!-- Slides sovrapposte una sopra l'altra (Stack fotografico) -->
       <div
-        id="hero-controls"
-        class="absolute inset-x-0 bottom-3 sm:bottom-5 md:bottom-6 z-30 flex items-center justify-end px-4 sm:px-8 md:px-12 pointer-events-none opacity-0 transition-opacity duration-700"
+        id="hero-slides-stack"
+        class="relative w-full h-full will-change-transform"
+        style="filter: grayscale(100%) saturate(0%);"
       >
-        <div class="flex items-center gap-2 pointer-events-auto bg-black/40 backdrop-blur-sm px-2.5 py-1.5 rounded-sm">
+        {heroSlides.map((slide, index) => (
+          <div
+            class={`hero-slide-layer absolute inset-0 w-full h-full overflow-hidden transition-opacity will-change-transform ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            data-slide-index={index}
+          >
+            <img
+              src={slide.image}
+              alt={slide.alt || slide.title || `VERACE Foto ${index + 1}`}
+              class="hero-slide-img w-full h-full object-cover select-none will-change-transform"
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
+            />
+          </div>
+        ))}
+      </div>
+
+      <!-- Logo VERACE durante intro (compare e svanisce nello scatto) -->
+      <div
+        id="hero-intro-logo"
+        class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none will-change-transform"
+        style="opacity: 0; transform: scale(0.92);"
+      >
+        <img
+          src="/logos/Verace_Logo_Bianco.png"
+          alt="VERACE Logo"
+          class="h-16 sm:h-24 md:h-32 w-auto object-contain drop-shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
+        />
+      </div>
+
+      <!-- FRECCE SULLA FOTO SENZA QUADRATO INTORNO (FRECCETTE RIDOTTE ALLA METÀ) -->
+      {heroSlides.length > 1 && (
+        <div
+          id="hero-controls"
+          class="absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-2 sm:px-4 md:px-5 opacity-0 transition-opacity duration-700"
+        >
           <button
             id="hero-prev-btn"
             type="button"
-            class="text-white hover:text-zero-red p-1 transition-colors duration-200 cursor-pointer focus:outline-none"
+            class="pointer-events-auto text-white hover:text-zero-red transition-all duration-200 cursor-pointer focus:outline-none p-1 sm:p-1.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] group"
             aria-label="Foto precedente"
           >
-            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 transition-transform duration-200 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-
-          <span class="w-[1px] h-4 bg-white/30"></span>
 
           <button
             id="hero-next-btn"
             type="button"
-            class="text-white hover:text-zero-red p-1 transition-colors duration-200 cursor-pointer focus:outline-none"
+            class="pointer-events-auto text-white hover:text-zero-red transition-all duration-200 cursor-pointer focus:outline-none p-1 sm:p-1.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] group"
             aria-label="Foto successiva"
           >
-            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
             </svg>
           </button>
         </div>
-      </div>
-    )}
+      )}
+    </div>
   </div>
 
-  <!-- 2. ELEMENTI SOTTO LA FOTO: SCRITTA DESCRITTIVA E DUE BOTTONI CENTRATI -->
-  <div class="w-full max-w-4xl mx-auto px-4 sm:px-8 mt-6 sm:mt-8 md:mt-10 text-center space-y-5 sm:space-y-6">
-    
-    <!-- Scritta descrittiva in nero puro -->
-    <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-display font-medium text-zero-black tracking-tight leading-snug">
-      {headline}
-    </p>
-
-    <!-- Due Bottoni Centrati -->
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-1">
-      <a
-        href={primaryButtonLink}
-        class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 bg-zero-black text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-zero-red transition-colors duration-200 shadow-sm text-center"
-      >
-        {primaryButtonText}
-      </a>
-      <a
-        href={secondaryButtonLink}
-        class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 border border-zero-black text-zero-black font-mono text-xs font-bold uppercase tracking-widest hover:bg-zero-black hover:text-white transition-colors duration-200 text-center"
-      >
-        {secondaryButtonText}
-      </a>
+  <!-- 2. FRASE IN SCORRIMENTO ORIZZONTALE ATTACCATA SUPERIORMENTE ALLA FOTO E SENZA RIGHE DIVISORIE -->
+  <div class="w-full overflow-hidden pt-3 sm:pt-4 pb-4 sm:pb-6 bg-zero-bg">
+    <div class="hero-ticker-track flex whitespace-nowrap will-change-transform">
+      <div class="hero-ticker-content flex items-center shrink-0">
+        <span class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium text-zero-black tracking-tight px-6 sm:px-10">
+          {formattedHeadline}
+        </span>
+        <span class="text-2xl sm:text-4xl md:text-5xl text-zero-red font-mono px-4 sm:px-6 select-none leading-none">✦</span>
+        <span class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium text-zero-black tracking-tight px-6 sm:px-10">
+          {formattedHeadline}
+        </span>
+        <span class="text-2xl sm:text-4xl md:text-5xl text-zero-red font-mono px-4 sm:px-6 select-none leading-none">✦</span>
+      </div>
+      <div class="hero-ticker-content flex items-center shrink-0" aria-hidden="true">
+        <span class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium text-zero-black tracking-tight px-6 sm:px-10">
+          {formattedHeadline}
+        </span>
+        <span class="text-2xl sm:text-4xl md:text-5xl text-zero-red font-mono px-4 sm:px-6 select-none leading-none">✦</span>
+        <span class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium text-zero-black tracking-tight px-6 sm:px-10">
+          {formattedHeadline}
+        </span>
+        <span class="text-2xl sm:text-4xl md:text-5xl text-zero-red font-mono px-4 sm:px-6 select-none leading-none">✦</span>
+      </div>
     </div>
+  </div>
 
+  <!-- 3. DUE BOTTONI CENTRATI -->
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-1 pb-4">
+    <a
+      href={primaryButtonLink}
+      class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 bg-zero-black text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-zero-red transition-colors duration-200 shadow-sm text-center"
+    >
+      {primaryButtonText}
+    </a>
+    <a
+      href={secondaryButtonLink}
+      class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 border border-zero-black text-zero-black font-mono text-xs font-bold uppercase tracking-widest hover:bg-zero-black hover:text-white transition-colors duration-200 text-center"
+    >
+      {secondaryButtonText}
+    </a>
   </div>
 </section>
+
+<style>
+  @keyframes heroTickerLoop {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .hero-ticker-track {
+    display: flex;
+    width: max-content;
+    animation: heroTickerLoop 28s linear infinite;
+  }
+
+  .hero-ticker-track:hover {
+    animation-play-state: paused;
+  }
+</style>
 
 <script>
   import { gsap } from "gsap";

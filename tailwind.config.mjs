@@ -26,6 +26,7 @@ export default {
       fontFamily: {
         display: ['Populista', 'sans-serif'],
         sans: ['"Unica 77"', 'Helvetica', 'Arial', 'sans-serif'],
+        helvetica: ['Helvetica', 'Arial', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       borderWidth: {

@@ -130,3 +130,14 @@ html::-webkit-scrollbar {
   display: inline-block;
   transform: translateY(110%);
 }
+
+/* Stile testo regolare non bold per gli articoli magazine */
+.font-helvetica {
+  font-family: 'Helvetica', 'Arial', sans-serif !important;
+  font-weight: 400 !important;
+}
+
+.font-helvetica strong,
+.font-helvetica b {
+  font-weight: 700 !important;
+}

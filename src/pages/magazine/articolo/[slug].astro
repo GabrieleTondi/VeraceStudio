@@ -4,20 +4,30 @@ import { getPosts, getPostBySlug } from '../../../lib/sanity';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
-  return posts.map((post) => ({
-    params: { slug: post.slug.current },
-    props: { post },
-  }));
+  return posts.map((post) => {
+    const suggestedPosts = posts.filter((p) => p.slug.current !== post.slug.current);
+
+    return {
+      params: { slug: post.slug.current },
+      props: { post, suggestedPosts },
+    };
+  });
 }
 
 const { slug } = Astro.params;
-const { post: initialPost } = Astro.props;
+const { post: initialPost, suggestedPosts: initialSuggested } = Astro.props;
 
 const post = initialPost || await getPostBySlug(slug as string);
 
 if (!post) {
   return Astro.redirect('/magazine');
 }
+
+let suggestedPosts = initialSuggested;
+if (!suggestedPosts || suggestedPosts.length === 0) {
+  const allPosts = await getPosts();
+  suggestedPosts = allPosts.filter((p) => p.slug.current !== post.slug.current);
+}
 ---
 
-<ArticleLayout post={post} />
+<ArticleLayout post={post} suggestedPosts={suggestedPosts} />

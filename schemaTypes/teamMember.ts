@@ -11,9 +11,22 @@ export default {
     },
     {
       name: 'role',
-      title: 'Ruolo in VERACE',
+      title: 'Ruolo / Ambito di Collaborazione',
       type: 'string',
       validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'category',
+      title: 'Tipologia / Sezione',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Core Team', value: 'team' },
+          { title: 'Collaboratore', value: 'collaboratore' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'team',
     },
     {
       name: 'photo',
@@ -25,7 +38,7 @@ export default {
     },
     {
       name: 'bio',
-      title: 'Breve Biografia',
+      title: 'Breve Biografia o Descrizione',
       type: 'text',
     },
     {
@@ -37,7 +50,7 @@ export default {
     },
     {
       name: 'linkedinUrl',
-      title: 'Link Profilo LinkedIn',
+      title: 'Link Profilo o Portfolio',
       type: 'url',
     }
   ],
@@ -45,7 +58,16 @@ export default {
     select: {
       title: 'name',
       subtitle: 'role',
+      category: 'category',
       media: 'photo',
+    },
+    prepare({ title, subtitle, category, media }: any) {
+      const typeLabel = category === 'collaboratore' ? 'Collaboratore' : 'Team';
+      return {
+        title,
+        subtitle: subtitle ? `[${typeLabel}] ${subtitle}` : typeLabel,
+        media,
+      };
     },
   },
 };

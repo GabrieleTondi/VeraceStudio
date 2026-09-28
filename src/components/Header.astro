@@ -8,30 +8,25 @@ const navLinks = [
   { name: 'CONTATTI', href: '/contatti' },
 ];
 
+const leftLinks = navLinks.slice(0, 3);
+const rightLinks = navLinks.slice(3);
+
 const currentPath = Astro.url.pathname;
 ---
 
 <header class="sticky top-0 z-50 bg-zero-bg w-full border-b border-black/[0.04]">
   <div class="w-full px-4 sm:px-8 lg:px-12 max-w-[1600px] mx-auto">
-    <div class="flex items-center justify-between h-18 md:h-22 py-4">
-      <!-- Logo (Logo discreto e raffinato in alto a sinistra) -->
-      <a href="/" class="flex items-center group focus:outline-none" aria-label="VERACE Home">
-        <img
-          src="/logos/Verace_Logo_Nero.png"
-          alt="VERACE Logo"
-          class="h-[36px] sm:h-[42px] md:h-[46px] w-auto object-contain transition-opacity duration-300 group-hover:opacity-75"
-        />
-      </a>
-
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-8 lg:space-x-12" aria-label="Navigazione Principale">
-        {navLinks.map((link) => {
+    <!-- Desktop Navigation: 3-column grid with centered larger logo -->
+    <div class="hidden md:grid md:grid-cols-[1fr_auto_1fr] items-center py-1.5 lg:py-2 gap-4 lg:gap-8 min-h-[58px] lg:min-h-[66px]">
+      <!-- Left Navigation Links (MAGAZINE, PROGETTI, PARTNERSHIP) -->
+      <nav class="flex items-center space-x-5 lg:space-x-8 justify-start" aria-label="Navigazione Sinistra">
+        {leftLinks.map((link) => {
           const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
           return (
             <a
               href={link.href}
-              class={`group flex items-center ui-meta text-xs tracking-wider transition-colors duration-200 ${
-                isActive ? 'text-zero-red font-bold' : 'text-zero-black font-medium hover:text-zero-red'
+              class={`group flex items-center ui-meta text-sm lg:text-[15px] tracking-wider transition-colors duration-200 ${
+                isActive ? 'text-zero-red font-bold' : 'text-zero-black font-semibold hover:text-zero-red'
               }`}
             >
               <span>{link.name}</span>
@@ -41,8 +36,51 @@ const currentPath = Astro.url.pathname;
         })}
       </nav>
 
-      <!-- Mobile Menu Toggle -->
-      <div class="md:hidden flex items-center">
+      <!-- Center Logo (Ingrandito visivamente senza aumentare il padding dell'header) -->
+      <div class="flex items-center justify-center px-4 sm:px-6 h-20 lg:h-24 overflow-visible">
+        <a href="/" class="flex items-center justify-center h-full group focus:outline-none overflow-visible" aria-label="VERACE Home">
+          <img
+            src="/logos/Verace_Logo_Nero.png"
+            alt="VERACE Logo"
+            class="h-[46px] sm:h-[52px] md:h-[58px] lg:h-[66px] w-auto object-contain scale-[1.55] sm:scale-[1.65] md:scale-[1.75] lg:scale-[1.85] origin-center transition-all duration-300 group-hover:opacity-75"
+          />
+        </a>
+      </div>
+
+      <!-- Right Navigation Links (CALENDARIO, TEAM, CONTATTI) -->
+      <nav class="flex items-center space-x-5 lg:space-x-8 justify-end" aria-label="Navigazione Destra">
+        {rightLinks.map((link) => {
+          const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+          return (
+            <a
+              href={link.href}
+              class={`group flex items-center ui-meta text-sm lg:text-[15px] tracking-wider transition-colors duration-200 ${
+                isActive ? 'text-zero-red font-bold' : 'text-zero-black font-semibold hover:text-zero-red'
+              }`}
+            >
+              <span>{link.name}</span>
+              <span class="ml-1.5 inline-block transition-transform duration-300 ease-out group-hover:translate-x-1">→</span>
+            </a>
+          );
+        })}
+      </nav>
+    </div>
+
+    <!-- Mobile Header (Logo Centrato con hamburger a destra) -->
+    <div class="md:hidden flex items-center justify-between h-14 py-1">
+      <div class="w-10"></div> <!-- Spacer per centrare visivamente il logo -->
+
+      <div class="flex items-center justify-center h-10 overflow-visible">
+        <a href="/" class="flex items-center justify-center h-full focus:outline-none overflow-visible" aria-label="VERACE Home">
+          <img
+            src="/logos/Verace_Logo_Nero.png"
+            alt="VERACE Logo"
+            class="h-[36px] w-auto object-contain scale-[1.55] origin-center"
+          />
+        </a>
+      </div>
+
+      <div class="w-10 flex justify-end">
         <button
           id="mobile-menu-toggle"
           type="button"

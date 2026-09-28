@@ -76,7 +76,7 @@ const projectSchema = {
         <h1 class="font-display font-black text-3xl sm:text-5xl lg:text-6xl text-white uppercase leading-none tracking-tight">
           {project.title}
         </h1>
-        <p class="text-lg sm:text-2xl text-neutral-200 font-light max-w-4xl leading-relaxed">
+        <p class="text-lg sm:text-2xl text-white/95 font-bold max-w-4xl leading-relaxed">
           {project.summary}
         </p>
       </div>
@@ -107,16 +107,21 @@ const projectSchema = {
         <!-- Left Column: Description & Partners -->
         <div class="lg:col-span-7 space-y-10">
           <section>
-            <div class="prose prose-lg prose-p:font-light prose-p:text-zero-black prose-p:leading-relaxed max-w-none space-y-6">
-              <p class="text-xl font-normal text-zero-black leading-relaxed">
+            <div class="max-w-none space-y-6">
+              <!-- Sottotitolo Progetto (Bold / In Evidenza) -->
+              <p class="text-xl md:text-2xl font-bold text-zero-black leading-relaxed">
                 {project.summary}
               </p>
-              <p>
-                Il progetto si sviluppa in continuità con la visione strategica di VERACE per favorire la riscoperta delle filiere territoriali, la rigenerazione degli spazi ed il coinvolgimento diretto delle giovani generazioni.
-              </p>
-              <p>
-                Attraverso un approccio partecipativo e multidisciplinare, l'iniziativa mette in rete istituzioni pubbliche, aziende private sostenitrici ed organizzazioni locali per garantire un impatto duraturo ed accrescere la coesione sociale del territorio.
-              </p>
+              
+              <!-- Testo del Progetto (Non in Bold - Helvetica Regular 400 come sul Magazine) -->
+              <div class="space-y-6 font-helvetica font-normal text-lg md:text-xl text-zero-black leading-relaxed text-justify hyphens-auto">
+                <p>
+                  Il progetto si sviluppa in continuità con la visione strategica di VERACE per favorire la riscoperta delle filiere territoriali, la rigenerazione degli spazi ed il coinvolgimento diretto delle giovani generazioni.
+                </p>
+                <p>
+                  Attraverso un approccio partecipativo e multidisciplinare, l'iniziativa mette in rete istituzioni pubbliche, aziende private sostenitrici ed organizzazioni locali per garantire un impatto duraturo ed accrescere la coesione sociale del territorio.
+                </p>
+              </div>
             </div>
           </section>
 

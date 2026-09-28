@@ -2,9 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TeamMemberCard from '../components/TeamMemberCard.astro';
 import DownloadButton from '../components/DownloadButton.astro';
-import { getTeamMembers } from '../lib/sanity';
+import { getTeamMembers, getCollaborators } from '../lib/sanity';
 
 const members = await getTeamMembers();
+const collaborators = await getCollaborators();
 const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
 
 const aboutSchema = {
@@ -50,7 +51,7 @@ const aboutSchema = {
       <section class="space-y-12 md:space-y-16 gsap-fade-up">
         <div class="pb-6 border-b border-black/10 flex items-end justify-between">
           <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight leading-none">
-            IL TEAM
+            TEAM
           </h2>
           <span class="ui-meta text-zero-red font-bold text-xs uppercase tracking-wider">{members.length} MEMBRI</span>
         </div>
@@ -62,7 +63,25 @@ const aboutSchema = {
         </div>
       </section>
 
-      <!-- C) Sezione TRASPARENZA (Subito dopo il Team con tasto 'scarica il bilancio 2025') -->
+      <!-- C) Sezione COLLABORATORI -->
+      {collaborators && collaborators.length > 0 && (
+        <section class="space-y-12 md:space-y-16 gsap-fade-up">
+          <div class="pb-6 border-b border-black/10 flex items-end justify-between">
+            <h2 class="font-display font-black text-3xl md:text-4xl uppercase text-zero-black tracking-tight leading-none">
+              COLLABORATORI
+            </h2>
+            <span class="ui-meta text-zero-red font-bold text-xs uppercase tracking-wider">{collaborators.length} COLLABORATORI</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
+            {collaborators.map((collaborator, idx) => (
+              <TeamMemberCard member={collaborator} index={idx + members.length} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- D) Sezione TRASPARENZA (Subito dopo il Team con tasto 'scarica il bilancio 2025') -->
       <section class="border border-black/10 p-8 md:p-14 space-y-8 bg-transparent gsap-fade-up">
         <div class="max-w-3xl space-y-3">
           <div class="ui-meta text-zero-red font-bold text-xs uppercase tracking-wider">ADEMPIMENTI NORMATIVI & RENDICONTAZIONE</div>

@@ -1,12 +1,24 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
 import type { Post } from '../lib/sanity';
+import { getPosts } from '../lib/sanity';
 
 interface Props {
   post: Post;
+  suggestedPosts?: Post[];
 }
 
-const { post } = Astro.props;
+const { post, suggestedPosts: initialSuggested } = Astro.props;
+
+let suggestedPosts = initialSuggested || [];
+if (suggestedPosts.length === 0) {
+  try {
+    suggestedPosts = allPosts.filter((p) => p.slug.current !== post.slug.current);
+  } catch (err) {
+    console.warn('Fallback fetching suggested posts:', err);
+  }
+}
 
 const formattedDate = new Date(post.publishedAt).toLocaleDateString('it-IT', {
   day: '2-digit',
@@ -167,7 +179,7 @@ function renderBlockHtml(block: any, isFirstText: boolean) {
         </h1>
 
         {post.subtitle && (
-          <p itemprop="description" class="text-xl md:text-2xl font-light text-zero-black leading-relaxed">
+          <p itemprop="description" class="text-xl md:text-2xl font-bold text-zero-black leading-relaxed">
             {post.subtitle}
           </p>
         )}
@@ -248,7 +260,7 @@ function renderBlockHtml(block: any, isFirstText: boolean) {
                   )}
                   {htmlContent && (
                     <p
-                      class={`text-lg md:text-xl font-light text-zero-black leading-relaxed text-justify hyphens-auto ${shouldApplyAutoDropCap ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red first-letter:leading-none first-letter:mt-1' : ''}`}
+                      class={`text-lg md:text-xl font-helvetica font-normal text-zero-black leading-relaxed text-justify hyphens-auto ${shouldApplyAutoDropCap ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red first-letter:leading-none first-letter:mt-1' : ''}`}
                       set:html={htmlContent}
                     />
                   )}
@@ -286,7 +298,7 @@ function renderBlockHtml(block: any, isFirstText: boolean) {
                       </h3>
                     </div>
                   )}
-                  <p class="text-base md:text-lg font-light text-zero-black leading-relaxed whitespace-pre-line">
+                  <p class="text-base md:text-lg font-helvetica font-normal text-zero-black leading-relaxed whitespace-pre-line">
                     {block.text}
                   </p>
                 </aside>
@@ -326,7 +338,7 @@ function renderBlockHtml(block: any, isFirstText: boolean) {
         ) : fallbackPairs.length > 0 ? (
           fallbackPairs.map((pair, idx) => (
             <div class="space-y-8">
-              <p class={`text-lg md:text-xl font-light text-zero-black leading-relaxed text-justify hyphens-auto ${idx === 0 ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red first-letter:leading-none first-letter:mt-1' : ''}`}>
+              <p class={`text-lg md:text-xl font-helvetica font-normal text-zero-black leading-relaxed text-justify hyphens-auto ${idx === 0 ? 'first-letter:float-left first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:mr-4 first-letter:text-zero-red first-letter:leading-none first-letter:mt-1' : ''}`}>
                 {pair.text}
               </p>
               {pair.image && (
@@ -457,6 +469,54 @@ function renderBlockHtml(block: any, isFirstText: boolean) {
       </div>
 
     </main>
+
+    <!-- 5. SLIDER ORIZZONTALE TUTTI GLI ARTICOLI (IN MAX-WIDTH, SENZA RIQUADRI, CON SPAZIO GENEROSO) -->
+    {suggestedPosts && suggestedPosts.length > 0 && (
+      <section class="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 my-20 md:my-32 pt-12 md:pt-16 border-t border-neutral-300/80 space-y-8 gsap-fade-up" aria-label="Slider articoli del magazine">
+        <div class="flex items-end justify-between flex-wrap gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+            </div>
+            <h2 class="font-display font-bold text-2xl sm:text-3xl lg:text-4xl uppercase text-zero-black tracking-tight mt-1">
+              Articoli suggeriti dal Magazine
+            </h2>
+          </div>
+
+          <!-- Frecce di navigazione dello slider e link archivio -->
+          <div class="flex items-center gap-3">
+            <a href="/magazine" class="hidden sm:inline-block ui-meta font-bold text-xs text-zero-black hover:text-zero-red transition-colors mr-2">
+              TUTTO IL MAGAZINE →
+            </a>
+            <button
+              id="suggested-prev"
+              class="w-10 h-10 bg-zero-paper shadow-sm text-zero-black hover:bg-zero-red hover:text-white flex items-center justify-center font-bold transition-colors focus:outline-none cursor-pointer"
+              aria-label="Articolo precedente nello slider"
+            >
+              ←
+            </button>
+            <button
+              id="suggested-next"
+              class="w-10 h-10 bg-zero-paper shadow-sm text-zero-black hover:bg-zero-red hover:text-white flex items-center justify-center font-bold transition-colors focus:outline-none cursor-pointer"
+              aria-label="Articolo successivo nello slider"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        <!-- Traccia orizzontale a scorrimento (senza bordi né box spuri, con spaziatura aumentata) -->
+        <div
+          id="suggested-articles-slider"
+          class="flex items-stretch gap-8 sm:gap-10 md:gap-12 lg:gap-14 overflow-x-auto scroll-smooth snap-x snap-mandatory py-4 px-1 no-scrollbar"
+        >
+          {suggestedPosts.map((suggested) => (
+            <div class="snap-start shrink-0 w-[84%] sm:w-[48%] md:w-[38%] lg:w-[30%] xl:w-[26%] flex flex-col">
+              <ArticleCard post={suggested} />
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
   </article>
 
   <!-- Lightbox Modal for Photo Gallery -->
@@ -535,6 +595,25 @@ function renderBlockHtml(block: any, isFirstText: boolean) {
     if (nextBtn && carousel) {
       nextBtn.addEventListener('click', () => {
         carousel.scrollBy({ left: 320, behavior: 'smooth' });
+      });
+    }
+
+    // Slider Articoli Suggeriti (Tutti gli articoli del magazine)
+    const suggestedPrev = document.getElementById('suggested-prev');
+    const suggestedNext = document.getElementById('suggested-next');
+    const suggestedSlider = document.getElementById('suggested-articles-slider');
+
+    if (suggestedPrev && suggestedSlider) {
+      suggestedPrev.addEventListener('click', () => {
+        const scrollAmount = Math.max(340, suggestedSlider.clientWidth * 0.75);
+        suggestedSlider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      });
+    }
+
+    if (suggestedNext && suggestedSlider) {
+      suggestedNext.addEventListener('click', () => {
+        const scrollAmount = Math.max(340, suggestedSlider.clientWidth * 0.75);
+        suggestedSlider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
       });
     }
 

@@ -20,7 +20,7 @@ export const sanityClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: false,
 });
 
 export const sanityWriteClient = createClient({
@@ -113,6 +113,7 @@ export interface TeamMember {
   bio: string;
   order: number;
   linkedinUrl?: string;
+  category?: 'team' | 'collaboratore';
 }
 
 
@@ -662,6 +663,41 @@ export const FALLBACK_TEAM: TeamMember[] = [
   }
 ];
 
+export const FALLBACK_COLLABORATORS: TeamMember[] = [
+  {
+    _id: 'collab-1',
+    name: 'Gabriele Tondi',
+    role: 'Piattaforma Digitale & Web Architecture',
+    bio: 'Sviluppatore web e interaction designer. Cura l\'infrastruttura tecnologica e le piattaforme digitali di VERACE.',
+    order: 1,
+    category: 'collaboratore'
+  },
+  {
+    _id: 'collab-2',
+    name: 'Rita Yea',
+    role: 'Mediazione Culturale & Ricerca Sociale',
+    bio: 'Mediatrice culturale e attivista civica. Collabora ai progetti di comunità, inclusione e memoria urbana a Reggio Emilia.',
+    order: 2,
+    category: 'collaboratore'
+  },
+  {
+    _id: 'collab-3',
+    name: 'Luca Ferretti',
+    role: 'Fotografia Documentaria & Reportage',
+    bio: 'Fotografo indipendente focalizzato su paesaggio emiliano, trasformazioni del territorio e archeologia industriale.',
+    order: 3,
+    category: 'collaboratore'
+  },
+  {
+    _id: 'collab-4',
+    name: 'Giulia Montanari',
+    role: 'Architettura del Paesaggio & Rigenerazione',
+    bio: 'Architetta e paesaggista. Collabora ai tavoli di co-progettazione e agli interventi di riattivazione dello spazio pubblico.',
+    order: 4,
+    category: 'collaboratore'
+  }
+];
+
 
 
 function mapSanityPost(p: any, fallback?: Post): Post {
@@ -875,14 +911,15 @@ export async function getProjects(): Promise<Project[]> {
 export async function getTeamMembers(): Promise<TeamMember[]> {
   try {
     if (projectId) {
-      const members = await sanityClient.fetch(`*[_type == "teamMember"] | order(order asc) {
+      const members = await sanityClient.fetch(`*[_type == "teamMember" && (!defined(category) || category == "team")] | order(order asc) {
         _id,
         name,
         role,
         bio,
         order,
         linkedinUrl,
-        photo
+        photo,
+        category
       }`);
       if (members && members.length > 0) {
         return members.map((m: any) => ({
@@ -895,6 +932,32 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     console.warn('Sanity query fallback for team:', err);
   }
   return FALLBACK_TEAM;
+}
+
+export async function getCollaborators(): Promise<TeamMember[]> {
+  try {
+    if (projectId) {
+      const collabs = await sanityClient.fetch(`*[_type == "collaborator" || (_type == "teamMember" && category == "collaboratore")] | order(order asc) {
+        _id,
+        name,
+        role,
+        bio,
+        order,
+        linkedinUrl,
+        photo,
+        category
+      }`);
+      if (collabs && collabs.length > 0) {
+        return collabs.map((m: any) => ({
+          ...m,
+          photoUrl: m.photo ? urlFor(m.photo)?.url() : null
+        }));
+      }
+    }
+  } catch (err) {
+    console.warn('Sanity query fallback for collaborators:', err);
+  }
+  return FALLBACK_COLLABORATORS;
 }
 
 export const FALLBACK_EVENTS: Event[] = [
@@ -1247,7 +1310,7 @@ export async function getHeroSliderData(): Promise<HeroSliderSettings> {
   try {
     if (projectId) {
       const doc = await sanityClient.fetch(
-        `*[_type == "heroSlider"][0] {
+        `*[_type == "heroSlider"] | order(_updatedAt desc)[0] {
           title,
           headline,
           primaryButtonText,
@@ -1274,11 +1337,15 @@ export async function getHeroSliderData(): Promise<HeroSliderSettings> {
         const mappedSlides: HeroSlideItem[] = doc.slides
           .map((item: any) => {
             let imgUrl = '';
-            if (item.image?.asset?.url) {
-              imgUrl = item.image.asset.url;
-            } else if (item.image) {
+            if (item.image) {
               const built = urlFor(item.image);
-              if (built) imgUrl = built.width(2000).quality(90).auto('format').url();
+              if (built) {
+                imgUrl = built.width(2000).quality(90).auto('format').url();
+              }
+            }
+
+            if (!imgUrl && item.image?.asset?.url) {
+              imgUrl = item.image.asset.url;
             }
 
             if (!imgUrl) return null;
@@ -1293,16 +1360,14 @@ export async function getHeroSliderData(): Promise<HeroSliderSettings> {
           .filter(Boolean) as HeroSlideItem[];
 
         if (mappedSlides.length > 0) {
-          // Limita a max 9 foto per sicurezza
-          const finalSlides = mappedSlides.slice(0, 9);
           return {
             title: doc.title || 'Slider Principale',
-            headline: doc.headline || 'Media cultura e rigenerazione per il territorio',
+            headline: (doc.headline || 'media cultura e rigenerazione per il territorio').replace(/^Media\b/i, 'media'),
             primaryButtonText: doc.primaryButtonText || 'scopri i progetti',
             primaryButtonLink: doc.primaryButtonLink || '/progetti',
             secondaryButtonText: doc.secondaryButtonText || 'esplora il nostro magazine',
             secondaryButtonLink: doc.secondaryButtonLink || '/magazine',
-            slides: finalSlides,
+            slides: mappedSlides,
           };
         }
       }
@@ -1313,7 +1378,7 @@ export async function getHeroSliderData(): Promise<HeroSliderSettings> {
 
   return {
     title: 'Slider Principale',
-    headline: 'Media cultura e rigenerazione per il territorio',
+    headline: 'media cultura e rigenerazione per il territorio',
     primaryButtonText: 'scopri i progetti',
     primaryButtonLink: '/progetti',
     secondaryButtonText: 'esplora il nostro magazine',

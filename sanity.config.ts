@@ -22,7 +22,7 @@ export default defineConfig({
               .title('Slider Home & Animazione')
               .schemaType('heroSlider')
               .child(
-                S.documentTypeList('heroSlider').title('Slider Home Page & Intro (Max 9 Foto)')
+                S.documentTypeList('heroSlider').title('Slider Home Page & Intro')
               ),
             S.divider(),
             S.listItem()
@@ -38,9 +38,13 @@ export default defineConfig({
               .schemaType('event')
               .child(S.documentTypeList('event').title('Tutti gli Eventi')),
             S.listItem()
-              .title('Team & Collaboratori')
+              .title('Membri del Team')
               .schemaType('teamMember')
-              .child(S.documentTypeList('teamMember').title('Membri del Team')),
+              .child(S.documentTypeList('teamMember').title('Tutti i Membri del Team')),
+            S.listItem()
+              .title('Collaboratori')
+              .schemaType('collaborator')
+              .child(S.documentTypeList('collaborator').title('Tutti i Collaboratori')),
             S.divider(),
             S.listItem()
               .title('Newsletter & Comunicazioni')

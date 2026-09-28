@@ -15,7 +15,7 @@ export default {
       name: 'headline',
       title: 'Titolo / Frase Centrale (Post-Intro)',
       type: 'string',
-      initialValue: 'Media cultura e rigenerazione per il territorio',
+      initialValue: 'media cultura e rigenerazione per il territorio',
       description: 'La frase che compare al centro della Hero dopo l\'animazione del logo.',
     },
     {
@@ -44,15 +44,14 @@ export default {
     },
     {
       name: 'slides',
-      title: 'Fotografie Slider & Animazione Intro (Massimo 9 Foto)',
+      title: 'Fotografie Slider & Animazione Intro',
       type: 'array',
       description:
         'Trascina per ordinare le foto. NOTA: La PRIMA foto in elenco sarà la prima dello slider regolare e l\'ultima su cui si concluderà la sequenza di scatti dell\'animazione iniziale.',
       validation: (Rule: any) =>
         Rule.required()
           .min(1)
-          .max(9)
-          .error('Puoi inserire da un minimo di 1 a un massimo di 9 foto per lo slider.'),
+          .error('Inserisci almeno una fotografia per lo slider.'),
       of: [
         {
           type: 'object',
@@ -114,7 +113,7 @@ export default {
       const count = Array.isArray(slides) ? slides.length : 0;
       return {
         title: title || 'Slider Home Page',
-        subtitle: `${count} ${count === 1 ? 'foto caricata' : 'foto caricate'} (Max 9)`,
+        subtitle: `${count} ${count === 1 ? 'foto caricata' : 'foto caricate'}`,
       };
     },
   },
