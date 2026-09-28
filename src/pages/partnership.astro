@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DownloadButton from '../components/DownloadButton.astro';
+import { PARTNER_LOGOS } from '../lib/partners';
 
 const siteOrigin = Astro.site ? Astro.site.origin : 'https://fondazioneverace.eu';
 
@@ -28,16 +29,6 @@ const faqs = [
   }
 ];
 
-const partnersList = [
-  "Fondazione Manodori",
-  "Fondazione Luigi Ghirri",
-  "Salewa",
-  "Alpinaflora",
-  "Asineria di Reggio Emilia",
-  "Giro del Cielo",
-  "Bruma ETS",
-  "Territorio Reggiano"
-];
 
 const partnershipSchema = {
   "@context": "https://schema.org",
@@ -195,15 +186,21 @@ const partnershipSchema = {
           <span class="font-mono text-xs text-zero-black/50">RETE TERRITORIALE</span>
         </div>
 
-        <!-- Fascia a Scorrimento Continuo (Marquee) -->
-        <div class="relative w-full overflow-hidden py-4">
-          <div class="flex items-center gap-12 whitespace-nowrap animate-marquee">
-            {partnersList.concat(partnersList).map((partner) => (
-              <div class="flex items-center gap-12 flex-shrink-0">
-                <span class="font-display font-bold text-xl md:text-2xl uppercase tracking-wider text-zero-black/80 hover:text-zero-red transition-colors cursor-default">
-                  {partner}
-                </span>
-                <span class="text-zero-red/40 font-mono text-xs">/</span>
+        <!-- Fascia a Scorrimento Continuo (Marquee con Loghi dei Partner) -->
+        <div class="relative w-full overflow-hidden py-6">
+          <div class="flex items-center gap-14 md:gap-20 whitespace-nowrap animate-marquee">
+            {PARTNER_LOGOS.concat(PARTNER_LOGOS).map((partner) => (
+              <div class="flex items-center gap-14 md:gap-20 flex-shrink-0">
+                <div class="h-12 md:h-14 flex items-center justify-center px-2">
+                  <img
+                    src={encodeURI(partner.logo)}
+                    alt={partner.name}
+                    title={partner.name}
+                    class="max-h-10 md:max-h-12 w-auto max-w-[140px] md:max-w-[180px] object-contain grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300 select-none"
+                    loading="lazy"
+                  />
+                </div>
+                <span class="text-zero-red/30 font-mono text-xs select-none">/</span>
               </div>
             ))}
           </div>
@@ -431,7 +428,7 @@ const partnershipSchema = {
   .animate-marquee {
     display: flex;
     width: max-content;
-    animation: marquee 30s linear infinite;
+    animation: marquee 50s linear infinite;
   }
   .animate-marquee:hover {
     animation-play-state: paused;
